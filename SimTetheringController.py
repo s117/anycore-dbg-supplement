@@ -9,6 +9,27 @@ try:
     from deepdiff import DeepDiff
 except ImportError:
     DeepDiff = None
+# define APP_UUID "115fc8b7-8b73-425a-883b-57fc0b10fc25"
+# define SIM_ID   "1"
+
+# define COMM_FIFO_BASE_DIR         "/tmp/" APP_UUID
+# define COMM_FIFO_FROM_CONTROLLER  COMM_FIFO_BASE_DIR "/" SIM_ID "/c2s"  // c: controller
+# define COMM_FIFO_TO_CONTROLLER    COMM_FIFO_BASE_DIR "/" SIM_ID "/s2c"  // s: simulator
+# define COMM_FIFO_NODE_MODE        0600
+
+APP_UUID = "115fc8b7-8b73-425a-883b-57fc0b10fc25"
+SIM_A_ID = "A"  # Old simulator (Ref)
+SIM_B_ID = "B"  # New simulator
+
+COMM_FIFO_BASE_DIR = "/tmp/%s" % APP_UUID
+COMM_FIFO_SIM_A_DIR = "%s/%s" % (COMM_FIFO_BASE_DIR, SIM_A_ID)
+COMM_FIFO_SIM_B_DIR = "%s/%s" % (COMM_FIFO_BASE_DIR, SIM_B_ID)
+COMM_FIFO_NODE_MODE = 0o600
+
+COMM_FIFO_A_S2C_IN = "%s/s2c" % COMM_FIFO_SIM_A_DIR
+COMM_FIFO_A_C2S_OUT = "%s/c2s" % COMM_FIFO_SIM_A_DIR
+COMM_FIFO_B_S2C_IN = "%s/s2c" % COMM_FIFO_SIM_B_DIR
+COMM_FIFO_B_C2S_OUT = "%s/c2s" % COMM_FIFO_SIM_B_DIR
 
 # uint64_t  number of cycle the simulator should skip reporting
 SIM_CONF_SKIP_CYCLE = 0
@@ -16,7 +37,7 @@ SIM_CONF_SKIP_CYCLE = 0
 SIM_CONF_BRIDGE_VERBOSE = False
 # cycles that the controller should breakpoint the simulator
 SIM_CONF_BREAK_POINT_CYCLE = {
-    47093008
+    54746
 }
 
 
@@ -205,8 +226,8 @@ class SimABTetheringController:
             os.unlink(simB_pipe_out)
         except FileNotFoundError:
             pass
-        os.mkfifo(simA_pipe_out)
-        os.mkfifo(simB_pipe_out)
+        os.mkfifo(simA_pipe_out, COMM_FIFO_NODE_MODE)
+        os.mkfifo(simB_pipe_out, COMM_FIFO_NODE_MODE)
 
         self.m_simA_in_pipe = open(simA_pipe_in, 'rb')
         self.m_simA_in_pipe_path = simA_pipe_in
@@ -441,16 +462,16 @@ class SimABTetheringController:
 
 
 def main():
-    SIMA_IN_PIPE = "/tmp/fifo/1/s2c"
-    SIMA_OUT_PIPE = "/tmp/fifo/1/c2s"
-    SIMB_IN_PIPE = "/tmp/fifo/2/s2c"
-    SIMB_OUT_PIPE = "/tmp/fifo/2/c2s"
+    import os
+
+    os.makedirs(COMM_FIFO_SIM_A_DIR, 0o700, exist_ok=True)
+    os.makedirs(COMM_FIFO_SIM_B_DIR, 0o700, exist_ok=True)
 
     cp_ipc = SimABTetheringController(
-        SIMA_IN_PIPE,
-        SIMA_OUT_PIPE,
-        SIMB_IN_PIPE,
-        SIMB_OUT_PIPE
+        COMM_FIFO_A_S2C_IN,
+        COMM_FIFO_A_C2S_OUT,
+        COMM_FIFO_B_S2C_IN,
+        COMM_FIFO_B_C2S_OUT
     )
     while True:
         cp_ipc.run()

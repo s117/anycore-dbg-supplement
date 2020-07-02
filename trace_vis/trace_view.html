@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Timeline | items | Item ordering</title>
+
+    <style type="text/css">
+        body, html {
+            /*font-family: sans-serif;*/
+            font-family: monospace;
+        }
+
+        p {
+            max-width: 800px;
+        }
+    </style>
+
+    <script src="node_modules/vis-timeline/standalone/umd/vis-timeline-graph2d.min.js"></script>
+    <link href="node_modules/vis-timeline/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css"/>
+
+
+</head>
+<h1>Trace View</h1>
+<!--<p>-->
+<!--    By default, the items displayed on the Timeline are unordered. They are-->
+<!--    stacked in the order that they where loaded. This means that way items are-->
+<!--    stacked can change while moving and zooming the Timeline.-->
+<!--</p>-->
+<!--<p>-->
+<!--    To display and stack the items in a controlled order, you can provide a-->
+<!--    custom sorting function via the configuration option <code>order</code>.-->
+<!--</p>-->
+<!--<p>-->
+<!--    WARNING: Custom ordering is only suitable for small amounts of items (up to a few-->
+<!--    hundred), as the Timeline has to render <i>all</i> items once on load to-->
+<!--    determine their width and height.-->
+<!--</p>-->
+<!--<p>-->
+<!--    <label for="ordering"><input type="checkbox" id="ordering" checked/> Apply custom ordering. Order items by their id.</label>-->
+<!--</p>-->
+
+<div id="visualization"></div>
+
+<br/>
+<label>Info: </label><label id="info_bar"></label>
+<br/>
+
+<script type="text/javascript">
+    var data_src = {};
+
+    fetch("data_src.json").then(
+        resp => resp.json()
+    ).then(
+        json => {
+            data_src = json;
+            update_timeline(json);
+        }
+    );
+
+    function update_timeline(data_src) {
+        // DOM element where the Timeline will be attached
+        var container = document.getElementById('visualization');
+        var info_bar = document.getElementById('info_bar')
+        // Create a DataSet (allows two way data-binding)
+        var items = new vis.DataSet();
+
+        var date = vis.moment(0);
+        for (var i = 0; i < data_src.length; ++i) {
+            var call_record = data_src[i]
+            var record_content = call_record["content"]
+            var record_start = call_record["start"]
+            var record_end = call_record["end"]
+            var record_type = call_record["type"]
+            var new_item = {
+                id: i,
+                content: record_content,
+                title: record_content + ", lifespan " + record_start + " - " + record_end,
+                start: vis.moment(record_start),
+                end: vis.moment(record_end)
+            }
+
+            if (record_type != "FunctionRecord")
+                new_item.style = "color: red;";
+
+            items.add(new_item);
+        }
+
+
+        function customOrder(a, b) {
+            // order by id
+            return b.id - a.id;
+        }
+
+        // Configuration for the Timeline
+        var options = {
+            order: customOrder,
+            editable: false,
+            margin: {item: 0},
+            format: {
+                minorLabels: function (date, scale, step) {
+                    // must have a space otherwise it will get mad.
+                    return new Date(date).getTime() + "";
+                },
+                majorLabels: function (date, scale, step) {
+                    // must have a space otherwise it will get mad.
+                    return new Date(date).getTime() + "";
+                }
+            },
+            // timeAxis:{scale:'millisecond'}
+        };
+
+        // Create a Timeline
+        var timeline = new vis.Timeline(container, items, options);
+
+        info_bar.innerText = "Ready"
+        timeline.on("mouseOver", function onMouseOver(properties) {
+
+            if (properties.item) {
+                timeline.setSelection([properties.item]);
+                info_bar.innerText = "[" + data_src[properties.item].start + "~" + data_src[properties.item].end + "] " +
+                    data_src[properties.item].content;
+            }
+
+        })
+
+        // var ordering = document.getElementById('ordering');
+        // ordering.onchange = function () {
+        //     timeline.setOptions({
+        //         order: ordering.checked ? customOrder : () => {
+        //         }
+        //     });
+        // };
+    }
+
+</script>
+</body>
+</html>
