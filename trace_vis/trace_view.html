@@ -16,7 +16,27 @@
 
     <script src="node_modules/vis-timeline/standalone/umd/vis-timeline-graph2d.min.js"></script>
     <link href="node_modules/vis-timeline/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css"/>
-
+    <script>
+        function clearSelection() {
+            var sel;
+            if ((sel = document.selection) && sel.empty) {
+                sel.empty();
+            } else {
+                if (window.getSelection) {
+                    window.getSelection().removeAllRanges();
+                }
+                var activeEl = document.activeElement;
+                if (activeEl) {
+                    var tagName = activeEl.nodeName.toLowerCase();
+                    if (tagName === "textarea" ||
+                        (tagName === "input" && activeEl.type === "text")) {
+                        // Collapse the selection to the end
+                        activeEl.selectionStart = activeEl.selectionEnd;
+                    }
+                }
+            }
+        }
+    </script>
 
 </head>
 <h1>Trace View</h1>
@@ -41,9 +61,13 @@
 <div id="visualization"></div>
 
 <br/>
-<label for="curr_marker_pos">Marker position: </label><input type="number" id="curr_marker_pos" value="0"
-                                                             onmouseover="this.select()">
-<input type="submit" id="update_marker" value="Move to">
+<form>
+    <label for="curr_marker_pos">Marker position: </label>
+    <input type="number" id="curr_marker_pos" value="0"
+           onmouseover="this.select()"
+           onmouseleave="clearSelection()"
+    >
+    <input type="submit" id="update_marker" value="Move to">
 </form>
 
 <br/>
