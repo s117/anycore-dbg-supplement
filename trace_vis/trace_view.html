@@ -41,6 +41,12 @@
 <div id="visualization"></div>
 
 <br/>
+<label for="curr_marker_pos">Marker position: </label><input type="number" id="curr_marker_pos" value="0">
+<input type="submit" id="update_marker" value="Move to">
+</form>
+
+<br/>
+<br/>
 <label>Info: </label><label id="info_bar"></label>
 <br/>
 
@@ -105,12 +111,66 @@
                     return new Date(date).getTime() + "";
                 }
             },
+            showMinorLabels: true,
+            showMajorLabels: false,
+            type: 'range'
             // timeAxis:{scale:'millisecond'}
         };
+
 
         // Create a Timeline
         var timeline = new vis.Timeline(container, items, options);
 
+        function update_height() {
+            var win = window,
+                doc = document,
+                docElem = doc.documentElement,
+                body = doc.getElementsByTagName('body')[0],
+                x = win.innerWidth || docElem.clientWidth || body.clientWidth,
+                y = win.innerHeight || docElem.clientHeight || body.clientHeight;
+            timeline.setOptions(
+                {height: y - 150 + "px"}
+            );
+        }
+
+        update_height();
+        document.body.onresize = function () {
+            update_height();
+        }
+
+
+        // Setup the time marker
+        var marker_id = timeline.addCustomTime(vis.moment(0))
+        timeline.setCustomTimeMarker(
+            "Cycle: " + Number(document.getElementById("curr_marker_pos").value),
+            marker_id,
+            false
+        )
+
+        document.getElementById("update_marker").onclick = function (ev) {
+            var new_time = Number(document.getElementById("curr_marker_pos").value)
+            new_time = vis.moment(new_time)
+            timeline.setCustomTime(new_time, marker_id)
+            timeline.setCustomTimeMarker(
+                "Cycle: " + Number(document.getElementById("curr_marker_pos").value),
+                marker_id,
+                false
+            )
+        }
+
+        timeline.on('timechange', function (ev) {
+            if (ev.id === marker_id) {
+                document.getElementById("curr_marker_pos").value = Number(ev.time)
+                timeline.setCustomTimeMarker(
+                    "Cycle: " + Number(ev.time),
+                    marker_id,
+                    false
+                )
+            }
+        })
+
+
+        // Setup the status bar
         info_bar.innerText = "Ready"
         timeline.on("mouseOver", function onMouseOver(properties) {
 
@@ -121,6 +181,7 @@
             }
 
         })
+
 
         // var ordering = document.getElementById('ordering');
         // ordering.onchange = function () {
