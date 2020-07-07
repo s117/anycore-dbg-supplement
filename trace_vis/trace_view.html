@@ -7,11 +7,19 @@
         body, html {
             /*font-family: sans-serif;*/
             font-family: monospace;
+            /*background-color: dimgray;*/
         }
+        /*input {*/
+        /*    background-color: lightgray;*/
+        /*}*/
+        /*button{*/
+        /*    background-color: lightgray;*/
+        /*}*/
 
         p {
             max-width: 800px;
         }
+
     </style>
 
     <script src="node_modules/vis-timeline/standalone/umd/vis-timeline-graph2d.min.js"></script>
@@ -37,9 +45,15 @@
             }
         }
     </script>
-
+    <style>
+        .vis-custom-time{
+            background-color: orangered;
+            /*border-color: red;*/
+            /*color: red;*/
+        }
+    </style>
 </head>
-<h1>Trace View</h1>
+<h1>Trace timeline</h1>
 <!--<p>-->
 <!--    By default, the items displayed on the Timeline are unordered. They are-->
 <!--    stacked in the order that they where loaded. This means that way items are-->
