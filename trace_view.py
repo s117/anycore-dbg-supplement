@@ -102,7 +102,8 @@ def main():
     symtab = SymbolTable()
     for objdump_dism_file in objdump_dism_files:
         print("Loading symbol from '%s'" % objdump_dism_file)
-        symtab.add_symbol_from_dism_file(objdump_dism_file)
+        with open(objdump_dism_file, "r") as fp:
+            symtab.add_symbol_from_objdump_dism(fp.read())
 
     # load trace
     print("Loading trace file '%s'" % trace_file)

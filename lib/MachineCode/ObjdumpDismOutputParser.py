@@ -1,5 +1,6 @@
 import re
 from enum import Enum, auto
+from io import StringIO
 from typing import Union, TextIO, Generator, Optional
 
 from lib.MachineCode.Instruction import Instruction
@@ -9,6 +10,7 @@ from lib.MachineCode.Label import Label
 class ObjdumpDismOutputParser:
     reg_objdump_label_line_pattern = re.compile(r"^\s*([0-9a-fA-F]{1,16})\s*<(\S+)>\s*:\s*$", re.MULTILINE)
     reg_objdump_asm_line_pattern = re.compile(r"^\s*([0-9a-fA-F]{1,16}):\s*([0-9a-fA-F]{8})\s+(.+)$", re.MULTILINE)
+    reg_objdump_meta_pattern = re.compile(r"^(.+):\s+file format (.+)$", re.MULTILINE)
 
     @staticmethod
     def _parse_objdump_asm_line(line):
@@ -37,19 +39,28 @@ class ObjdumpDismOutputParser:
 
         return None
 
+    @staticmethod
+    def _parse_objdump_meta(file_content):
+        # type: (str) -> (str, str)
+        matches = ObjdumpDismOutputParser.reg_objdump_meta_pattern.finditer(file_content)
+
+        for matchNum, match in enumerate(matches, start=1):
+            return match.group(1), match.group(2)
+
+        return None, None
+
     class StepStatus(Enum):
         ST_NEW_INSN = auto()
         ST_NEW_LABEL = auto()
         ST_EOF = auto()
 
-    def __init__(self, dism_file):
-        # type: (Union[TextIO, str]) -> None
-        if isinstance(dism_file, str):
-            self.fp = open(dism_file, "r")
-            self.fp_need_close = True
-        else:
-            self.fp = dism_file
-            self.fp_need_close = False
+    def __init__(self, dism_content):
+        # type: (str) -> None
+        self.content_buf = StringIO(dism_content)
+
+        self.module_name, self.module_bin_format = self._parse_objdump_meta(dism_content)
+        if not self.module_name:
+            raise ValueError("Not a valid OBJDUMP -S output")
 
         self.curr_label = None
         self.curr_insn = None
@@ -61,8 +72,7 @@ class ObjdumpDismOutputParser:
 
     def __del__(self):
         # type: () -> None
-        if self.fp_need_close:
-            self.fp.close()
+        self.content_buf.close()
 
     def get_current_label(self):
         # type: () -> Label
@@ -74,7 +84,7 @@ class ObjdumpDismOutputParser:
 
     def step(self):
         # type: () -> StepStatus
-        while curr_line_text := self.fp.readline():
+        while curr_line_text := self.content_buf.readline():
             for pf in self.parse_seq:
                 parse_result = pf(curr_line_text)
                 if isinstance(parse_result, Instruction):

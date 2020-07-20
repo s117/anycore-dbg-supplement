@@ -1,6 +1,7 @@
 import bisect
 import os
 import sys
+from io import StringIO
 from typing import List, Optional, Dict, Tuple
 
 from lib.MachineCode.Instruction import Instruction
@@ -64,27 +65,26 @@ class SymbolTable:
 
         self._check_symbol_overlapping()
 
-    def add_symbol_from_dism_file(self, dism_file_path):
+    def add_symbol_from_objdump_dism(self, dism_content):
         # type: (str) -> None
-        with open(dism_file_path, "r") as dism_file:
-            parser = ObjdumpDismOutputParser(dism_file)
 
-            # format: symbol_name -> [start, end]
-            fn_sym_table = dict()  # type: Dict[str, Tuple[int, int]]
+        parser = ObjdumpDismOutputParser(dism_content)
 
-            for x in parser.foreach():
-                if isinstance(x, Instruction):
-                    # print(x.get_dism_op())
-                    fn_sym_table[parser.get_current_label().name] = (
-                        fn_sym_table[parser.get_current_label().name][0],
-                        x.offset
-                    )
-                elif isinstance(x, Label):
-                    fn_sym_table[x.name] = (x.offset, x.offset)
+        module_name = parser.module_name
 
-        module_name = os.path.splitext(
-            os.path.basename(dism_file_path)
-        )[0]
+        # format: symbol_name -> [start, end]
+        fn_sym_table = dict()  # type: Dict[str, Tuple[int, int]]
+
+        for x in parser.foreach():
+            if isinstance(x, Instruction):
+                # print(x.get_dism_op())
+                fn_sym_table[parser.get_current_label().name] = (
+                    fn_sym_table[parser.get_current_label().name][0],
+                    x.offset
+                )
+            elif isinstance(x, Label):
+                fn_sym_table[x.name] = (x.offset, x.offset)
+
         self.add_symbol(module_name, fn_sym_table)
 
     def _check_symbol_overlapping(self):
