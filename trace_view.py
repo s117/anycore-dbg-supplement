@@ -26,7 +26,7 @@ class JsonHistoryRecorder(HistoryRecorder):
     def init_ignore_list(self):
         import yaml
 
-        with open("ignore_symbol.yaml", 'r') as stream:
+        with open(os.path.join(os.path.dirname(__file__), "ignore_symbol.yaml"), 'r') as stream:
             try:
                 ignore_dict = yaml.load(stream, Loader=yaml.SafeLoader)
             except yaml.YAMLError as exc:
