@@ -6,7 +6,7 @@ from typing import List, Optional, Dict, Tuple
 
 from lib.MachineCode.Instruction import Instruction
 from lib.MachineCode.Label import Label
-from lib.MachineCode.ObjdumpDismOutputParser import ObjdumpDismOutputParser
+from lib.MachineCode.Objdump import ObjdumpDismOutputParser
 from lib.utils import strong_check, weak_check
 
 
@@ -70,7 +70,7 @@ class SymbolTable:
 
         parser = ObjdumpDismOutputParser(dism_content)
 
-        module_name = parser.module_name
+        module_name = os.path.basename(parser.module_name)
 
         # format: symbol_name -> [start, end]
         fn_sym_table = dict()  # type: Dict[str, Tuple[int, int]]

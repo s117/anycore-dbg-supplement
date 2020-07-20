@@ -5,6 +5,7 @@ import os
 import sys
 from collections import defaultdict
 
+from lib.MachineCode.Objdump import get_objdump_content
 from lib.StackAnalysis.CallStackTracker import CallStackTracker
 from lib.StackAnalysis.TraceCodePatternScanner import TraceCodePatternScanner
 from lib.StackAnalysis.HistoryRecorder import HistoryRecorder
@@ -101,19 +102,23 @@ def print_usage():
     )
 
 
+def get_module_objdump_output():
+    pass
+
+
 def main():
     if len(sys.argv) < 2:
         print_usage()
         return -1
     trace_file = sys.argv[-1]
-    objdump_dism_files = sys.argv[1:-1]
+    modules = sys.argv[1:-1]
 
     # load symbol
     symtab = SymbolTable()
-    for objdump_dism_file in objdump_dism_files:
-        print("Loading symbol from '%s'" % objdump_dism_file)
-        with open(objdump_dism_file, "r") as fp:
-            symtab.add_symbol_from_objdump_dism(fp.read())
+    for module_path in modules:
+        print("Loading symbol from '%s'" % module_path)
+        objdump_content = get_objdump_content(module_path)
+        symtab.add_symbol_from_objdump_dism(objdump_content)
 
     # load trace
     print("Loading trace file '%s'" % trace_file)

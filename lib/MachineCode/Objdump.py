@@ -1,10 +1,76 @@
 import re
+import tempfile
 from enum import Enum, auto
 from io import StringIO
-from typing import Union, TextIO, Generator, Optional
+from typing import Union, Generator, Optional
 
 from lib.MachineCode.Instruction import Instruction
 from lib.MachineCode.Label import Label
+from lib.utils import ShellCmdWrapper
+
+DEFAULT_OBJDUMP_PREFIX = "riscv64-unknown-elf-"
+
+
+class InvalidObjdumpOutput(Exception):
+    pass
+
+
+class FailObjdumpInvoke(Exception):
+    pass
+
+
+def is_elf_file(file_path):
+    # type: (str) -> bool
+    with open(file_path, "rb") as fp:
+        elf_magic = fp.read(4)
+        return elf_magic == b"\x7f\x45\x4c\x46"
+
+
+def dism_elf_with_objdump(file_path, objdump_prefix):
+    # type: (str, str) -> str
+    cmd = [objdump_prefix + "objdump", "-S", file_path]
+    tmp_stdout = tempfile.TemporaryFile(mode="r+")
+    tmp_stderr = tempfile.TemporaryFile(mode="r+")
+
+    cmd_wrapper = ShellCmdWrapper(
+        cmd, stdin_pipe=None, stdout_pipe=tmp_stdout, stderr_pipe=tmp_stderr
+    )
+    cmd_wrapper.launch_cmd()
+    cmd_wrapper.join()
+    ret_code = cmd_wrapper.get_ret_code()
+    tmp_stdout.seek(0)
+    tmp_stderr.seek(0)
+    stdout_output, stderr_output = tmp_stdout.read(), tmp_stderr.read()
+
+    if ret_code != 0:
+        raise FailObjdumpInvoke(
+            "Fail to analysis module '%s' using command:\n"
+            "  %s\n\n"
+            "Return code: %d\n\n"
+            "Stdout:\n"
+            "%s"
+            "\n\n"
+            "Stderr:\n"
+            "%s" % (
+                file_path,
+                " ".join(cmd),
+                ret_code,
+                stdout_output,
+                stderr_output
+
+            )
+        )
+
+    return stdout_output
+
+
+def get_objdump_content(file_path):
+    # type: (str) -> str
+    if is_elf_file(file_path):
+        return dism_elf_with_objdump(file_path, DEFAULT_OBJDUMP_PREFIX)
+    else:
+        with open(file_path, "r") as fp:
+            return fp.read()
 
 
 class ObjdumpDismOutputParser:
@@ -60,7 +126,7 @@ class ObjdumpDismOutputParser:
 
         self.module_name, self.module_bin_format = self._parse_objdump_meta(dism_content)
         if not self.module_name:
-            raise ValueError("Not a valid OBJDUMP -S output")
+            raise InvalidObjdumpOutput("Not a valid OBJDUMP -S output")
 
         self.curr_label = None
         self.curr_insn = None
