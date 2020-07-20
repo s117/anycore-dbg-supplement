@@ -23,7 +23,17 @@ class JsonHistoryRecorder(HistoryRecorder):
         self.init_ignore_list()
 
     def init_ignore_list(self):
-        self.ignored_function_call_list["pk_c920"].add("__walk_create")
+        import yaml
+
+        with open("ignore_symbol.yaml", 'r') as stream:
+            try:
+                ignore_dict = yaml.load(stream, Loader=yaml.SafeLoader)
+            except yaml.YAMLError as exc:
+                print(exc)
+                exit(1)
+        for k, v in ignore_dict.items():
+            for vi in v:
+                self.ignored_function_call_list[k].add(vi)
 
     def on_pop_frame(self, frame):
         # type: (CallStackTracker.StackFrame) -> None
