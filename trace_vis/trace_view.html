@@ -9,6 +9,7 @@
             font-family: monospace;
             /*background-color: dimgray;*/
         }
+
         /*input {*/
         /*    background-color: lightgray;*/
         /*}*/
@@ -45,7 +46,7 @@
         }
     </script>
     <style>
-        .vis-custom-time{
+        .vis-custom-time {
             background-color: orangered;
             /*border-color: red;*/
             /*color: red;*/
@@ -53,23 +54,6 @@
     </style>
 </head>
 <h1>Trace Timeline</h1>
-<!--<p>-->
-<!--    By default, the items displayed on the Timeline are unordered. They are-->
-<!--    stacked in the order that they where loaded. This means that way items are-->
-<!--    stacked can change while moving and zooming the Timeline.-->
-<!--</p>-->
-<!--<p>-->
-<!--    To display and stack the items in a controlled order, you can provide a-->
-<!--    custom sorting function via the configuration option <code>order</code>.-->
-<!--</p>-->
-<!--<p>-->
-<!--    WARNING: Custom ordering is only suitable for small amounts of items (up to a few-->
-<!--    hundred), as the Timeline has to render <i>all</i> items once on load to-->
-<!--    determine their width and height.-->
-<!--</p>-->
-<!--<p>-->
-<!--    <label for="ordering"><input type="checkbox" id="ordering" checked/> Apply custom ordering. Order items by their id.</label>-->
-<!--</p>-->
 
 <div id="visualization"></div>
 
@@ -210,14 +194,20 @@
 
         // Setup the status bar
         info_bar.innerText = "Ready"
-        timeline.on("mouseOver", function onMouseOver(properties) {
+        timeline.on("mouseOver", function onMouseOver(event) {
 
-            if (properties.item) {
-                timeline.setSelection([properties.item]);
-                info_bar.innerText = "[" + data_src[properties.item].start + "~" + data_src[properties.item].end + "] " +
-                    data_src[properties.item].content;
+            if (event.item) {
+                timeline.setSelection([event.item]);
+                info_bar.innerText = "[" + data_src[event.item].start + "~" + data_src[event.item].end + "] " +
+                    data_src[event.item].content;
             }
 
+        })
+
+        timeline.on("doubleClick", function onDoubleClick(event) {
+            if (event.item) {
+                timeline.focus(event.item)
+            }
         })
 
 
