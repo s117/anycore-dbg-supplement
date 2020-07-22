@@ -83,6 +83,9 @@ class SymbolTable:
                     x.offset
                 )
             elif isinstance(x, Label):
+                if x.name in fn_sym_table:
+                    print("Warning: duplicated symbol detected: %s" % x.name)
+
                 fn_sym_table[x.name] = (x.offset, x.offset)
 
         self.add_symbol(module_name, fn_sym_table)
