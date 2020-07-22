@@ -123,6 +123,8 @@ class TraceCodePatternScanner:
 
     def scan(self):
         # type: () -> None
+        total_trace_ev = self.trace_reader.size()
+
         for self.curr_scan_idx, ev in self.trace_reader.foreach():
             for pattern in self.patterns:
                 weak_check(
@@ -130,6 +132,11 @@ class TraceCodePatternScanner:
                     "the trace should only have this type of trace event currently"
                 )
                 pattern.feed(ev)
+
+            if self.curr_scan_idx & 0xffff == 0:
+                print("Finished 0x%X/0x%X (%0.1f%%)" % (
+                    self.curr_scan_idx, total_trace_ev, (float(self.curr_scan_idx) / total_trace_ev) * 100
+                ))
 
         self.call_stack_tracker.finalize(self.trace_reader.at(-1).cycle)
 

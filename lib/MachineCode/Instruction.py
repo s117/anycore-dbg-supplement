@@ -28,7 +28,7 @@ class Instruction:
         self.offset = offset
         self.insn = insn
         self.objdump_dism = objdump_dism.strip()
-        self.dism_op = self.objdump_dism.strip().split(" ")[0]
+        self.dism_op = self.objdump_dism.split(" ")[0]
 
     def get_dism_op(self):
         # type: () -> str

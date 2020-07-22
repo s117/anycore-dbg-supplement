@@ -42,27 +42,59 @@ class SimpleTraceFileReader:
 
     def __init__(self, trace_file_path):
         # type: (str) -> None
-        def parse_foreach():
-            split_trace_txt = self.trace_txt.split("\n\n")
-            for trace_record in split_trace_txt:
-                basic_info = (self.extract_basic_info(trace_record))
-                if basic_info:
-                    cycle, seq, pc, insn, asm = basic_info
-                    extra_info = self.extract_extra_info(trace_record)
-                    yield TraceEventInstRetired(cycle, seq, pc, insn, asm, extra_info)
+        TRACE_EV_SEPARATOR = "\n\n"
+        TRACE_EV_SEPARATOR_LEN = len(TRACE_EV_SEPARATOR)
 
-        with open(trace_file_path, "r") as tf:
-            self.trace_txt = tf.read()
+        # format: [(offset, len)]
+        self.trev_offset_idx = list()  # type: List[Tuple[int, int]]
 
-        self.trace_event = [ev for ev in parse_foreach()]  # type: List[Union[TraceEventInstRetired]]
+        self.trace_file_fp = open(trace_file_path, "r")
+
+        trace_content = self.trace_file_fp.read()
+
+        curr_trev_begin = 0
+        curr_trev_end = trace_content.find(TRACE_EV_SEPARATOR, curr_trev_begin)
+
+        while curr_trev_end > 0:
+            if trace_content[curr_trev_begin:curr_trev_end].strip():
+                self.trev_offset_idx.append(
+                    (curr_trev_begin, curr_trev_end - curr_trev_begin)
+                )
+            curr_trev_begin = curr_trev_end + TRACE_EV_SEPARATOR_LEN
+            curr_trev_end = trace_content.find(TRACE_EV_SEPARATOR, curr_trev_begin)
+
+        leftover = trace_content[curr_trev_begin:].rstrip()
+        if leftover:
+            self.trev_offset_idx.append(
+                (curr_trev_begin, len(leftover))
+            )
+        print("INDEX DONE")
+        # sys.exit(0)
+
+        # self.trev_offset_idx = [ev for ev in parse_foreach()]  # type: List[Union[TraceEventInstRetired]]
+
+    def __del__(self):
+        if self.trace_file_fp:
+            self.trace_file_fp.close()
 
     def foreach(self):
-        for idx, ev in enumerate(self.trace_event):
-            yield idx, ev
+        for idx in range(len(self.trev_offset_idx)):
+            yield idx, self.at(idx)
 
     def at(self, i):
         # type: (int) -> Optional[TraceEventInstRetired]
         try:
-            return self.trace_event[i]
+            trev_data_offset, trev_data_len = self.trev_offset_idx[i]
         except IndexError:
             return None
+
+        self.trace_file_fp.seek(trev_data_offset)
+        trev_data = self.trace_file_fp.read(trev_data_len)
+        basic_info = (self.extract_basic_info(trev_data))
+        if basic_info:
+            cycle, seq, pc, insn, asm = basic_info
+            extra_info = self.extract_extra_info(trev_data)
+            return TraceEventInstRetired(cycle, seq, pc, insn, asm, extra_info)
+
+    def size(self):
+        return len(self.trev_offset_idx)
