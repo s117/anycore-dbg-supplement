@@ -1,6 +1,8 @@
 import bisect
 import os
 import sys
+from collections import defaultdict
+from functools import partial
 from io import StringIO
 from typing import List, Optional, Dict, Tuple
 
@@ -71,22 +73,31 @@ class SymbolTable:
         parser = ObjdumpDismOutputParser(dism_content)
 
         module_name = os.path.basename(parser.module_name)
+        name_conflict_counters = defaultdict(partial(int, 0))
 
         # format: symbol_name -> [start, end]
         fn_sym_table = dict()  # type: Dict[str, Tuple[int, int]]
-
+        curr_tracking_name = None
         for x in parser.foreach():
             if isinstance(x, Instruction):
+                assert curr_tracking_name
                 # print(x.get_dism_op())
-                fn_sym_table[parser.get_current_label().name] = (
-                    fn_sym_table[parser.get_current_label().name][0],
+                fn_sym_table[curr_tracking_name] = (
+                    fn_sym_table[curr_tracking_name][0],
                     x.offset
                 )
             elif isinstance(x, Label):
                 if x.name in fn_sym_table:
-                    print("Warning: duplicated symbol detected: %s" % x.name)
 
-                fn_sym_table[x.name] = (x.offset, x.offset)
+                    name_conflict_counters[x.name] += 1
+                    curr_tracking_name = x.name + " (%d)" % name_conflict_counters[x.name]
+                    print("Warning: duplicated symbol detected: %s, rename the new symbol to %s" % (
+                        x.name, curr_tracking_name
+                    ))
+                else:
+                    curr_tracking_name = x.name
+
+                fn_sym_table[curr_tracking_name] = (x.offset, x.offset)
 
         self.add_symbol(module_name, fn_sym_table)
 
