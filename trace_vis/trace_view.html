@@ -75,7 +75,16 @@
 <script type="text/javascript">
     var data_src = {};
 
-    fetch("data_src.json").then(
+    var no_cache_headers = new Headers();
+    no_cache_headers.append('pragma', 'no-cache');
+    no_cache_headers.append('cache-control', 'no-cache');
+
+    var no_cache_init = {
+        method: 'GET',
+        headers: no_cache_headers,
+    };
+
+    fetch("data_src.json", no_cache_init).then(
         resp => resp.json()
     ).then(
         json => {
