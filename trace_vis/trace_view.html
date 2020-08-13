@@ -204,13 +204,16 @@
         // Setup the status bar
         info_bar.innerText = "Ready"
         timeline.on("mouseOver", function onMouseOver(event) {
-
             if (event.item) {
                 timeline.setSelection([event.item]);
+            }
+        })
+
+        timeline.on("click", function onClick(event) {
+            if (event.item) {
                 info_bar.innerText = "[" + data_src[event.item].start + "~" + data_src[event.item].end + "] " +
                     data_src[event.item].content;
             }
-
         })
 
         timeline.on("doubleClick", function onDoubleClick(event) {
