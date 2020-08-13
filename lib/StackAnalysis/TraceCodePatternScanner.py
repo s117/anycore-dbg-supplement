@@ -21,14 +21,15 @@ class TraceCodePatternScanner:
             raise NotImplementedError()
 
     class Pattern_Reset(MachineCodePattern):
-        def __init__(self, scanner):
-            # type: (TraceCodePatternScanner) -> None
+        def __init__(self, scanner, reset_vector=0x2000):
+            # type: (TraceCodePatternScanner, int) -> None
             super().__init__(scanner)
             self.first_insn = True
+            self.reset_vector = reset_vector
 
         def feed(self, ev_insn_retire):
             # type: (TraceEventInstRetired) -> None
-            if self.first_insn:
+            if self.first_insn and ev_insn_retire.pc == self.reset_vector:
                 self.scanner.get_tracker().track_poweron_reset(ev_insn_retire.cycle, ev_insn_retire.pc)
                 self.first_insn = False
 
@@ -112,6 +113,7 @@ class TraceCodePatternScanner:
 
         self.patterns = []  # type: List[TraceCodePatternScanner.MachineCodePattern]
         self.register_pattern()
+
 
     def register_pattern(self):
         # type: () -> None
