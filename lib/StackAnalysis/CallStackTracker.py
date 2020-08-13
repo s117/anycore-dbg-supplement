@@ -40,8 +40,11 @@ class CallStackTracker:
             return self.frame_stack.pop()
 
         def peek_tos(self):
-            # type: () -> CallStackTracker.StackFrame
-            return self.frame_stack[-1]
+            # type: () -> Optional[CallStackTracker.StackFrame]
+            if self.size():
+                return self.frame_stack[-1]
+            else:
+                return None
 
         def size(self):
             return len(self.frame_stack)
@@ -116,6 +119,11 @@ class CallStackTracker:
             # type: (int, Optional[int], int) -> None
             super().__init__(cycle_start, cycle_end, -1)
             self.reset_vec = reset_vec
+
+    class RecoveredFrame(FunctionFrame):
+        def __init__(self, cycle_start, cycle_end):
+            # type: (int, Optional[int]) -> None
+            super().__init__(cycle_start, cycle_end, -1)
 
     class ActiveRecord:
         def __init__(self, cycle_start, cycle_end, frame):
@@ -202,10 +210,40 @@ class CallStackTracker:
 
             return ret_val
 
+    class RecoveredFunctionRecord(ActiveRecord):
+        def __init__(self, cycle_start, cycle_end, callee_symbol, frame):
+            # type: (int, Optional[int], SymbolTable.Symbol, CallStackTracker.StackFrame) -> None
+            super().__init__(cycle_start, cycle_end, None)
+            self.callee_symbol = callee_symbol
+
+        def __str__(self):
+            return "%s:%s @ %s [Recovered]" % (
+                self.callee_symbol.symbol_name,
+                SymbolTable.format_addr(self.callee_symbol.start_addr),
+                self.callee_symbol.module_name,
+            )
+
+    class RecoveredExceptionRecord(ActiveRecord):
+        def __init__(self, cycle_start, cycle_end, frame):
+            # type: (int, Optional[int], CallStackTracker.StackFrame) -> None
+            super().__init__(cycle_start, cycle_end, None)
+
+        def __str__(self):
+            return "Exception [Recovered]"
+
+    class RecoveredWarningRecord(ActiveRecord):
+        def __init__(self, cycle_start, cycle_end, frame):
+            # type: (int, Optional[int], CallStackTracker.StackFrame) -> None
+            super().__init__(cycle_start, cycle_end, None)
+
+        def __str__(self):
+            return "** Warning: Due to incomplete trace, some other not-recovered active records might be HERE **"
+
     def __init__(self, scanner, history_recorder=None):
         # type: (TraceCodePatternScanner.TraceCodePatternScanner, HistoryRecorder) -> None
         self.scanner = scanner  # type: TraceCodePatternScanner.TraceCodePatternScanner
         self.frame_stack = CallStackTracker.Stack()
+        self.is_frame_stack_complete = True
         if history_recorder:
             self.history_recorder = history_recorder
         else:
@@ -227,7 +265,8 @@ class CallStackTracker:
         caller_symbol = self.scanner.get_symbol_by_addr(trig_pc)
         callee_symbol = self.scanner.get_symbol_by_addr(addr_target)
 
-        weak_check(callee_symbol.start_addr == addr_target, "should never call into the middle of function")
+        weak_check(callee_symbol.start_addr == addr_target,
+                   "(C/%d) call into the middle of function is rare" % cycle)
 
         new_frame = CallStackTracker.FunctionFrame(cycle, None, addr_return)
         self.frame_stack.push_frame(new_frame)
@@ -244,23 +283,30 @@ class CallStackTracker:
         weak_check(callee_symbol.start_addr == addr_target, "should never call into the middle of function")
 
         curr_tos_frame = self.frame_stack.peek_tos()
+        if curr_tos_frame is None:
+            curr_tos_frame = CallStackTracker.RecoveredFrame(self.scanner.trace_reader.earliest_cycle(), cycle)
+            self.is_frame_stack_complete = False
+
         new_record = CallStackTracker.FunctionRecord(cycle, None, curr_tos_frame,
                                                      callee_symbol, caller_symbol, trig_pc)
         curr_tos_frame.add_active_record(new_record)
 
     def track_func_return(self, cycle, addr_target, trig_pc):
         # type: (int, int, int) -> None
-        popped_frame = self.frame_stack.pop_frame()
-        popped_frame.end_frame(cycle)
+        if self.frame_stack.size() == 0:
+            self.frame_recover(cycle, addr_target, trig_pc, is_sret=False)
+        else:
+            popped_frame = self.frame_stack.pop_frame()
+            popped_frame.end_frame(cycle)
 
-        strong_check(
-            isinstance(popped_frame, CallStackTracker.FunctionFrame),
-            "RET instruction is popping a function frame"
-        )
+            strong_check(
+                isinstance(popped_frame, CallStackTracker.FunctionFrame),
+                "RET instruction is popping a function frame"
+            )
 
-        popped_frame.check_return_address(addr_target)
+            popped_frame.check_return_address(addr_target)
 
-        self.history_recorder.on_pop_frame(popped_frame)
+            self.history_recorder.on_pop_frame(popped_frame)
 
     def track_exception(self, cycle, evec, ecause, epc, sr, trig_pc):
         # type: (int, int, int, int, int, int) -> None
@@ -274,7 +320,7 @@ class CallStackTracker:
 
     def track_exception_return(self, cycle, addr_target, trig_pc):
         # type: (int, Optional[int], int) -> None
-        def check_is_program_loading():
+        def check_is_loading_user_prog():
             """
             This is a Proxy Kernel related heuristic
             """
@@ -290,7 +336,7 @@ class CallStackTracker:
             else:
                 return False
 
-        create_program_start_frame = check_is_program_loading()
+        create_program_start_frame = check_is_loading_user_prog()
 
         while self.frame_stack.size() != 0:
             popped_frame = self.frame_stack.pop_frame()
@@ -303,6 +349,7 @@ class CallStackTracker:
                 break
 
         if create_program_start_frame:
+            weak_check(self.frame_stack.size() == 0, "Call stack should have been cleared when PK starts user program")
             new_frame = CallStackTracker.FunctionFrame(cycle, None, -1)
             self.frame_stack.push_frame(new_frame)
             new_record = CallStackTracker.FunctionRecord(
@@ -312,6 +359,34 @@ class CallStackTracker:
                 trig_pc
             )
             new_frame.add_active_record(new_record)
+        else:
+            if self.frame_stack.size() == 0:
+                self.frame_recover(cycle, addr_target, trig_pc, is_sret=True)
+
+    def frame_recover(self, cycle_end, return_addr, trig_pc, is_sret):
+        print("Recovered a frame at address 0x%08X" % return_addr)
+        recovered_frame = CallStackTracker.RecoveredFrame(self.scanner.trace_reader.earliest_cycle(), cycle_end)
+        warn_record = CallStackTracker.RecoveredWarningRecord(self.scanner.trace_reader.earliest_cycle(), cycle_end,
+                                                              recovered_frame)
+        self.is_frame_stack_complete = False
+        if is_sret:
+            exec_record = CallStackTracker.RecoveredExceptionRecord(
+                self.scanner.trace_reader.earliest_cycle(),
+                cycle_end,
+                recovered_frame
+            )
+            recovered_frame.add_active_record(exec_record)
+        else:
+            callee_symbol = self.scanner.get_symbol_by_addr(return_addr)
+            func_record = CallStackTracker.RecoveredFunctionRecord(
+                self.scanner.trace_reader.earliest_cycle(),
+                cycle_end,
+                callee_symbol,
+                recovered_frame
+            )
+            recovered_frame.add_active_record(func_record)
+
+        self.history_recorder.on_pop_frame(recovered_frame)
 
     def foreach_top_down(self):
         # type: () -> Generator[ActiveRecord]
@@ -356,3 +431,10 @@ class CallStackTracker:
             popped_frame = self.frame_stack.pop_frame()
             popped_frame.end_frame(cycle)
             self.history_recorder.on_pop_frame(popped_frame)
+        if not self.is_frame_stack_complete:
+            # give a warning on incomplete trace
+            f = CallStackTracker.RecoveredFrame(self.scanner.trace_reader.earliest_cycle(), cycle)
+            f.add_active_record(
+                CallStackTracker.RecoveredWarningRecord(self.scanner.trace_reader.earliest_cycle(), cycle, f)
+            )
+            self.history_recorder.on_pop_frame(f)
