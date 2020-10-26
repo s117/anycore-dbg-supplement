@@ -1,0 +1,20 @@
+RD:
+  /etc/localtime:
+    isdir: false
+    sha256: null
+  stdin:
+    isdir: false
+    sha256: 4493ff727b0f5930c7f9300c6b727caff1f5c8d491d2d92869707d348755ff90
+  tonto_base.riscv:
+    isdir: false
+    sha256: 7eb40dfb9c9d80fa255973b2b19bbc2bce8d5ca0e6b07029e69a549d976d4dc3
+RDWR:
+  n2o4.constraint_matrix:
+    isdir: false
+    sha256: null
+  stdout:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

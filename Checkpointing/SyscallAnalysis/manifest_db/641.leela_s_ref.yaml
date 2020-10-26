@@ -1,0 +1,8 @@
+leela_s_base.riscv-m64:
+  sha256: 29d1c40d3481fbdeb2db35071d10f7e8fbc67f98cff686cc64ece1db4a0f3e07
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+ref.sgf:
+  sha256: aa13ef173f97ca7bb2c4306e4af693b289247a1968f9129b192212d399680821
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

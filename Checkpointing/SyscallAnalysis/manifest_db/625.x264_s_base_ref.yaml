@@ -1,0 +1,32 @@
+BuckBunny.yuv:
+  sha256: c92d8266894868e0cd8c1e1fd76fa2b20a5e9b34bf839a9850655b878853a00f
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+BuckBunny_New.264:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+frame_1100.yuv:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+frame_1249.yuv:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+frame_500.yuv:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+frame_700.yuv:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+frame_900.yuv:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+x264_s_base.riscv-m64:
+  sha256: 089fde6219a0c006616c5fde40cecf0206d97110ac630460de7d018d4a94fe12
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

@@ -1,0 +1,35 @@
+RD:
+  OBJ.dat:
+    isdir: false
+    sha256: 2e245e742943bc7bd69d58cc61b00b4d92a399197151494d626b63f73eb0056e
+  PSI.dat:
+    isdir: false
+    sha256: d0e5690e7324edff8c519bfe8b34d97684451ba13babe688bb5bcdd400ef8cdd
+  TEwaveguide.m:
+    isdir: false
+    sha256: ab29071fd6592955660198cbc5835c2a6336ec6261133a5f3cb25a6097f9c8a8
+  fotonik3d_s_base.riscv-m64:
+    isdir: false
+    sha256: 37968c8c9993405b5fad19e5a18f6bba40bfb8b3deb93fe83b382f3ecc857a71
+  incident_W3PC_25nm.def:
+    isdir: false
+    sha256: f757a2d87173536b6a06d242107ef02196de4441bb520e7e63e071a7994a6bf2
+  power1.dat:
+    isdir: false
+    sha256: 362f02c40d685d970bb6ae30465163fdbd597100824fc53bc29405ba39a2a3d6
+  power2.dat:
+    isdir: false
+    sha256: 9588158585dbb2213fc29cc4e75addcca7f8177295394a4a11f53d5f158da3ae
+  trans_W3PC_25nm.def:
+    isdir: false
+    sha256: 2fabfdb8120272f38ddef7b1e1a61c9b44d193b8813ed4e1be41751564acedf8
+  yee.dat:
+    isdir: false
+    sha256: 49fe569f67eda126fd9e46d763fef9c1412d85819547745cf2fd073ee558e242
+RDWR:
+  pscyee.out:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

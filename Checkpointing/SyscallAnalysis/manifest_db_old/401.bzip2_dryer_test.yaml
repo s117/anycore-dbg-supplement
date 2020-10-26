@@ -1,0 +1,11 @@
+RD:
+  bzip2_base.riscv:
+    isdir: false
+    sha256: 599ef0923473cd718cf263269bd47fb0ec9a6a69f3bf4136b6233f989c131fcc
+  dryer.jpg:
+    isdir: false
+    sha256: 24493623ad4f445b4d27e64e62a8ae2bb71a8d36b2378082fcf532dad47b0a18
+RDWR: {}
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

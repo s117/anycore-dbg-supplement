@@ -1,0 +1,4 @@
+milc_base.riscv:
+  sha256: 8779b9d2826c4ef3aaaab4c29d270d4d11b39bde369780ae2584fea83671a774
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

@@ -1,0 +1,28 @@
+SPECtestformatmodifier_z.txt:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+calculix_base.riscv:
+  sha256: 53d4227ccaadea244a992e1138d6fb465151ca043270cbebfec783ef57be49b8
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+hyperviscoplastic.dat:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_REMOVE | FUSE_OPEN
+hyperviscoplastic.frd:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_REMOVE | FUSE_OPEN
+hyperviscoplastic.inp:
+  sha256: e03fb5872adf9dfe4dcc27422009a7c479cae31ec9cb8b8e854d402f7281bd89
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+hyperviscoplastic.sta:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_REMOVE | FUSE_OPEN
+spooles.out:
+  sha256: null
+  spec_input: false
+  usage: FUSE_CREATE | FUSE_OPEN

@@ -1,0 +1,16 @@
+100mb.xsd:
+  sha256: 6e46dda5793f3e74baf16431b69fece3ca9e8ba4c7e302f76e411ba7cab5010c
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+t5.xml:
+  sha256: 9aa86020b09e795c29f1cf20bea2ab2d8a740e429e93803fa7faa98679beee5d
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN | FUSE_ABS_REF
+xalanc.xsl:
+  sha256: c58da8aea0a4280679bfb72d7d3b85aaf2576c3203052854c0d9163494a86b34
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN | FUSE_ABS_REF
+xalancbmk_s_base.riscv-m64:
+  sha256: 60fd35bc38afb6bc9f3501597f75e3c7bca73095dfcde2aac5f9469695527323
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

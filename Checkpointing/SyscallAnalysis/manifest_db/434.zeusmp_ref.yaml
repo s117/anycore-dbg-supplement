@@ -1,0 +1,12 @@
+tsl000aa:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+zeusmp_base.riscv:
+  sha256: 9c9722beb82b8d4812a3d3fe8be0f3fac834d9cc4a8d943e904f8317d7cd57f1
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+zmp_inp:
+  sha256: b9ace079030d0983756196e484f2cee55c30137e04ae36de2f76ccd5caea34d2
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN

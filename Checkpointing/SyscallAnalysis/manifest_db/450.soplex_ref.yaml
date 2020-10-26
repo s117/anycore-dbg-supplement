@@ -1,0 +1,12 @@
+pds-50.mps:
+  sha256: ae266eb1e5b0b9e8bbbaea71c9653274ac188c8f7c042e5777d9733b2ee150fe
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+pds-50.mps.info:
+  sha256: null
+  spec_input: false
+  usage: FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+soplex_base.riscv:
+  sha256: be38dcc0c254350d7688c45fcb3be0827612a4e753132ab8805fc31740e1a817
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

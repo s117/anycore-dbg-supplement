@@ -1,0 +1,14 @@
+RD:
+  pds-50.mps:
+    isdir: false
+    sha256: ae266eb1e5b0b9e8bbbaea71c9653274ac188c8f7c042e5777d9733b2ee150fe
+  soplex_base.riscv:
+    isdir: false
+    sha256: be38dcc0c254350d7688c45fcb3be0827612a4e753132ab8805fc31740e1a817
+RDWR: {}
+WR:
+  pds-50.mps.info:
+    isdir: false
+    sha256: null
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

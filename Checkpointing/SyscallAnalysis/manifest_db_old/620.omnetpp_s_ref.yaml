@@ -1,0 +1,62 @@
+RD:
+  .:
+    isdir: true
+    sha256: null
+  /dev/urandom:
+    isdir: false
+    sha256: null
+  ned:
+    isdir: true
+    sha256: null
+  ned/EtherAppCli.ned:
+    isdir: false
+    sha256: ed3077e3ab0c54aafa68b72aab0693a6e359e299a15c6392db39d5d187b36c0b
+  ned/EtherAppSrv.ned:
+    isdir: false
+    sha256: 3a0d3ca13113280a6f3c8fa6efce00c5cdfe82f2b588ddc355c4e2125cee158e
+  ned/EtherBus.ned:
+    isdir: false
+    sha256: 078e1fbe1e048a4ca746ce507b8a5498a829dc8c4772e7a4ad6410ea554dec27
+  ned/EtherEncap.ned:
+    isdir: false
+    sha256: 3b401050987a4c8d05d9114e3fce25f2624da856ab1330c0d5c1180eb2e9b6fd
+  ned/EtherHost.ned:
+    isdir: false
+    sha256: 23c12d3d5a4a99e9d9737a3c9a77b74743142953d46aac986c28e1f34dd35367
+  ned/EtherHub.ned:
+    isdir: false
+    sha256: b3a66b0440a1f3e3f6f95ff4995cc90682219847f356e53557a6c697e9dca62a
+  ned/EtherLLC.ned:
+    isdir: false
+    sha256: 33410cde7c4ff8a73e3c86e86f7ab058646eb935deb82ff2c0782c5e0eadc236
+  ned/EtherMAC.ned:
+    isdir: false
+    sha256: 99a50a21a249cf0ae07ccc09a092a238c9957092fdb54b042e7115a3fe553c1e
+  ned/EtherSwitch.ned:
+    isdir: false
+    sha256: 6100600388f42aad85f61dbe062f570d850b0642f2190181d0026aaa62cda3ab
+  ned/LargeNet.ned:
+    isdir: false
+    sha256: 4a5788fe004b377abcd9f2ddf0e454a335039eda217f87d458b21d53456faf1d
+  ned/MACRelayUnit.ned:
+    isdir: false
+    sha256: 3c7712cfbbfecc741894a65513afa1553b1b1e98d649452ad1f24e6fe88668b1
+  ned/MACRelayUnitNP.ned:
+    isdir: false
+    sha256: 7be408960c803b276e85382915987836ac30e031d60bcf4a666aa3249407fd83
+  ned/MACRelayUnitPP.ned:
+    isdir: false
+    sha256: b6deadc1b82e4a015a8530d0b85d6ffdeb34356751c390b34dab8bc9b9371151
+  omnetpp.ini:
+    isdir: false
+    sha256: 8ad8285ecaa8f4cedbb1e6d02015c29a2cb9f3c5bc6a962e868237f98f850206
+  omnetpp_s_base.riscv-m64:
+    isdir: false
+    sha256: f8097b155df57a5e078b981b25e7c41b1d718ffdbda7351f6f5bfee6eff603b1
+RDWR:
+  General-0.sca:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: false
+contains_out_of_tree_ref: true

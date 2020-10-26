@@ -1,0 +1,23 @@
+RD:
+  foreman_qcif.yuv:
+    isdir: false
+    sha256: 607a744279bb916e7e03f95bb1cf3605b7218b00a94a6135563d5868ce041a7f
+  foreman_ref_encoder_baseline.cfg:
+    isdir: false
+    sha256: a571593edcc37f2553125b24d79d5296192f12887474527fa9d354edf441820a
+  h264ref_base.riscv:
+    isdir: false
+    sha256: cd2f2f707629691854367dbeca45c9f79b204a097d698f9c3c8077ec4349e9c0
+  leakybucketrate.cfg:
+    isdir: false
+    sha256: afb86151641028d117af2214b293a012b64e4fb5d12377a221155945276ece13
+RDWR:
+  foreman_ref_baseline_leakybucketparam.cfg:
+    isdir: false
+    sha256: null
+WR:
+  foreman_qcif.264:
+    isdir: false
+    sha256: null
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

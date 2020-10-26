@@ -1,0 +1,12 @@
+hmmer_base.riscv:
+  sha256: c10415efbd5fc3dcd2d50d4d4d798f70784c9e052c5af6440b464700afd6e362
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+nph3.hmm:
+  sha256: c96306cdef73aad17736276427d90fba798f5182199edb50ddee6a595ac1e210
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+swiss41:
+  sha256: 9d08e0f684621b3a2ed85bc24f1a3b1a5c33207ae740ebf6bb224fd870daa2ca
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN

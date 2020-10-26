@@ -1,0 +1,23 @@
+RD:
+  cytosine.2.inp:
+    isdir: false
+    sha256: ea3544f06d3fd263b9a208e35784ddae5dc98def0bc2f8ce8089f1c6aa201a7a
+  gamess_base.riscv:
+    isdir: false
+    sha256: 3639f665d07c7cf00da049a22f5e18085418b8decd499c5ae7cd3df100460dce
+RDWR:
+  cytosine.F10:
+    isdir: false
+    sha256: null
+  cytosine.F15:
+    isdir: false
+    sha256: null
+  cytosine.dat:
+    isdir: false
+    sha256: null
+  cytosine.eigenv.txt:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

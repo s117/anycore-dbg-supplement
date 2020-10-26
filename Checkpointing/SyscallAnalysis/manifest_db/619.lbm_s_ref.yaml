@@ -1,0 +1,8 @@
+200_200_260_ldc.of:
+  sha256: 166083c206d6de7aa9388b6be65c7932a9834c39462ec462d2db6acecd587dae
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+lbm_s_base.riscv-m64:
+  sha256: 0ca9c10ecc83c8c783c8e4110204727a8d01e7ad40a06c2e901571d360b9d6ca
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

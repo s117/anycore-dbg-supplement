@@ -1,0 +1,24 @@
+foreman_qcif.264:
+  sha256: null
+  spec_input: false
+  usage: FUSE_CREATE | FUSE_OPEN
+foreman_qcif.yuv:
+  sha256: 607a744279bb916e7e03f95bb1cf3605b7218b00a94a6135563d5868ce041a7f
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+foreman_ref_baseline_leakybucketparam.cfg:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+foreman_ref_encoder_baseline.cfg:
+  sha256: a571593edcc37f2553125b24d79d5296192f12887474527fa9d354edf441820a
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+h264ref_base.riscv:
+  sha256: cd2f2f707629691854367dbeca45c9f79b204a097d698f9c3c8077ec4349e9c0
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+leakybucketrate.cfg:
+  sha256: afb86151641028d117af2214b293a012b64e4fb5d12377a221155945276ece13
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN

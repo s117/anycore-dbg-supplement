@@ -1,0 +1,16 @@
+/usr/include:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_ABS_REF
+gcc-pp.c:
+  sha256: 3befffe9750ea59b7867901ac3cd3f4ffd91c511f6df84b3898b7335ea76d964
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+gcc-pp.opts-O5_-finline-limit_24000_-fgcse_-fgcse-las_-fgcse-lm_-fgcse-sm.s:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+sgcc_base.riscv-m64:
+  sha256: 313fdd81ec0c48e331cbc222ab010fe38325cef51ff52693a80d82e9170cdaf5
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

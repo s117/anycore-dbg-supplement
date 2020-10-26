@@ -1,0 +1,8 @@
+sroms_base.riscv-m64:
+  sha256: 32527ad7c54834d1d577ffb4c9848e3e4830baf39b85509486b2e977e56f465b
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+varinfo.dat:
+  sha256: cfa6a5747f6c749de5367c90169bb961ecfb099b1d609182a4e1592ed6bc5101
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN

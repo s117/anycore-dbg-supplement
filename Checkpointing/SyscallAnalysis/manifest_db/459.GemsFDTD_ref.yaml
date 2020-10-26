@@ -1,0 +1,16 @@
+GemsFDTD_base.riscv:
+  sha256: 1adf8ebf163c9626b0ddcb35d9ebf26c85587b95e6b46b68aa1d96753e373960
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+sphere.pec:
+  sha256: 1b73717164dacbe65f6d9b765f2cc846d54311600750215de3ef871a17eb3361
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+sphere_td.nft:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+yee.dat:
+  sha256: e6d07e7717168c64550760e46c4576a7b38e33967cc5f73dde1cdedb3cc17a93
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN

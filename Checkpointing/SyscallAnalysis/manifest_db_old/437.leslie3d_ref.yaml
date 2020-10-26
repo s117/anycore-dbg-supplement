@@ -1,0 +1,14 @@
+RD:
+  /etc/localtime:
+    isdir: false
+    sha256: null
+  leslie3d_base.riscv:
+    isdir: false
+    sha256: 65dba7485807bf7b5a25b9c6282579aec95ea7af61d118b7d2a1547f65029e22
+RDWR:
+  leslie3d.out:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

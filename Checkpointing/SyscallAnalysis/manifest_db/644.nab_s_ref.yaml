@@ -1,0 +1,12 @@
+3j1n/3j1n.pdb:
+  sha256: 9b916ff724293983513a5af849511edca1181ee6db89f0f21ab5c007402256f1
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+3j1n/3j1n.prm:
+  sha256: b29ec8a3307a28609fa27e75515d3ad57d53686f794a89c751fdc48e17c50537
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+nab_s_base.riscv-m64:
+  sha256: 73667585f9a5195f02f16b8eb22f1724897bee27928a662c663a6f1bba085395
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

@@ -1,0 +1,14 @@
+RD:
+  zeusmp_base.riscv:
+    isdir: false
+    sha256: 9c9722beb82b8d4812a3d3fe8be0f3fac834d9cc4a8d943e904f8317d7cd57f1
+  zmp_inp:
+    isdir: false
+    sha256: b9ace079030d0983756196e484f2cee55c30137e04ae36de2f76ccd5caea34d2
+RDWR:
+  tsl000aa:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

@@ -1,0 +1,4 @@
+libquantum_base.riscv:
+  sha256: b473072074a4094738f999ee1d010a97f6b8e07862193f88c2f958f80cb505e1
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

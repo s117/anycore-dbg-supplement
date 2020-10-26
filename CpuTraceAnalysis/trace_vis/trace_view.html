@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Trace Timeline</title>
+
+    <style type="text/css">
+        body, html {
+            /*font-family: sans-serif;*/
+            font-family: monospace;
+            /*background-color: dimgray;*/
+        }
+
+        /*input {*/
+        /*    background-color: lightgray;*/
+        /*}*/
+        /*button{*/
+        /*    background-color: lightgray;*/
+        /*}*/
+
+        p {
+            max-width: 800px;
+        }
+    </style>
+
+    <script src="node_modules/vis-timeline/standalone/umd/vis-timeline-graph2d.min.js"></script>
+    <link href="node_modules/vis-timeline/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css"/>
+    <script>
+        function clearSelection() {
+            var sel;
+            if ((sel = document.selection) && sel.empty) {
+                sel.empty();
+            } else {
+                if (window.getSelection) {
+                    window.getSelection().removeAllRanges();
+                }
+                var activeEl = document.activeElement;
+                if (activeEl) {
+                    var tagName = activeEl.nodeName.toLowerCase();
+                    if (tagName === "textarea" ||
+                        (tagName === "input" && activeEl.type === "text")) {
+                        // Collapse the selection to the end
+                        activeEl.selectionStart = activeEl.selectionEnd;
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .vis-custom-time {
+            background-color: orangered;
+            /*border-color: red;*/
+            /*color: red;*/
+        }
+    </style>
+</head>
+<h1>Trace Timeline</h1>
+
+<div id="visualization"></div>
+
+<br/>
+
+<label for="curr_marker_pos">Marker position: </label>
+<input type="number" id="curr_marker_pos" value="0"
+       onmouseover="this.select()"
+       onmouseleave="clearSelection()"
+>
+<button id="update_marker">Move to</button>
+
+
+<br/>
+<br/>
+<label>Info: </label><label id="info_bar"></label>
+<br/>
+
+<script type="text/javascript">
+    var data_src = {};
+
+    var no_cache_headers = new Headers();
+    no_cache_headers.append('pragma', 'no-cache');
+    no_cache_headers.append('cache-control', 'no-cache');
+
+    var no_cache_init = {
+        method: 'GET',
+        headers: no_cache_headers,
+    };
+
+    fetch("data_src.json", no_cache_init).then(
+        resp => resp.json()
+    ).then(
+        json => {
+            data_src = json;
+            update_timeline(json);
+        }
+    );
+
+    function update_timeline(data_src) {
+        // DOM element where the Timeline will be attached
+        var container = document.getElementById('visualization');
+        var info_bar = document.getElementById('info_bar')
+        // Create a DataSet (allows two way data-binding)
+        var items = new vis.DataSet();
+
+        var largest_start_time = 0;
+        var largest_end_time = 0;
+
+        var date = vis.moment(0);
+        for (var i = 0; i < data_src.length; ++i) {
+            var call_record = data_src[i]
+            var record_content = call_record["content"]
+            var record_start = call_record["start"]
+            var record_end = call_record["end"]
+            var record_type = call_record["type"]
+            var new_item = {
+                id: i,
+                content: record_content,
+                title: record_content + ", lifespan " + record_start + " - " + record_end,
+                start: vis.moment(record_start),
+                end: vis.moment(record_end)
+            }
+
+            if (record_start > largest_start_time)
+              largest_start_time = record_start;
+            if (record_end > largest_end_time)
+              largest_end_time = record_end;
+
+            if (record_type != "FunctionRecord")
+                new_item.style = "color: red;";
+
+            items.add(new_item);
+        }
+
+
+        function customOrder(a, b) {
+            // order by id
+            return b.id - a.id;
+        }
+
+        // Configuration for the Timeline
+        var options = {
+            order: customOrder,
+            editable: false,
+            margin: {item: 0},
+            format: {
+                minorLabels: function (date, scale, step) {
+                    // must have a space otherwise it will get mad.
+                    return new Date(date).getTime() + "";
+                },
+                majorLabels: function (date, scale, step) {
+                    // must have a space otherwise it will get mad.
+                    return new Date(date).getTime() + "";
+                }
+            },
+            showMinorLabels: true,
+            showMajorLabels: false,
+            type: 'range'
+            // timeAxis:{scale:'millisecond'}
+        };
+
+
+        // Create a Timeline
+        var timeline = new vis.Timeline(container, items, options);
+
+        timeline.setWindow(largest_start_time, largest_end_time);
+        timeline.redraw();
+
+        function update_height() {
+            var win = window,
+                doc = document,
+                docElem = doc.documentElement,
+                body = doc.getElementsByTagName('body')[0],
+                x = win.innerWidth || docElem.clientWidth || body.clientWidth,
+                y = win.innerHeight || docElem.clientHeight || body.clientHeight;
+            timeline.setOptions(
+                {height: y - 150 + "px"}
+            );
+        }
+
+        update_height();
+        document.body.onresize = function () {
+            update_height();
+        }
+
+
+        // Setup the time marker
+        var marker_id = timeline.addCustomTime(vis.moment(0))
+        timeline.setCustomTimeMarker(
+            "Cycle: " + Number(document.getElementById("curr_marker_pos").value),
+            marker_id,
+            false
+        )
+
+        document.getElementById("update_marker").onclick = function (ev) {
+            var new_time = Number(document.getElementById("curr_marker_pos").value)
+            new_time = vis.moment(new_time)
+            timeline.setCustomTime(new_time, marker_id)
+            timeline.setCustomTimeMarker(
+                "Cycle: " + Number(document.getElementById("curr_marker_pos").value),
+                marker_id,
+                false
+            )
+        }
+
+        timeline.on('timechange', function (ev) {
+            if (ev.id === marker_id) {
+                document.getElementById("curr_marker_pos").value = Number(ev.time)
+                timeline.setCustomTimeMarker(
+                    "Cycle: " + Number(ev.time),
+                    marker_id,
+                    false
+                )
+            }
+        })
+
+
+        // Setup the status bar
+        info_bar.innerText = "Ready"
+        timeline.on("mouseOver", function onMouseOver(event) {
+            if (event.item) {
+                timeline.setSelection([event.item]);
+            }
+        })
+
+        timeline.on("click", function onClick(event) {
+            if (event.item) {
+                info_bar.innerText = "[" + data_src[event.item].start + "~" + data_src[event.item].end + "] " +
+                    data_src[event.item].content;
+            }
+        })
+
+        timeline.on("doubleClick", function onDoubleClick(event) {
+            if (event.item) {
+                timeline.focus(event.item)
+            }
+        })
+
+        // var ordering = document.getElementById('ordering');
+        // ordering.onchange = function () {
+        //     timeline.setOptions({
+        //         order: ordering.checked ? customOrder : () => {
+        //         }
+        //     });
+        // };
+    }
+
+</script>
+</body>
+</html>

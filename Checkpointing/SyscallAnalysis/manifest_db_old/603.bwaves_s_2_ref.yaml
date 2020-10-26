@@ -1,0 +1,14 @@
+RD:
+  speed_bwaves_base.riscv-m64:
+    isdir: false
+    sha256: 166d6e4c35a3426677858e767fa0cb53aea03e5503578131f825f814ddc65816
+RDWR:
+  refspeed2_dqnrm.log:
+    isdir: false
+    sha256: null
+  refspeed2_resid.log:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

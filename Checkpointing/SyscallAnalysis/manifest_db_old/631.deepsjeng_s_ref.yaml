@@ -1,0 +1,11 @@
+RD:
+  deepsjeng_s_base.riscv-m64:
+    isdir: false
+    sha256: 0c27a49704b134c499740a32c4e458646c8b55bf231e752a8f2c42e2f43577e3
+  ref.txt:
+    isdir: false
+    sha256: d8f179f0df5f8b8e7eff0a03116938757e23fe6d4968c3d7b0a123fb127de3c2
+RDWR: {}
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

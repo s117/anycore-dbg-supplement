@@ -1,0 +1,68 @@
+gobmk_base.riscv:
+  sha256: cf0b3584046d3967e1a0a349b3bec4d5a079b219f8abbd9bef928751b4f37c75
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+golois/Goemate990902-15.sgf:
+  sha256: c6b3334284582a871398f7d6fee23a6d51b98d32d186cf51ea680cfc7f552116
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Goemate990902-5.sgf:
+  sha256: 6ee66aba830fe33652928b40bd7ee3097951c7a73a3bbfff20b37dfa263a4edf
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Goemate990904-4.sgf:
+  sha256: 03461e1d091b1d59463181b6766db90c6d3777ccc9b938872f48f4401ee630af
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Goemate991109-1.sgf:
+  sha256: 38ae7c8c47663c94236c128585ad378a2a6a7e7191b45bd985dcedb760012ffa
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Handtalk980821-2.sgf:
+  sha256: f5d067992dfea88900ae15d7c537a71a00056673182cf90713ca69071bcf946b
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Handtalk980824-1.sgf:
+  sha256: d98644732bebaa8fa7570cb215992fedd7bbb14f5c46e47912a3903fe7d41336
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Handtalk980826-1.sgf:
+  sha256: 9047088e8afd01c270fdd2e0894f08774cf679db69a943dc13087b29958eff3d
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Jimmy990711-2.sgf:
+  sha256: 1741580a8c85894aaa04dbfafcdffcf4caa71a99574798a119724837f4c432ad
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Prendre990424-1.sgf:
+  sha256: 9354ec262ddd802280bc3d5161e7d988d38bb440b1fa3f33874743b3a48bed50
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Prendre990430-1.sgf:
+  sha256: efa7e752619df01d57837807a230192bab3b21b01fca2b51c0525a3232905592
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Prendre990502-1.sgf:
+  sha256: 67a9314d1caf628926fa354b757fa7b60c029bac18c3725a17effcb0f100009c
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/Prendre990630-1.sgf:
+  sha256: 4ab675c43ee356e890523bd43aeaf6e35509979a549bdfdcfecba517524020f1
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/knippel.sgf:
+  sha256: 9a5e9a69456ee2a812f6db62bc8bc6f6fb6f34b090d0eb7dd3916244fc681cf5
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/ko990604.sgf:
+  sha256: 5f43906ebea100165f1ff9e98126ff8367ebff48c0f74b3503b570e24bebdc1b
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/test.sgf:
+  sha256: ec565a037235fa19eb0b85cbe8ebed3270e67d232a8a62ee7579a2c7090f4815
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+golois/web000103.sgf:
+  sha256: e6a31b6ad933ce4ef6d334ae262d72d37f488844bfc5d6035d357412ae7ac0e3
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN

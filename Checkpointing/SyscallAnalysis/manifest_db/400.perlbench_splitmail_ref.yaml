@@ -1,0 +1,212 @@
+/etc/localtime:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN | FUSE_ABS_REF
+cpu2006_mhonarc.rc:
+  sha256: a735648cbf3fe3366fb58e2a7ca528de03c85c04d37ecf54554b5ef720fe6b2c
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+lib/AutoLoader.pm:
+  sha256: ccb5eff3960d7d550cc059577d4fd8b45fa84cf67cca6813631c5b77781a4c4c
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Carp.pm:
+  sha256: 75519c1b052f3a0abcb6977565d2d57590a62fe85a79521f3b8b60afcbc87aea
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Config.pm:
+  sha256: e231d99d158b17516c6bcf5c5f755118e72e23e413e8143bc6121f218d8eed77
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Date/Format.pm:
+  sha256: 64f401988d05f2a0ceaf8a561c25dc1198cfefbe90e5f087da733e4cd353c8b8
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Date/Parse.pm:
+  sha256: fa32f927abc2ef40f291392c4a294cf7c626d03234eff9f6799441c52189daeb
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Digest/MD5.pm:
+  sha256: 8c3038748d07f56a0badaa4c78af92ea4132430dbf7fe74b9183fb24008aa034
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/DynaLoader.pm:
+  sha256: e22e9e854d8954e82ee926ec6fe29dd020df2f47f1e73870503c116aaf8da384
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Exporter.pm:
+  sha256: 0f0cc1418492a7b151dea525b90accdd6f3d93cfad9f8c7afebed26d1ed68387
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Exporter/Heavy.pm:
+  sha256: a16bb405db379b9e8d105580839b6f74592aa5c4e0647f3cbd3538e4475565e8
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Fcntl.pm:
+  sha256: 83ea2e7d77f90ff848ceb057478ffe97baabcc34d62bc8a6f544a0cc4039bc9b
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/File/Basename.pm:
+  sha256: 9a8e4903721d5b2adfc783a07544b0e3ba5cbf85fef5b119110132bba63b3f5a
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/File/Path.pm:
+  sha256: 69a28ed08dc921ab20ad515198958a01d761f3ac9612718388901db988238f31
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/File/Spec.pm:
+  sha256: b6acffb8be69811b2bc58236ef49dfb7f6cf3ef82c39c4bbfa4b51b3d94b00ce
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/File/Spec/Unix.pm:
+  sha256: 24e479f48b718b5b8936c64bbca35c66aa1580aa1a336933a3e4aa6e8c7eb62f
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/File/Temp.pm:
+  sha256: 0c59f148228b85851bb530c5e7d34c60b7e16e30db1852ff06998c7d655a8e1e
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Getopt/Long.pm:
+  sha256: f33c50d06082edd3eba6095de4fd8f870a7010ea1a7309fee2705e0bff2d51b2
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/MHonArc/RFC822.pm:
+  sha256: 1227faa5fe3f8173fd8a76bd82e689d5254009e658ec5b7bef584e082128d159
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Mail/Header.pm:
+  sha256: a0871336e93cecf086014ecb4a669422679e2b51587465c1ec406cc93d0a9d01
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Mail/Util.pm:
+  sha256: e4972df3bcf10d291fc70c66d1ddd70184d9b6c63712d555e9bca61e599e475a
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Symbol.pm:
+  sha256: 480003e567b804a5c64054e8fe251964b98c8c632e7fa7cd655261722b9d1b94
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Time/Local.pm:
+  sha256: e0f50ece6d8aeb0f7164c95b1fb44e49a393c000e6f92f6d4a70a8d0a89c3586
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/Time/Zone.pm:
+  sha256: 2b99bdf9ce6807fe31d177bf11c90878b267218d62fc6938e88eec06f1c7d38f
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/constant.pm:
+  sha256: 513a2e23441d00066423f9c7f6c731b35344d26b70aeea65a65db03c3c21f8f0
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/ewhutil.pl:
+  sha256: af1b388a536c2cfb747a753efda08701d15980501bf6aec4f60ab2bb7654b5e9
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/integer.pm:
+  sha256: 564f04febde73f6340b217838add0f9090647c433fc97640e96c7a40e8db01c9
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/locale.pm:
+  sha256: a8455f5e250f979f997d277c2d3566ae4dfebddfa6ff395e033989dfc21aa80a
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mailcomp.pm:
+  sha256: 0be8c063bde6bb6e603e6ed29dab83334ee5aff3b48f8817c7a6765ee9aa5eb3
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhamain.pl:
+  sha256: 55a4fe0e8fc70054c34d90720c6d67f41625bb7753ebcbbb97a47ee64e81c77a
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhdb.pl:
+  sha256: 5c8ebd34035b1680444b3dcfad7fb75ab5fe425e7abed57f1afd763b9ffe0f6f
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhdysub.pl:
+  sha256: 2b9e4ebaee1c874d425c4dd18e4fbd26efa579f5ae7b2189a14083e34aa9ee39
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhfile.pl:
+  sha256: fbd5d6bf4ade1b0de3ff162d62c7acb267fa98d972b1a45dc8be1344a077a6a1
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhidxrc.pl:
+  sha256: 0b0134ccf8ce59886207aced18d9d5631b434a7365eba6108703559037d102d4
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhindex.pl:
+  sha256: 1c466469ec5d14d7d608ef1ac7a54a61f1969a830055f906694c91a05ea09045
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhinit.pl:
+  sha256: e64a727e3c01791a13a5bd1907c73d4c63e595d3b35feaaccfbe6185361c6369
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhlock.pl:
+  sha256: 6e91e2d7240f155a7ead0c3269e3f82f4530d566ad07b954e4b64ca1225de89f
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhopt.pl:
+  sha256: bb67fce149483b82211071e41a41fe252f058f111f6e1299101e7bbebaebd1b4
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhrcfile.pl:
+  sha256: 06365f61f419c892ab06bad9d56576be729261e4933cb53946ef70441fef612f
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhrcvars.pl:
+  sha256: cbdb07ff7b97ce78522c5bd0c7e282e4cf29c9ac99448faa43d8d76fbf13d77a
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhthread.pl:
+  sha256: e744c59f6588012f04cfb956f3e75e7a70a76ce598c1b824a607a57ec80bcc3c
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhtime.pl:
+  sha256: bb428f6cb907b39e3054b41d3264abf886e589de44792be12882062d404bff30
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhtxtplain.pl:
+  sha256: 6107a0d6cc9924e9cae1f7762940d3e8bdfeff22b485b1198d24e6ffb085afc9
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/mhutil.pl:
+  sha256: c459ec386afe356434868306d03f3c1f191af4dcd160f350ef2358752b650762
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/osinit.pl:
+  sha256: 6aae92fdf0ffa4f4ab26c82704f89910eb307228ee12120dfad3df6423106e1a
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/re.pm:
+  sha256: 3328c71a40a8345cbc78b39ffb7150aa4f075ef8be757c8e2bac60e0d5fe36b0
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/readmail.pl:
+  sha256: 6d4d4062ee04a44ed1f3e717461d775dd22aff6717530cbb4ba19da38df7a88f
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/strict.pm:
+  sha256: 3e3ce9eade53c7c01ac7b91d474eb28d5d537b3b1a48cce21b9c8ed198a72e97
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/vars.pm:
+  sha256: c3bee49d33431b6f7f10c0a490807091357147e8ce2e19b8ed22d8defb765f50
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/warnings.pm:
+  sha256: 9f7f2bb372235a237a9eb50b951e6a7f3b7796ef51f7c436f5d93ceb36d05303
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+lib/warnings/register.pm:
+  sha256: 8fb4f8f090ff3d2038081a62607e287f4609516919188dad7df0a69a75215a31
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+perlbench_base.riscv:
+  sha256: 72f37370a88eed8b8b84e319fbc39b81f1ba920f37b675686b5d2b941bfe6918
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+splitmail.pl:
+  sha256: 3da2bfd0b92f9b4bee8861a4a0388abe270c50476413216cc986cd4252582c06
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

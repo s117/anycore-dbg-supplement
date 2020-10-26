@@ -1,0 +1,12 @@
+refspeed1_dqnrm.log:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+refspeed1_resid.log:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+speed_bwaves_base.riscv-m64:
+  sha256: 166d6e4c35a3426677858e767fa0cb53aea03e5503578131f825f814ddc65816
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

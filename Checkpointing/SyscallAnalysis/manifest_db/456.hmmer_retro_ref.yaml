@@ -1,0 +1,12 @@
+hmmer_base.riscv:
+  sha256: c10415efbd5fc3dcd2d50d4d4d798f70784c9e052c5af6440b464700afd6e362
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+retro.hmm:
+  sha256: 71e0d3d94a96030eb79372b3d2576b5f60fb5da629b1e41137a04137f7981a56
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+retro.hmm.new:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN

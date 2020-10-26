@@ -1,0 +1,25 @@
+cytosine.2.inp:
+  sha256: ea3544f06d3fd263b9a208e35784ddae5dc98def0bc2f8ce8089f1c6aa201a7a
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+cytosine.F10:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+cytosine.F15:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_REMOVE
+    | FUSE_OPEN
+cytosine.dat:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+cytosine.eigenv.txt:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+gamess_base.riscv:
+  sha256: 3639f665d07c7cf00da049a22f5e18085418b8decd499c5ae7cd3df100460dce
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

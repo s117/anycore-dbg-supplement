@@ -1,0 +1,12 @@
+inp.in:
+  sha256: aceb933893790cd957ec9d03d34660ba756a70d87b65caa9809e3a48443ba849
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+mcf.out:
+  sha256: null
+  spec_input: false
+  usage: FUSE_STAT | FUSE_WRITE_DATA | FUSE_CREATE | FUSE_OPEN
+mcf_s_base.riscv-m64:
+  sha256: af54f80d0834548ae1a5dfb4b53f4925b2e32d32ed8e6d28692bd4bd80ea12c7
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

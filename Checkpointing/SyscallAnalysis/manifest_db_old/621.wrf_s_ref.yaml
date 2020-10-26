@@ -1,0 +1,38 @@
+RD:
+  GENPARM.TBL:
+    isdir: false
+    sha256: 9c02832a0e4a2ecaf47fcee485539aad95cd732c379c5c258161a88eb3d25ea2
+  LANDUSE.TBL:
+    isdir: false
+    sha256: eda83ae941df7dc56e37b3b8502b6b61977a0cc31118bec88bda4c8c689b4c8f
+  RRTM_DATA:
+    isdir: false
+    sha256: 45dc91514cf018e133301a1b667deeb17f5b65c49ccfaa9140761a8028bc8ae0
+  SOILPARM.TBL:
+    isdir: false
+    sha256: a142463b48b358426f551a80d84da947a2b623cd95d038797423fb4bad72cbf0
+  VEGPARM.TBL:
+    isdir: false
+    sha256: d91ffdba5bf69fab05dcff6cd66c24fdba9f90bc91c6a08722df76815a567dc6
+  namelist.input:
+    isdir: false
+    sha256: 811286c7fd18316ffcd9c57e55157eddcfa1e764fc8d4dc9dbfc43afdf0eb5bb
+  wrf_s_base.riscv-m64:
+    isdir: false
+    sha256: 6cd588f8c10324a17a2832045867c2085b61052c2364ec418efe3c46487e1d6e
+  wrfbdy_d01:
+    isdir: false
+    sha256: c8de386341befd341eee6c640e2023da99bda1d97970786b0c91f3322454e394
+  wrfinput_d01:
+    isdir: false
+    sha256: e1d2fec22a38bdda3cb00aa44cc23f2868323927808e740661457c87bbc91e58
+RDWR:
+  namelist.output:
+    isdir: false
+    sha256: null
+  wrfout_d01_2000-01-24_15_00_00:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

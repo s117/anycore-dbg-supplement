@@ -1,0 +1,6 @@
+pk:
+  - __walk_create
+  - __walk
+  - pte_ppn
+  - pt_idx
+  - __va_avail

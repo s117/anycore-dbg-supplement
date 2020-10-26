@@ -1,0 +1,8 @@
+sjeng_base.riscv:
+  sha256: f8556bcfbc75a12640333513f9c9ffaf67df786808facd928587d88cea20a800
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+test.txt:
+  sha256: ee52838fd6d59b177ff8400aba690470b3d1815eb6c80a7ac206c0ef3850a589
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN

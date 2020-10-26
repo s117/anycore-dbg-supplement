@@ -1,0 +1,8 @@
+RD:
+  libquantum_base.riscv:
+    isdir: false
+    sha256: 3819486f8db037e6e03e4dc6b8493815a5ec760031ee3db000d236209ef785df
+RDWR: {}
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

@@ -1,0 +1,8 @@
+bzip2_base.riscv:
+  sha256: d1a81b85f0cc57e26b636af77bb749c6c5c448e6aed9ffe12ae13a79b6833e54
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN
+chicken.jpg:
+  sha256: 93c133b5238cbe57536b3848715aba494bb9f1c1797866cbff24a9954cc061f1
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

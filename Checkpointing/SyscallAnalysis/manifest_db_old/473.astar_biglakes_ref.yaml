@@ -1,0 +1,14 @@
+RD:
+  BigLakes2048.bin:
+    isdir: false
+    sha256: fbee0bac611959f41c1ac3738428aab636ffbfcbd2ef9b3a53a35f9039761b7b
+  BigLakes2048.cfg:
+    isdir: false
+    sha256: 870ff4f4f16b3bd8f93a013ca4809bf9ed14f42b1172ca11313f4b28e34f21cc
+  astar_base.riscv:
+    isdir: false
+    sha256: dcbd43fd9a8a398f29960dbcbf8496f22082e9771b0a31504e4ba1b22e5725ba
+RDWR: {}
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

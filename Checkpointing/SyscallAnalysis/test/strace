@@ -1,0 +1,39 @@
+[79] sys_fstatat (
+  uint64_t dirfd = 18446744073709551516
+  path_in_t pname = 0x00000000001BCDC0|Li9saWIvNS44Ljc=|
+  uint64_t len = 12
+  ptr_out_t pbuf = 0x000000007FBED8F0
+  uint64_t flags = 0
+) -> -2
+
+[79] sys_fstatat (
+  uint64_t dirfd = 18446744073709551516
+  path_in_t pname = 0x00000000001BCDC0|Li9saWIvc3BlYy1jcHU=|
+  uint64_t len = 15
+  ptr_out_t pbuf = 0x000000007FBED8F0
+  uint64_t flags = 0
+) -> -2
+
+[79] sys_fstatat (
+  uint64_t dirfd = 18446744073709551516
+  path_in_t pname = 0x00000000001BCDC0|bGliLzUuOC43L3NwZWMtY3B1|
+  uint64_t len = 19
+  ptr_out_t pbuf = 0x000000007FBED8F0
+  uint64_t flags = 0
+) -> -2
+
+[79] sys_fstatat (
+  uint64_t dirfd = 18446744073709551516
+  path_in_t pname = 0x00000000001BCDC0|bGliLzUuOC43|
+  uint64_t len = 10
+  ptr_out_t pbuf = 0x000000007FBED8F0
+  uint64_t flags = 0
+) -> -2
+
+[79] sys_fstatat (
+  uint64_t dirfd = 18446744073709551516
+  path_in_t pname = 0x00000000001BCDC0|bGliL3NwZWMtY3B1|
+  uint64_t len = 13
+  ptr_out_t pbuf = 0x000000007FBED8F0
+  uint64_t flags = 0
+) -> -2

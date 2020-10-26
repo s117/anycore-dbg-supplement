@@ -1,0 +1,20 @@
+RD:
+  bwaves.in:
+    isdir: false
+    sha256: 2ab5faa2c8b49fc7618803086c47a4587499437da0de797ab1e4497f66d6c01f
+  bwaves_base.riscv:
+    isdir: false
+    sha256: 075ca3bfc41968728d40548b770095f1beaed13abd169315bf89e950df84d773
+RDWR:
+  bwaves.out:
+    isdir: false
+    sha256: null
+  bwaves2.out:
+    isdir: false
+    sha256: null
+  bwaves3.out:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

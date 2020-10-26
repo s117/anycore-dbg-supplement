@@ -1,0 +1,17 @@
+RD:
+  /usr/include:
+    isdir: true
+    sha256: null
+  expr.in:
+    isdir: false
+    sha256: 5c16a4d1c4db2bdf04c9495125d097610186e527785d45f91037d0f2c6574019
+  gcc_base.riscv:
+    isdir: false
+    sha256: c38ce6251787b1ef8a0d4ac65e0a35041884751fab9a5a138413b9375a5739bc
+RDWR:
+  expr.s:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

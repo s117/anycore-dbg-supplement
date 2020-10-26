@@ -1,0 +1,12 @@
+.:
+  sha256: null
+  spec_input: true
+  usage: FUSE_STAT
+benchADM.par:
+  sha256: 03c68400786c0a86f1bde32ade2d0c8d1c1772151a8afd47e2a6110447ac89d7
+  spec_input: true
+  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
+cactusADM_base.riscv:
+  sha256: b4459e668fc3efe27e24affe194bbe65cade32dfc9065b50c8c3395e5714eea2
+  spec_input: true
+  usage: FUSE_READ_DATA | FUSE_OPEN

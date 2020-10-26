@@ -1,0 +1,14 @@
+RD:
+  .:
+    isdir: true
+    sha256: null
+  benchADM.par:
+    isdir: false
+    sha256: 03c68400786c0a86f1bde32ade2d0c8d1c1772151a8afd47e2a6110447ac89d7
+  cactusADM_base.riscv:
+    isdir: false
+    sha256: b4459e668fc3efe27e24affe194bbe65cade32dfc9065b50c8c3395e5714eea2
+RDWR: {}
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

@@ -1,0 +1,14 @@
+RD:
+  hmmer_base.riscv:
+    isdir: false
+    sha256: c10415efbd5fc3dcd2d50d4d4d798f70784c9e052c5af6440b464700afd6e362
+  retro.hmm:
+    isdir: false
+    sha256: 71e0d3d94a96030eb79372b3d2576b5f60fb5da629b1e41137a04137f7981a56
+RDWR:
+  retro.hmm.new:
+    isdir: false
+    sha256: null
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true

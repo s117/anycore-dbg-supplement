@@ -1,0 +1,14 @@
+RD:
+  astar_base.riscv:
+    isdir: false
+    sha256: dcbd43fd9a8a398f29960dbcbf8496f22082e9771b0a31504e4ba1b22e5725ba
+  rivers.bin:
+    isdir: false
+    sha256: 4f01f05e30da60d5e7f0a2c123a1b7447ac12286ee20dbe6320610a51f6d5c78
+  rivers.cfg:
+    isdir: false
+    sha256: fdce1a1637cf78d156a663723ee47308242eded7e8b1494e07f5a22efcb73806
+RDWR: {}
+WR: {}
+contains_abspath_ref: true
+contains_out_of_tree_ref: true
