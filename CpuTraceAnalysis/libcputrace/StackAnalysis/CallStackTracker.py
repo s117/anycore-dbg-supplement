@@ -213,22 +213,29 @@ class CallStackTracker:
     class RecoveredFunctionRecord(ActiveRecord):
         def __init__(self, cycle_start, cycle_end, frame,
                      callee_symbol, caller_symbol, caller_insn_addr):
-            # type: (int, Optional[int], CallStackTracker.StackFrame, SymbolTable.Symbol, SymbolTable.Symbol, int) -> None
-            super().__init__(cycle_start, cycle_end, None)
+            # type: (int, Optional[int], CallStackTracker.StackFrame, SymbolTable.Symbol, Optional[SymbolTable.Symbol], Optional[int]) -> None
+            super().__init__(cycle_start, cycle_end, frame)
             self.callee_symbol = callee_symbol
             self.caller_symbol = caller_symbol
             self.caller_insn_addr = caller_insn_addr
 
         def __str__(self):
-            return "%s:%s @ %s, called by %s:%s @ %s [Recovered]" % (
-                self.callee_symbol.symbol_name,
-                SymbolTable.format_addr(self.callee_symbol.start_addr),
-                self.callee_symbol.module_name,
+            if self.caller_symbol:
+                return "%s:%s @ %s, called by %s:%s @ %s [Recovered]" % (
+                    self.callee_symbol.symbol_name,
+                    SymbolTable.format_addr(self.callee_symbol.start_addr),
+                    self.callee_symbol.module_name,
 
-                self.caller_symbol.symbol_name,
-                SymbolTable.format_addr(self.caller_insn_addr),
-                self.caller_symbol.module_name,
-            )
+                    self.caller_symbol.symbol_name,
+                    SymbolTable.format_addr(self.caller_insn_addr),
+                    self.caller_symbol.module_name,
+                )
+            else:
+                return "%s:%s @ %s, called by ? [Recovered]" % (
+                    self.callee_symbol.symbol_name,
+                    SymbolTable.format_addr(self.callee_symbol.start_addr),
+                    self.callee_symbol.module_name
+                )
 
     class RecoveredExceptionRecord(ActiveRecord):
         def __init__(self, cycle_start, cycle_end, frame):
@@ -251,6 +258,7 @@ class CallStackTracker:
         self.scanner = scanner  # type: TraceCodePatternScanner.TraceCodePatternScanner
         self.frame_stack = CallStackTracker.Stack()
         self.is_frame_stack_complete = True
+        self.recovered_root_caller = None
         if history_recorder:
             self.history_recorder = history_recorder
         else:
@@ -291,8 +299,7 @@ class CallStackTracker:
 
         curr_tos_frame = self.frame_stack.peek_tos()
         if curr_tos_frame is None:
-            curr_tos_frame = CallStackTracker.RecoveredFrame(self.scanner.trace_reader.earliest_cycle(), cycle)
-            self.is_frame_stack_complete = False
+            curr_tos_frame = self.recover_live_frame(cycle, trig_pc)
 
         new_record = CallStackTracker.FunctionRecord(cycle, None, curr_tos_frame,
                                                      callee_symbol, caller_symbol, trig_pc)
@@ -301,7 +308,7 @@ class CallStackTracker:
     def track_func_return(self, cycle, addr_target, trig_pc):
         # type: (int, int, int) -> None
         if self.frame_stack.size() == 0:
-            self.frame_recover(cycle, addr_target, trig_pc, is_sret=False)
+            self.return_to_unknown_frame(cycle, addr_target, trig_pc, is_sret=False)
         else:
             popped_frame = self.frame_stack.pop_frame()
             popped_frame.end_frame(cycle)
@@ -368,14 +375,19 @@ class CallStackTracker:
             new_frame.add_active_record(new_record)
         else:
             if self.frame_stack.size() == 0:
-                self.frame_recover(cycle, addr_target, trig_pc, is_sret=True)
+                self.return_to_unknown_frame(cycle, addr_target, trig_pc, is_sret=True)
 
-    def frame_recover(self, cycle_end, return_addr, trig_pc, is_sret):
+    def return_to_unknown_frame(self, cycle_end, return_addr, trig_pc, is_sret):
         print("Recovered a frame at address 0x%08X" % return_addr)
         recovered_frame = CallStackTracker.RecoveredFrame(self.scanner.trace_reader.earliest_cycle(), cycle_end)
         warn_record = CallStackTracker.RecoveredWarningRecord(self.scanner.trace_reader.earliest_cycle(), cycle_end,
                                                               recovered_frame)
+        recovered_frame.add_active_record(warn_record)
+
+        caller_symbol = self.scanner.get_symbol_by_addr(return_addr)
         self.is_frame_stack_complete = False
+        self.recovered_root_caller = caller_symbol
+
         if is_sret:
             exec_record = CallStackTracker.RecoveredExceptionRecord(
                 self.scanner.trace_reader.earliest_cycle(),
@@ -385,7 +397,6 @@ class CallStackTracker:
             recovered_frame.add_active_record(exec_record)
         else:
             callee_symbol = self.scanner.get_symbol_by_addr(trig_pc)
-            caller_symbol = self.scanner.get_symbol_by_addr(return_addr)
             func_record = CallStackTracker.RecoveredFunctionRecord(
                 self.scanner.trace_reader.earliest_cycle(),
                 cycle_end,
@@ -398,7 +409,23 @@ class CallStackTracker:
 
         self.history_recorder.on_pop_frame(recovered_frame)
 
-    def foreach_top_down(self):
+    def recover_live_frame(self, cycle, live_pc):
+        # type: (int, int) -> CallStackTracker.RecoveredFrame
+        live_symbol = self.scanner.get_symbol_by_addr(live_pc)
+        recovered_live_frame = CallStackTracker.RecoveredFrame(self.scanner.trace_reader.earliest_cycle(), None)
+        self.frame_stack.push_frame(recovered_live_frame)
+        warn_record = CallStackTracker.RecoveredWarningRecord(self.scanner.trace_reader.earliest_cycle(), None,
+                                                              recovered_live_frame)
+        recovered_caller_record = CallStackTracker.RecoveredFunctionRecord(cycle, None, recovered_live_frame,
+                                                                           live_symbol, None, None)
+
+        recovered_live_frame.add_active_record(warn_record)
+        recovered_live_frame.add_active_record(recovered_caller_record)
+
+        self.is_frame_stack_complete = False
+        return recovered_live_frame
+
+    def foreach_record_from_top(self):
         # type: () -> Generator[ActiveRecord]
         curr_frame_pos = self.frame_stack.size() - 1
 
@@ -416,22 +443,22 @@ class CallStackTracker:
 
     def describe_curr_call_stack(self):
         stack_desc = []
-        for rec in self.foreach_top_down():
+        for rec in self.foreach_record_from_top():
             stack_desc.append(str(rec))
         return "\n".join(stack_desc)
 
     def backtrack_stack(self, level):
         # type: (int) -> Optional[List[ActiveRecord]]
         strong_check(level >= 0)
-        step_remain = level + 1
+        level_remained = level + 1
         ret_val = list()
-        for rec in self.foreach_top_down():
+        for rec in self.foreach_record_from_top():
             ret_val.append(rec)
-            step_remain -= 1
-            if step_remain == 0:
+            level_remained -= 1
+            if level_remained == 0:
                 break
 
-        if step_remain == 0:
+        if level_remained == 0:
             return ret_val
         else:
             return None
@@ -447,4 +474,10 @@ class CallStackTracker:
             f.add_active_record(
                 CallStackTracker.RecoveredWarningRecord(self.scanner.trace_reader.earliest_cycle(), cycle, f)
             )
+            if self.recovered_root_caller:
+                f.add_active_record(
+                    CallStackTracker.RecoveredFunctionRecord(
+                        self.scanner.trace_reader.earliest_cycle(), cycle, f, self.recovered_root_caller, None, None
+                    )
+                )
             self.history_recorder.on_pop_frame(f)

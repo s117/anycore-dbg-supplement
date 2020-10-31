@@ -42,9 +42,7 @@ class JsonHistoryRecorder(HistoryRecorder):
     def on_pop_frame(self, frame):
         # type: (CallStackTracker.StackFrame) -> None
         while len(frame.record_stack) != 0:
-            record = frame.record_stack.pop()
-            if str(record).startswith("main"):
-                print("main is popped")
+            record = frame.record_stack.popleft()
             if (
                     isinstance(record, CallStackTracker.FunctionRecord) and
                     (
