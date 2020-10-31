@@ -6,6 +6,7 @@ from typing import Dict, Set
 import click
 
 from libsyscall.analyzer.check_scall import file_use_record
+from libsyscall.manifest_db import load_from_manifest_db, get_run_name_suggestion, get_avail_runs_in_db
 
 SELF_PATH = os.path.dirname(os.path.abspath(__file__))
 warning = list()
@@ -113,17 +114,54 @@ def check_output(name, details, fuse_record):  # type: (str, Dict, file_use_reco
     return True
 
 
+def prompt_run_name_suggestion(run_name, manifest_db_dir):
+    suggestions = get_run_name_suggestion(manifest_db_dir, run_name, limit=10)
+    if suggestions:
+        print("Did you mean:", file=sys.stderr)
+        for s in suggestions:
+            print("\t%s" % s, file=sys.stderr)
+    else:
+        print("No run name suggestion.", file=sys.stderr)
+
+
+def prompt_all_valid_run_name(manifest_db_dir):
+    all_available_run_names = sorted(get_avail_runs_in_db(manifest_db_dir))
+    if all_available_run_names:
+        print("All valid run name", file=sys.stderr)
+        for arn in all_available_run_names:
+            print("\t%s" % arn, file=sys.stderr)
+    else:
+        print("No record in the manifest DB [%s]" % manifest_db_dir, file=sys.stderr)
+        print(
+            "To generate manifest for a new benchmark, collect it's syscall trace then use the generate_manifest.py",
+            file=sys.stderr
+
+        )
+
+
 @click.command()
 @click.argument("path", type=click.Path(exists=True))
-def main(path):
+@click.option("-n", "--run-name", help="Override the run name (default is the folder name)")
+@click.option("-a", "--print-all-valid-run-name", is_flag=True, help="Print all the available run name then exit")
+def main(path, run_name, print_all_valid_run_name):
+    manifest_db_dir = os.path.join(SELF_PATH, "manifest_db")
+
+    if print_all_valid_run_name:
+        prompt_all_valid_run_name(manifest_db_dir)
+        sys.exit(0)
+
     os.chdir(path)
     init_at_cwd = os.getcwd()
-    bench_name = os.path.basename(init_at_cwd)
-    print("Performing pre-run environment checking for run %s" % bench_name)
+    if not run_name:
+        run_name = os.path.basename(init_at_cwd)
+    print("File environment pre-run checking: '%s' at '%s'\n" % (run_name, path))
 
-    from libsyscall.manifest_db import load_from_manifest_db
-    manifest_db_dir = os.path.join(SELF_PATH, "manifest_db")
-    manifest = load_from_manifest_db(manifest_db_dir, bench_name)
+    try:
+        manifest = load_from_manifest_db(manifest_db_dir, run_name)
+    except FileNotFoundError:
+        print("Fatal: No manifest file for run '%s'" % run_name, file=sys.stderr)
+        prompt_run_name_suggestion(run_name, manifest_db_dir)
+        sys.exit(-1)
 
     spec_input_absref = list()
     check_succ = True
