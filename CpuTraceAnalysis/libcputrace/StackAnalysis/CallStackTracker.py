@@ -211,16 +211,23 @@ class CallStackTracker:
             return ret_val
 
     class RecoveredFunctionRecord(ActiveRecord):
-        def __init__(self, cycle_start, cycle_end, callee_symbol, frame):
-            # type: (int, Optional[int], SymbolTable.Symbol, CallStackTracker.StackFrame) -> None
+        def __init__(self, cycle_start, cycle_end, frame,
+                     callee_symbol, caller_symbol, caller_insn_addr):
+            # type: (int, Optional[int], CallStackTracker.StackFrame, SymbolTable.Symbol, SymbolTable.Symbol, int) -> None
             super().__init__(cycle_start, cycle_end, None)
             self.callee_symbol = callee_symbol
+            self.caller_symbol = caller_symbol
+            self.caller_insn_addr = caller_insn_addr
 
         def __str__(self):
-            return "%s:%s @ %s [Recovered]" % (
+            return "%s:%s @ %s, called by %s:%s @ %s [Recovered]" % (
                 self.callee_symbol.symbol_name,
                 SymbolTable.format_addr(self.callee_symbol.start_addr),
                 self.callee_symbol.module_name,
+
+                self.caller_symbol.symbol_name,
+                SymbolTable.format_addr(self.caller_insn_addr),
+                self.caller_symbol.module_name,
             )
 
     class RecoveredExceptionRecord(ActiveRecord):
@@ -377,12 +384,15 @@ class CallStackTracker:
             )
             recovered_frame.add_active_record(exec_record)
         else:
-            callee_symbol = self.scanner.get_symbol_by_addr(return_addr)
+            callee_symbol = self.scanner.get_symbol_by_addr(trig_pc)
+            caller_symbol = self.scanner.get_symbol_by_addr(return_addr)
             func_record = CallStackTracker.RecoveredFunctionRecord(
                 self.scanner.trace_reader.earliest_cycle(),
                 cycle_end,
+                recovered_frame,
                 callee_symbol,
-                recovered_frame
+                caller_symbol,
+                return_addr - 4
             )
             recovered_frame.add_active_record(func_record)
 
