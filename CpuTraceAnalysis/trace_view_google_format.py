@@ -34,9 +34,10 @@ class JsonHistoryRecorder(HistoryRecorder):
             except yaml.YAMLError as exc:
                 print(exc)
                 exit(1)
-        for k, v in ignore_dict.items():
-            for vi in v:
-                self.ignored_function_call_list[k].add(vi)
+        if ignore_dict:
+            for k, v in ignore_dict.items():
+                for vi in v:
+                    self.ignored_function_call_list[k].add(vi)
 
     def on_pop_frame(self, frame):
         # type: (CallStackTracker.StackFrame) -> None
