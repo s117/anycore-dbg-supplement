@@ -1,8 +1,8 @@
-from trace_backtrace import SymbolTable
+from libcputrace.MachineCode.SymbolTable import SymbolTable
 
 symtab = SymbolTable()
-symtab.add_symbol_from_dism_file("../debug_output/pk_c920.dism")
-symtab.add_symbol_from_dism_file("../debug_output/hello.dism")
+symtab.add_symbol_from_objdump_dism("../debug_output/pk_c920.dism")
+symtab.add_symbol_from_objdump_dism("../debug_output/hello.dism")
 
 while (query := input("Query (addr)? ")) != "q":
     try:
