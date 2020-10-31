@@ -5,6 +5,8 @@ import os
 import sys
 from collections import defaultdict
 
+import click
+
 from libcputrace.MachineCode.Objdump import get_objdump_content
 from libcputrace.StackAnalysis.CallStackTracker import CallStackTracker
 from libcputrace.StackAnalysis.TraceCodePatternScanner import TraceCodePatternScanner
@@ -94,25 +96,14 @@ def show_result(try_port=8080):
             break
 
 
-def print_usage():
-    print(
-        "Usage: \n" +
-        "%s [objdump dism file list] <trace_file> " % sys.argv[0],
-        file=sys.stderr
-    )
-
-
 def get_module_objdump_output():
     pass
 
 
-def main():
-    if len(sys.argv) < 2:
-        print_usage()
-        return -1
-    trace_file = sys.argv[-1]
-    modules = sys.argv[1:-1]
-
+@click.command()
+@click.argument('modules', nargs=-1, type=click.Path(exists=True))
+@click.argument('trace_file', nargs=1, type=click.Path(exists=True))
+def main(modules, trace_file):
     # load symbol
     symtab = SymbolTable()
     for module_path in modules:

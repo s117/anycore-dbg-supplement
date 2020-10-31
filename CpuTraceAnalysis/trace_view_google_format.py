@@ -3,6 +3,8 @@
 import json
 import os
 import sys
+import click
+
 from collections import defaultdict
 
 from libcputrace.MachineCode.Objdump import get_objdump_content
@@ -40,6 +42,8 @@ class JsonHistoryRecorder(HistoryRecorder):
         # type: (CallStackTracker.StackFrame) -> None
         while len(frame.record_stack) != 0:
             record = frame.record_stack.pop()
+            if str(record).startswith("main"):
+                print("main is popped")
             if (
                     isinstance(record, CallStackTracker.FunctionRecord) and
                     (
@@ -66,25 +70,14 @@ class JsonHistoryRecorder(HistoryRecorder):
             json.dump(self.record, fp)
 
 
-def print_usage():
-    print(
-        "Usage: \n" +
-        "%s [objdump dism file list] <trace_file> " % sys.argv[0],
-        file=sys.stderr
-    )
-
-
 def get_module_objdump_output():
     pass
 
 
-def main():
-    if len(sys.argv) < 2:
-        print_usage()
-        return -1
-    trace_file = sys.argv[-1]
-    modules = sys.argv[1:-1]
-
+@click.command()
+@click.argument('modules', nargs=-1, type=click.Path(exists=True))
+@click.argument('trace_file', nargs=1, type=click.Path(exists=True))
+def main(modules, trace_file):
     # load symbol
     symtab = SymbolTable()
     for module_path in modules:
