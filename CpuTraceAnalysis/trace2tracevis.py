@@ -1,77 +1,38 @@
 #!/usr/bin/env python3.8
 # coding=utf8
-import json
 import os
-import sys
-from collections import defaultdict
-
+import shutil
+import tempfile
 import click
 
 from libcputrace.MachineCode.Objdump import get_objdump_content
 from libcputrace.StackAnalysis.CallStackTracker import CallStackTracker
+from libcputrace.StackAnalysis.Recorder.JsonHistoryRecorder import JsonHistoryRecorder
 from libcputrace.StackAnalysis.TraceCodePatternScanner import TraceCodePatternScanner
-from libcputrace.StackAnalysis.HistoryRecorder import HistoryRecorder
 
 from libcputrace.MachineCode.SymbolTable import SymbolTable
 from libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
 from libcputrace.utils import xopen
 
-TRACE_VIS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trace_vis")
+
+# Copy the timeline frontend to a folder
+def prepare_trace_vis_web_root(web_root):
+    src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trace_vis")
+    shutil.copytree(src_dir, web_root)
 
 
-class JsonHistoryRecorder(HistoryRecorder):
-    def __init__(self):
-        self.record = list()
-        self.ignored_function_call_list = defaultdict(set)
-        self.init_ignore_list()
-
-    def init_ignore_list(self):
-        import yaml
-
-        with open(os.path.join(os.path.dirname(__file__), "ignore_symbol.yaml"), 'r') as stream:
-            try:
-                ignore_dict = yaml.load(stream, Loader=yaml.SafeLoader)
-            except yaml.YAMLError as exc:
-                print(exc)
-                exit(1)
-        if ignore_dict:
-            for k, v in ignore_dict.items():
-                for vi in v:
-                    self.ignored_function_call_list[k].add(vi)
-
-    def on_pop_frame(self, frame):
-        # type: (CallStackTracker.StackFrame) -> None
-        while len(frame.record_stack) != 0:
-            record = frame.record_stack.pop()
-            if (
-                    isinstance(record, CallStackTracker.FunctionRecord) and
-                    (
-                            record.callee_symbol.symbol_name in
-                            self.ignored_function_call_list[record.callee_symbol.module_name]
-                    )
-            ):
-                continue
-
-            self.record.append({
-                "content": str(record),
-                "start": record.cycle_start,
-                "end": record.cycle_end,
-                "type": "%s" % type(record).__name__
-            })
-
-    def dump_json(self, json_path):
-        with open(json_path, "w") as fp:
-            json.dump(self.record, fp)
-
-
-def show_result(try_port=8080):
+# Setup a temporary simple http server, then open URL in system default browser
+def start_trace_vis_webserver(web_root, try_port=8080):
     from http.server import HTTPServer
     from http.server import SimpleHTTPRequestHandler
 
     server_class = HTTPServer
     handler_class = SimpleHTTPRequestHandler
-
-    os.chdir(TRACE_VIS_DIR)
+    if not os.path.isdir(web_root):
+        raise RuntimeError("Web root [%s] is not a dir!")
+    if not os.access(web_root, os.R_OK):
+        raise RuntimeError("Current user doesn't have the read permission on web root [%s]!")
+    os.chdir(web_root)
     port = try_port
 
     while True:
@@ -80,6 +41,7 @@ def show_result(try_port=8080):
             show_url = "http://localhost:%s/trace_view.html" % port
             httpd = server_class(server_address, handler_class)
             print("A temporary simple HTTP server will be held at %s:%s for viewing the result." % server_address)
+            print("HTTP server is up with web root [%s]" % web_root)
             xopen(show_url)
             print("A browser should opened now showing the result.")
             print("Manually open %s if not." % show_url)
@@ -95,10 +57,6 @@ def show_result(try_port=8080):
             return
         else:
             break
-
-
-def get_module_objdump_output():
-    pass
 
 
 @click.command()
@@ -128,11 +86,12 @@ def main(modules, trace_file):
     scanner.scan()
 
     # output the result for visualization
-    json_recorder.dump_json(TRACE_VIS_DIR + "/data_src.json")
+    with tempfile.TemporaryDirectory() as tmp_web_root:
+        prepare_trace_vis_web_root(tmp_web_root)
+        json_recorder.dump_json(os.path.join(tmp_web_root, "data_src.json"))
+        start_trace_vis_webserver(tmp_web_root)
 
-    # held a simple http server, open URL in system default browser
     print("Done")
-    show_result()
 
     return 0
 
