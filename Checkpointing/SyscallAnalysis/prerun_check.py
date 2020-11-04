@@ -140,21 +140,21 @@ def prompt_all_valid_run_name(manifest_db_dir):
 
 
 @click.command()
-@click.argument("path", type=click.Path(exists=True))
+@click.argument("sim_dir", type=click.Path(exists=True, dir_okay=True, file_okay=False))
 @click.option("-n", "--run-name", help="Override the run name (default is the folder name)")
 @click.option("-a", "--print-all-valid-run-name", is_flag=True, help="Print all the available run name then exit")
-def main(path, run_name, print_all_valid_run_name):
+def main(sim_dir, run_name, print_all_valid_run_name):
     manifest_db_dir = os.path.join(SELF_PATH, "manifest_db")
 
     if print_all_valid_run_name:
         prompt_all_valid_run_name(manifest_db_dir)
         sys.exit(0)
 
-    os.chdir(path)
+    os.chdir(sim_dir)
     init_at_cwd = os.getcwd()
     if not run_name:
         run_name = os.path.basename(init_at_cwd)
-    print("File environment pre-run checking: '%s' at '%s'\n" % (run_name, path))
+    print("Start file environment pre-run checking: '%s' at '%s'\n" % (run_name, sim_dir))
 
     try:
         manifest = load_from_manifest_db(manifest_db_dir, run_name)
@@ -163,7 +163,6 @@ def main(path, run_name, print_all_valid_run_name):
         prompt_run_name_suggestion(run_name, manifest_db_dir)
         sys.exit(-1)
 
-    spec_input_absref = list()
     check_succ = True
     for pname, details in manifest.items():
         fuse_record = file_use_record.build_from_str(details['usage'])
