@@ -1,4 +1,4 @@
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # int lstat(const char *pathname, struct stat *statbuf);

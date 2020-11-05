@@ -1,4 +1,4 @@
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # char *getcwd(char *buf, size_t size);

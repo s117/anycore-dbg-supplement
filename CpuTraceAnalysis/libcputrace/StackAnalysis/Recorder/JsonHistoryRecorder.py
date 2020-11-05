@@ -3,8 +3,8 @@ import yaml
 import os
 from collections import defaultdict
 
-from libcputrace.StackAnalysis.CallStackTracker import CallStackTracker
-from libcputrace.StackAnalysis.HistoryRecorder import HistoryRecorder
+from ..CallStackTracker import CallStackTracker
+from ..HistoryRecorder import HistoryRecorder
 
 
 class JsonHistoryRecorder(HistoryRecorder):

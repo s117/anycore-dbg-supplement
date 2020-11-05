@@ -3,7 +3,7 @@
 
 import sys
 
-from libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
+from .libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
 
 
 def main():

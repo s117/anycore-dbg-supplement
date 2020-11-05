@@ -1,4 +1,4 @@
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # int getdents64(unsigned int fd, struct linux_dirent64 *dirp, unsigned int count);

@@ -5,8 +5,8 @@ from typing import Dict, Set
 
 import click
 
-from libsyscall.analyzer.check_scall import file_use_record
-from libsyscall.manifest_db import load_from_manifest_db, get_run_name_suggestion, get_avail_runs_in_db, \
+from .libsyscall.analyzer.check_scall import file_use_record
+from .libsyscall.manifest_db import load_from_manifest_db, get_run_name_suggestion, get_avail_runs_in_db, \
     get_default_dbpath
 
 warning = list()

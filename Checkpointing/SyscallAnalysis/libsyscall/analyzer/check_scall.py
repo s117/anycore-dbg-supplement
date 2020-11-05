@@ -4,8 +4,8 @@ from collections import defaultdict
 from typing import Dict
 
 import click
-import libsyscall.syscalls.syscall as s
-from libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
+from ..syscalls import syscall as s
+from .scall_trace_analyzer import scall_trace_analyzer
 
 path_whitelist = {
     "/etc/localtime",
@@ -146,21 +146,21 @@ class file_use_record:
 
 def check_file_usage(analyzer, tree_root, print_info=False):
     # type: (scall_trace_analyzer, str, bool) -> Dict[str, file_use_record]
-    from libsyscall.syscalls.sys_read import sys_read
-    from libsyscall.syscalls.sys_pread import sys_pread
-    from libsyscall.syscalls.sys_write import sys_write
-    from libsyscall.syscalls.sys_pwrite import sys_pwrite
-    from libsyscall.syscalls.sys_lseek import sys_lseek
-    from libsyscall.syscalls.sys_fstat import sys_fstat
-    from libsyscall.syscalls.sys_fcntl import sys_fcntl
-    from libsyscall.syscalls.sys_ftruncate import sys_ftruncate
-    from libsyscall.syscalls.sys_lstat import sys_lstat
-    from libsyscall.syscalls.sys_fstatat import sys_fstatat
-    from libsyscall.syscalls.sys_faccessat import sys_faccessat
-    from libsyscall.syscalls.sys_linkat import sys_linkat
-    from libsyscall.syscalls.sys_unlinkat import sys_unlinkat
-    from libsyscall.syscalls.sys_mkdirat import sys_mkdirat
-    from libsyscall.syscalls.sys_renameat2 import sys_renameat2
+    from ..syscalls.sys_read import sys_read
+    from ..syscalls.sys_pread import sys_pread
+    from ..syscalls.sys_write import sys_write
+    from ..syscalls.sys_pwrite import sys_pwrite
+    from ..syscalls.sys_lseek import sys_lseek
+    from ..syscalls.sys_fstat import sys_fstat
+    from ..syscalls.sys_fcntl import sys_fcntl
+    from ..syscalls.sys_ftruncate import sys_ftruncate
+    from ..syscalls.sys_lstat import sys_lstat
+    from ..syscalls.sys_fstatat import sys_fstatat
+    from ..syscalls.sys_faccessat import sys_faccessat
+    from ..syscalls.sys_linkat import sys_linkat
+    from ..syscalls.sys_unlinkat import sys_unlinkat
+    from ..syscalls.sys_mkdirat import sys_mkdirat
+    from ..syscalls.sys_renameat2 import sys_renameat2
 
     file_usage_info = defaultdict(file_use_record)
 

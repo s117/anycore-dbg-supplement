@@ -6,10 +6,10 @@ from functools import partial
 from io import StringIO
 from typing import List, Optional, Dict, Tuple
 
-from libcputrace.MachineCode.Instruction import Instruction
-from libcputrace.MachineCode.Label import Label
-from libcputrace.MachineCode.Objdump import ObjdumpDismOutputParser
-from libcputrace.utils import strong_check, weak_check
+from .Instruction import Instruction
+from .Label import Label
+from .Objdump import ObjdumpDismOutputParser
+from ..utils import strong_check, weak_check
 
 
 class SymbolTable:

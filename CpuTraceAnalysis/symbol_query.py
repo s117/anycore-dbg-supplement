@@ -1,4 +1,4 @@
-from libcputrace.MachineCode.SymbolTable import SymbolTable
+from .libcputrace.MachineCode.SymbolTable import SymbolTable
 
 symtab = SymbolTable()
 symtab.add_symbol_from_objdump_dism("../debug_output/pk_c920.dism")

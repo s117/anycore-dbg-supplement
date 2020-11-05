@@ -5,30 +5,30 @@ _DEFAULT_FACTORY = None
 
 
 def _init_register():
-    from libsyscall.syscalls import syscall
-    from libsyscall.syscalls import sys_exit
-    from libsyscall.syscalls import sys_read
-    from libsyscall.syscalls import sys_pread
-    from libsyscall.syscalls import sys_write
-    from libsyscall.syscalls import sys_pwrite
-    from libsyscall.syscalls import sys_close
-    from libsyscall.syscalls import sys_lseek
-    from libsyscall.syscalls import sys_fstat
-    from libsyscall.syscalls import sys_fcntl
-    from libsyscall.syscalls import sys_ftruncate
-    from libsyscall.syscalls import sys_lstat
-    from libsyscall.syscalls import sys_openat
-    from libsyscall.syscalls import sys_fstatat
-    from libsyscall.syscalls import sys_faccessat
-    from libsyscall.syscalls import sys_linkat
-    from libsyscall.syscalls import sys_unlinkat
-    from libsyscall.syscalls import sys_mkdirat
-    from libsyscall.syscalls import sys_getcwd
-    from libsyscall.syscalls import sys_getmainvars
-    from libsyscall.syscalls import sys_chdir
-    from libsyscall.syscalls import sys_getdents64
-    from libsyscall.syscalls import sys_getrandom
-    from libsyscall.syscalls import sys_renameat2
+    from . import syscall
+    from . import sys_exit
+    from . import sys_read
+    from . import sys_pread
+    from . import sys_write
+    from . import sys_pwrite
+    from . import sys_close
+    from . import sys_lseek
+    from . import sys_fstat
+    from . import sys_fcntl
+    from . import sys_ftruncate
+    from . import sys_lstat
+    from . import sys_openat
+    from . import sys_fstatat
+    from . import sys_faccessat
+    from . import sys_linkat
+    from . import sys_unlinkat
+    from . import sys_mkdirat
+    from . import sys_getcwd
+    from . import sys_getmainvars
+    from . import sys_chdir
+    from . import sys_getdents64
+    from . import sys_getrandom
+    from . import sys_renameat2
     global _DEFAULT_FACTORY
     global _FACTORY_REGISTER
     _DEFAULT_FACTORY = syscall.syscall

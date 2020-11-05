@@ -3,8 +3,8 @@ import gzip
 
 from typing import Optional, Tuple, Dict, List, Union
 
-from libcputrace.Trace.TraceEvent import TraceEventInstRetired
-from libcputrace.utils import strong_check, weak_check
+from .TraceEvent import TraceEventInstRetired
+from ..utils import strong_check, weak_check
 
 
 class SimpleTraceFileReader:
@@ -101,7 +101,7 @@ class SimpleTraceFileReader:
         if basic_info:
             seq, cycle, instret, pc, insn, asm = basic_info
             extra_info = self.extract_extra_info(tr_ev_data)
-            return TraceEventInstRetired(seq, cycle, instret,  pc, insn, asm, extra_info)
+            return TraceEventInstRetired(seq, cycle, instret, pc, insn, asm, extra_info)
 
     def size(self):
         return len(self.tr_ev_offset_idx)

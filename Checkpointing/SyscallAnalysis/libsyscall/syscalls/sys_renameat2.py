@@ -1,4 +1,4 @@
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # int renameat2(int olddirfd, const char *oldpath,

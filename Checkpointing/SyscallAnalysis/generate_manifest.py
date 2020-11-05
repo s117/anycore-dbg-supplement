@@ -4,10 +4,11 @@ from typing import Dict, Set
 
 import click
 
-from libsyscall.analyzer.check_scall import check_file_usage, check_out_of_tree_reference, check_abs_path_reference, \
+from .libsyscall.analyzer.check_scall import check_file_usage, check_out_of_tree_reference, check_abs_path_reference, \
     path_whitelist, file_use_record
-from libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
-from libsyscall.spec_bench_name import spec_bench_name
+from .libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
+from .libsyscall.spec_bench_name import spec_bench_name
+from .libsyscall.manifest_db import save_to_manifest_db
 
 SPEC_BENCH_DIR = "/home/s117/SPX_Garage/AnyCore/spec/compile/Speckle/built_bin/riscv64-unknown-linux-gnu-gcc-9.2.0/any"
 
@@ -121,7 +122,6 @@ def main(input_file, echo):
     file_usage_info = check_file_usage(trace_analyzer, init_at_cwd)
     manifest = build_manifest(pristine_spec_run_dir, file_usage_info)
 
-    from libsyscall.manifest_db import save_to_manifest_db
     save_to_manifest_db(bench_name, manifest)
 
 

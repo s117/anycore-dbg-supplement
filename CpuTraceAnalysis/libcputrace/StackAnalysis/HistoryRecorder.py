@@ -1,4 +1,4 @@
-import libcputrace.StackAnalysis.CallStackTracker as CallStackTracker
+from . import CallStackTracker
 
 
 class HistoryRecorder:

@@ -1,4 +1,4 @@
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset);

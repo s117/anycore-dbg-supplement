@@ -1,22 +1,12 @@
 #!/usr/bin/env python3.8
 # coding=utf8
-import json
-import os
 import sys
-from collections import defaultdict
 from typing import Optional, List, Dict, Any
 
-from libcputrace.MachineCode.Objdump import get_objdump_content
-from libcputrace.StackAnalysis.CallStackTracker import CallStackTracker
-from libcputrace.StackAnalysis.TraceCodePatternScanner import TraceCodePatternScanner
-from libcputrace.StackAnalysis.HistoryRecorder import HistoryRecorder
-
-from libcputrace.MachineCode.SymbolTable import SymbolTable
-from libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
-from libcputrace.Trace.TraceEvent import TraceEventInstRetired
-from libcputrace.utils import xopen
-
-from libcputrace.utils import weak_check, strong_check
+from .libcputrace.MachineCode.Objdump import get_objdump_content
+from .libcputrace.MachineCode.SymbolTable import SymbolTable
+from .libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
+from .libcputrace.utils import weak_check, strong_check
 
 
 def print_usage():

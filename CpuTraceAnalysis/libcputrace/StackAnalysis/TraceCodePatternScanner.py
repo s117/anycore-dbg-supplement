@@ -1,11 +1,12 @@
 from typing import List, Optional
 
-from libcputrace.MachineCode.Instruction import Instruction
-import libcputrace.StackAnalysis.CallStackTracker as CallStackTracker
-from libcputrace.MachineCode.SymbolTable import SymbolTable
-from libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
-from libcputrace.Trace.TraceEvent import TraceEventInstRetired
-from libcputrace.utils import strong_check, weak_check
+from . import CallStackTracker
+
+from ..MachineCode.Instruction import Instruction
+from ..MachineCode.SymbolTable import SymbolTable
+from ..Trace.SimpleTraceFileReader import SimpleTraceFileReader
+from ..Trace.TraceEvent import TraceEventInstRetired
+from ..utils import strong_check, weak_check
 
 
 class TraceCodePatternScanner:
@@ -113,7 +114,6 @@ class TraceCodePatternScanner:
 
         self.patterns = []  # type: List[TraceCodePatternScanner.MachineCodePattern]
         self.register_pattern()
-
 
     def register_pattern(self):
         # type: () -> None

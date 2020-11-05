@@ -1,17 +1,14 @@
 #!/usr/bin/env python3.8
 # coding=utf8
-import os
 import click
 
-from libcputrace.MachineCode.Objdump import get_objdump_content
-from libcputrace.StackAnalysis.CallStackTracker import CallStackTracker
-from libcputrace.StackAnalysis.Recorder.GoogleTraceEventFormatRecorder import GoogleTraceEventFormatRecorder
-from libcputrace.StackAnalysis.TraceCodePatternScanner import TraceCodePatternScanner
+from .libcputrace.MachineCode.Objdump import get_objdump_content
+from .libcputrace.StackAnalysis.CallStackTracker import CallStackTracker
+from .libcputrace.StackAnalysis.Recorder.GoogleTraceEventFormatRecorder import GoogleTraceEventFormatRecorder
+from .libcputrace.StackAnalysis.TraceCodePatternScanner import TraceCodePatternScanner
 
-from libcputrace.MachineCode.SymbolTable import SymbolTable
-from libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
-
-TRACE_VIS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trace_vis")
+from .libcputrace.MachineCode.SymbolTable import SymbolTable
+from .libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
 
 
 @click.command()

@@ -1,11 +1,12 @@
 import fcntl
 from typing import Dict, List, Any, Optional, Callable, Tuple, Union
 import os
-import libsyscall.syscalls.syscall as syscall
-from libsyscall.syscalls.sys_openat import sys_openat
-from libsyscall.syscalls.sys_fcntl import sys_fcntl
-from libsyscall.syscalls.sys_close import sys_close
-from libsyscall.syscalls.sys_chdir import sys_chdir
+
+from ..syscalls import syscall
+from ..syscalls.sys_openat import sys_openat
+from ..syscalls.sys_fcntl import sys_fcntl
+from ..syscalls.sys_close import sys_close
+from ..syscalls.sys_chdir import sys_chdir
 
 
 class fd_tracker:

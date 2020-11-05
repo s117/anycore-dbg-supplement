@@ -4,12 +4,13 @@ from enum import Enum, auto
 from io import StringIO
 from typing import Union, Generator, Optional
 
-from libcputrace.MachineCode.Instruction import Instruction
-from libcputrace.MachineCode.Label import Label
-from libcputrace.utils import ShellCmdWrapper
+from .Instruction import Instruction
+from .Label import Label
+from ..utils import ShellCmdWrapper
 
 # DEFAULT_OBJDUMP_PREFIX = "riscv64-unknown-elf-"
 DEFAULT_OBJDUMP_PREFIX = "riscv64-unknown-linux-gnu-"
+
 
 class InvalidObjdumpOutput(Exception):
     pass

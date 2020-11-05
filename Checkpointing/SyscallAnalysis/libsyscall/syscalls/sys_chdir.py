@@ -1,6 +1,6 @@
 import os
 
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # int chdir(const char *path);

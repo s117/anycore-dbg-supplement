@@ -1,12 +1,13 @@
 from collections import deque
 from typing import Deque, Optional, Generator, List
 
-from libcputrace.MachineCode.Instruction import Instruction
-from libcputrace.StackAnalysis.HistoryRecorder import HistoryRecorder, DummyHistoryRecorder
-import libcputrace.StackAnalysis.TraceCodePatternScanner as TraceCodePatternScanner
+from . import TraceCodePatternScanner
 
-from libcputrace.MachineCode.SymbolTable import SymbolTable
-from libcputrace.utils import strong_check, weak_check
+from .HistoryRecorder import HistoryRecorder, DummyHistoryRecorder
+
+from ..MachineCode.Instruction import Instruction
+from ..MachineCode.SymbolTable import SymbolTable
+from ..utils import strong_check, weak_check
 
 
 class CallStackTracker:

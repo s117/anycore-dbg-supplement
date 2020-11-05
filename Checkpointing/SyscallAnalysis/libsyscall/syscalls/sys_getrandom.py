@@ -1,4 +1,4 @@
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # ssize_t getrandom(void *buf, size_t buflen, unsigned int flags);

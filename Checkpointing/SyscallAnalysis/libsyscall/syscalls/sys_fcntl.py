@@ -1,7 +1,7 @@
 import fcntl
 import os
 
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # int fcntl(int fd, int cmd, uint64_t arg);

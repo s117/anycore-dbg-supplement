@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from libcputrace.MachineCode.Instruction import Instruction
+from ..MachineCode.Instruction import Instruction
 
 
 class TraceEventInstRetired:

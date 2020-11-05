@@ -1,4 +1,4 @@
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # int faccessat(int dirfd, const char *pathname, int mode, int flags);

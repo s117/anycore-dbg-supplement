@@ -5,14 +5,14 @@ import shutil
 import tempfile
 import click
 
-from libcputrace.MachineCode.Objdump import get_objdump_content
-from libcputrace.StackAnalysis.CallStackTracker import CallStackTracker
-from libcputrace.StackAnalysis.Recorder.JsonHistoryRecorder import JsonHistoryRecorder
-from libcputrace.StackAnalysis.TraceCodePatternScanner import TraceCodePatternScanner
+from .libcputrace.MachineCode.Objdump import get_objdump_content
+from .libcputrace.StackAnalysis.CallStackTracker import CallStackTracker
+from .libcputrace.StackAnalysis.Recorder.JsonHistoryRecorder import JsonHistoryRecorder
+from .libcputrace.StackAnalysis.TraceCodePatternScanner import TraceCodePatternScanner
 
-from libcputrace.MachineCode.SymbolTable import SymbolTable
-from libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
-from libcputrace.utils import xopen
+from .libcputrace.MachineCode.SymbolTable import SymbolTable
+from .libcputrace.Trace.SimpleTraceFileReader import SimpleTraceFileReader
+from .libcputrace.utils import xopen
 
 
 # Copy the timeline frontend to a folder

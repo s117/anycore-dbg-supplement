@@ -1,4 +1,4 @@
-import libsyscall.syscalls.syscall as s
+from . import syscall as s
 
 
 # int fstatat(int dirfd, const char *pathname, struct stat *statbuf, int flags);

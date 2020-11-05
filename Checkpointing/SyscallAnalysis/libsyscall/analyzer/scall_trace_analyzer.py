@@ -1,28 +1,29 @@
 from typing import List, Iterable
-import libsyscall.analyzer.fd_tracker
-from libsyscall.analyzer.strace_parser import strace_parser
-import libsyscall.syscalls.syscall as syscall
-import libsyscall.syscalls.factory as syscall_factory
 from pyparsing import ParseResults
+
+from .fd_tracker import fd_tracker
+from .strace_parser import strace_parser
+from ..syscalls import syscall
+from ..syscalls import factory as syscall_factory
 
 
 class scall_trace_analyzer:
 
     def __init__(self, initial_working_dir):
         self.syscalls = list()  # type: List[syscall.syscall]
-        self.fd_res = libsyscall.analyzer.fd_tracker.fd_tracker(initial_working_dir)
+        self.fd_res = fd_tracker(initial_working_dir)
 
     def get_fd_resolver(self):
-        # type: () -> libsyscall.fd_tracker.fd_tracker
+        # type: () -> fd_tracker
         return self.fd_res
 
     def on_strace_parsed(self, p, start, end):
         # type: (ParseResults, int, int) -> None
         args = list()
         for pa in p.syscall_args:
-            if pa.arg_type in libsyscall.analyzer.strace_parser.strace_parser.list_arg_type_strptr:
+            if pa.arg_type in strace_parser.list_arg_type_strptr:
                 args.append(syscall.arg_ptr(pa.arg_name, pa.arg_type, pa.arg_val, pa.arg_memval))
-            elif pa.arg_type in libsyscall.analyzer.strace_parser.strace_parser.list_arg_type_num:
+            elif pa.arg_type in strace_parser.list_arg_type_num:
                 args.append(syscall.arg_val(pa.arg_name, pa.arg_type, pa.arg_val))
             else:
                 raise ValueError("Invalid syscall argument type %s" % p.arg_type)
