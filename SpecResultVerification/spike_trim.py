@@ -19,7 +19,8 @@ tail_regex = re.compile(
     r"\*\*\*\*\*\*\* Resetting core \*\*\*\*\*\*\*\*\*\*\s*$"
 )
 
-if __name__ == '__main__':
+
+def main():
     ret_code = 0
 
     if len(sys.argv) != 2:
@@ -45,4 +46,8 @@ if __name__ == '__main__':
                 ret_code |= 2
             print(sim_out, file=sys.stdout)
 
-    exit(ret_code)
+    sys.exit(ret_code)
+
+
+if __name__ == '__main__':
+    main()

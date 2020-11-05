@@ -2,6 +2,7 @@
 
 # chkpt format: HTIF | 0xbaadbeefdeadbeef | memory | 0xdeadbeefbaadbeef | proc
 
+import click
 import gzip
 import sys
 from typing import Tuple, Iterable, Dict, Any, List, Callable, Optional, Set
@@ -480,10 +481,12 @@ class htif_stream_reader:
                 raise ValueError("Unknown token %s" % token_list[0])
 
 
-# with gzip.open("sample.gz", "w") as out_fp:
-#     out_fp.write("line 1\n\n".encode("ascii"))
-#     out_fp.write("line 2\n\n".encode("ascii"))
+@click.command()
+@click.argument("checkpoint", type=click.Path(exists=True, dir_okay=False, file_okay=True))
+def main(checkpoint):
+    htif_reader = htif_stream_reader(checkpoint, syscall_info_extractor())
+    htif_reader.run_parse()
 
-htif_stream_reader = htif_stream_reader(sys.argv[1], syscall_info_extractor())
 
-htif_stream_reader.run_parse()
+if __name__ == '__main__':
+    main()

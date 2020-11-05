@@ -97,14 +97,14 @@ def main():
 
     if len(sys.argv) != 5 and len(sys.argv) != 6:
         print_help()
-        return -1
+        sys.exit(-1)
 
     try:
         simpoint_interval = int(sys.argv[1])
     except ValueError:
         print("Invalid SimPoint Interval: %s" % sys.argv[1], file=sys.stderr)
         print_help()
-        return -1
+        sys.exit(-1)
     ckpt_basename = sys.argv[2]
     simpoints_path = sys.argv[3]
     weights_path = sys.argv[4]
@@ -117,13 +117,13 @@ def main():
         if not (c.isalnum() or c == '-' or c == '_' or c == '.'):
             print("Invalid checkpoint name: " + ckpt_basename + "\n" +
                   "  (a valid checkpoint name can only contain char, digit, '-', '_', '.')", file=sys.stderr)
-            return -1
+            sys.exit(-1)
     try:
         simpoints = read_simpoints(simpoints_path)
         weights = read_weights(weights_path)
     except FileNotFoundError as ef:
         # print("Fail to load simpoint data: %s" % str(ef), file=sys.stderr)
-        return -1
+        sys.exit(-1)
 
     if len(simpoints) != len(weights):
         raise RuntimeError("Input 'weights' and 'simpoints' not match")
@@ -145,6 +145,8 @@ def main():
     print("%2d - %3.2f%%\t%s" % (len(weights), int(reduce(add, weights) * 10000) / 100.0, ckpt_basename),
           file=sys.stderr)
 
+    sys.exit(0)
+
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()
