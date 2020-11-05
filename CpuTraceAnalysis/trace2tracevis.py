@@ -18,7 +18,7 @@ from .libcputrace.utils import xopen
 # Copy the timeline frontend to a folder
 def prepare_trace_vis_web_root(web_root):
     src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trace_vis")
-    shutil.copytree(src_dir, web_root)
+    shutil.copytree(src_dir, web_root, dirs_exist_ok=True)
 
 
 # Setup a temporary simple http server, then open URL in system default browser
