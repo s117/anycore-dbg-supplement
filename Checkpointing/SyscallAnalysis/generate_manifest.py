@@ -9,6 +9,7 @@ from .libsyscall.analyzer.check_scall import check_file_usage, check_out_of_tree
 from .libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
 from .libsyscall.spec_bench_name import spec_bench_name
 from .libsyscall.manifest_db import save_to_manifest_db
+from .libsyscall.utils import sha256
 
 SPEC_BENCH_DIR = "/home/s117/SPX_Garage/AnyCore/spec/compile/Speckle/built_bin/riscv64-unknown-linux-gnu-gcc-9.2.0/any"
 
@@ -19,20 +20,6 @@ def get_pristine_spec_bench_run_dir(base, spec_no, dataset):
         base,
         "%s.%s_%s" % (spec_no, spec_bench_name[spec_no], dataset)
     )
-
-
-def sha256(fpath):
-    # type: (str) -> str
-    import hashlib
-    BUF_SIZE = 65536
-    sha256 = hashlib.sha256()
-    with open(fpath, 'rb') as f:
-        while True:
-            data = f.read(BUF_SIZE)
-            if not data:
-                break
-            sha256.update(data)
-    return sha256.hexdigest()
 
 
 def build_manifest(tree_root, file_usage_info):

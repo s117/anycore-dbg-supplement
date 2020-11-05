@@ -8,6 +8,7 @@ import click
 from .libsyscall.analyzer.check_scall import file_use_record
 from .libsyscall.manifest_db import load_from_manifest_db, get_run_name_suggestion, get_avail_runs_in_db, \
     get_default_dbpath
+from .libsyscall.utils import sha256
 
 warning = list()
 failures = list()
@@ -15,20 +16,6 @@ failures = list()
 
 class CheckingFailure(RuntimeError):
     pass
-
-
-def sha256(fpath):
-    # type: (str) -> str
-    import hashlib
-    BUF_SIZE = 65536
-    sha256 = hashlib.sha256()
-    with open(fpath, 'rb') as f:
-        while True:
-            data = f.read(BUF_SIZE)
-            if not data:
-                break
-            sha256.update(data)
-    return sha256.hexdigest()
 
 
 def add_warning(warn):
