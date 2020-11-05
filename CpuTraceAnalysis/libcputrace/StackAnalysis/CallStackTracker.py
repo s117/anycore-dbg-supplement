@@ -241,7 +241,7 @@ class CallStackTracker:
     class RecoveredExceptionRecord(ActiveRecord):
         def __init__(self, cycle_start, cycle_end, frame):
             # type: (int, Optional[int], CallStackTracker.StackFrame) -> None
-            super().__init__(cycle_start, cycle_end, None)
+            super().__init__(cycle_start, cycle_end, frame)
 
         def __str__(self):
             return "Exception [Recovered]"
@@ -249,7 +249,7 @@ class CallStackTracker:
     class RecoveredWarningRecord(ActiveRecord):
         def __init__(self, cycle_start, cycle_end, frame):
             # type: (int, Optional[int], CallStackTracker.StackFrame) -> None
-            super().__init__(cycle_start, cycle_end, None)
+            super().__init__(cycle_start, cycle_end, frame)
 
         def __str__(self):
             return "** Warning: Due to incomplete trace, some other not-recovered active records might be HERE **"
