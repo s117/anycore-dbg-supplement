@@ -151,7 +151,10 @@ class ObjdumpDismOutputParser:
 
     def step(self):
         # type: () -> StepStatus
-        while curr_line_text := self.content_buf.readline():
+        while True:
+            curr_line_text = self.content_buf.readline()
+            if not curr_line_text:
+                break
             for pf in self.parse_seq:
                 parse_result = pf(curr_line_text)
                 if isinstance(parse_result, Instruction):
@@ -165,7 +168,10 @@ class ObjdumpDismOutputParser:
 
     def foreach(self):
         # type: () -> Generator[Union[Instruction, Label]]
-        while self.StepStatus.ST_EOF != (step_st := self.step()):
+        while True:
+            step_st = self.step()
+            if self.StepStatus.ST_EOF == step_st:
+                break
             if step_st == self.StepStatus.ST_NEW_INSN:
                 yield self.get_curr_insn()
             else:

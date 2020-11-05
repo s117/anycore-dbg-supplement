@@ -18,7 +18,7 @@ from .libcputrace.utils import xopen
 # Copy the timeline frontend to a folder
 def prepare_trace_vis_web_root(web_root):
     src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trace_vis")
-    shutil.copytree(src_dir, web_root, dirs_exist_ok=True)
+    shutil.copytree(src_dir, web_root)
 
 
 # Setup a temporary simple http server, then open URL in system default browser
@@ -87,9 +87,10 @@ def main(modules, trace_file):
 
     # output the result for visualization
     with tempfile.TemporaryDirectory() as tmp_web_root:
-        prepare_trace_vis_web_root(tmp_web_root)
-        json_recorder.dump_json(os.path.join(tmp_web_root, "data_src.json"))
-        start_trace_vis_webserver(tmp_web_root)
+        trace_vis_root = os.path.join(tmp_web_root, "trace_vis")
+        prepare_trace_vis_web_root(trace_vis_root)
+        json_recorder.dump_json(os.path.join(trace_vis_root, "data_src.json"))
+        start_trace_vis_webserver(trace_vis_root)
 
     print("Done")
 
