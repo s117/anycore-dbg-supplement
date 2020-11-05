@@ -1,8 +1,0 @@
-cpu2006docs.tar.xz:
-  sha256: ecd85efc22ee978514491774a1ac21b5da1c0dfb23058cbe8e9d3e4327bcb572
-  spec_input: true
-  usage: FUSE_READ_DATA | FUSE_OPEN
-xz_s_base.riscv-m64:
-  sha256: 1594d511de8f7e1ee9deb314c02fcc52994f716a29930729ade6f428c0041580
-  spec_input: true
-  usage: FUSE_READ_DATA | FUSE_OPEN

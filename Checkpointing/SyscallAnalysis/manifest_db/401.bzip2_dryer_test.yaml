@@ -1,8 +1,0 @@
-bzip2_base.riscv:
-  sha256: 599ef0923473cd718cf263269bd47fb0ec9a6a69f3bf4136b6233f989c131fcc
-  spec_input: true
-  usage: FUSE_READ_DATA | FUSE_OPEN
-dryer.jpg:
-  sha256: 24493623ad4f445b4d27e64e62a8ae2bb71a8d36b2378082fcf532dad47b0a18
-  spec_input: true
-  usage: FUSE_READ_DATA | FUSE_OPEN

@@ -1,8 +1,0 @@
-bzip2_base.riscv:
-  sha256: d1a81b85f0cc57e26b636af77bb749c6c5c448e6aed9ffe12ae13a79b6833e54
-  spec_input: true
-  usage: FUSE_READ_DATA | FUSE_OPEN
-input.program:
-  sha256: e3f58e29ba6bd0f840bd195507a97876e36ce21a57d08abd9d4bdcee270fe604
-  spec_input: true
-  usage: FUSE_READ_DATA | FUSE_OPEN

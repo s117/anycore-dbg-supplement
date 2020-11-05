@@ -10,7 +10,6 @@ from libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
 from libsyscall.spec_bench_name import spec_bench_name
 
 SPEC_BENCH_DIR = "/home/s117/SPX_Garage/AnyCore/spec/compile/Speckle/built_bin/riscv64-unknown-linux-gnu-gcc-9.2.0/any"
-SELF_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 def get_pristine_spec_bench_run_dir(base, spec_no, dataset):
@@ -123,13 +122,7 @@ def main(input_file, echo):
     manifest = build_manifest(pristine_spec_run_dir, file_usage_info)
 
     from libsyscall.manifest_db import save_to_manifest_db
-    manifest_db_dir = os.path.join(SELF_PATH, "manifest_db")
-    os.makedirs(manifest_db_dir, exist_ok=True)
-    save_to_manifest_db(
-        manifest_db_dir,
-        bench_name,
-        manifest
-    )
+    save_to_manifest_db(bench_name, manifest)
 
 
 if __name__ == '__main__':

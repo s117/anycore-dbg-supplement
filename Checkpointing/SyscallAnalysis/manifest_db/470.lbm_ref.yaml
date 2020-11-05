@@ -1,8 +1,0 @@
-100_100_130_ldc.of:
-  sha256: 4710a21d20a05a1c998de19470cbc2fdd4f5863e101967ff1a3d04784a107f91
-  spec_input: true
-  usage: FUSE_STAT | FUSE_READ_DATA | FUSE_OPEN
-lbm_base.riscv:
-  sha256: 9c25a561fa46c7befb9b6be6ae11f66a251510a28a9d3343fdf1959570cdfcb2
-  spec_input: true
-  usage: FUSE_READ_DATA | FUSE_OPEN

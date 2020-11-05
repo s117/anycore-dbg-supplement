@@ -1,8 +1,0 @@
-cld.tar.xz:
-  sha256: 28360def5ef6ffdeb445c9804de06fcb57495bc52600e7f1e6b8e2529045218a
-  spec_input: true
-  usage: FUSE_READ_DATA | FUSE_OPEN
-xz_s_base.riscv-m64:
-  sha256: 1594d511de8f7e1ee9deb314c02fcc52994f716a29930729ade6f428c0041580
-  spec_input: true
-  usage: FUSE_READ_DATA | FUSE_OPEN
