@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "anycore-dbg-supplement"
-version = "0.0.1"
+version = "0.0.2"
 description = "A bundle of auxiliary scripts for the Anycore project"
 authors = ["Jiayang Li <jli95@ncsu.edu>"]
 license = "Other/Proprietary License"
 repository = "https://github.com/s117/anycore-dbg-supplement.git"
-readme = "README.MD"
+readme = "README.md"
 keywords = ["anycore"]
 classifiers = [
     "Operating System :: POSIX :: Linux",
