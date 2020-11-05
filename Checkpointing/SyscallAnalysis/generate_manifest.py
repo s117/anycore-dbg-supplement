@@ -11,8 +11,6 @@ from .libsyscall.spec_bench_name import spec_bench_name
 from .libsyscall.manifest_db import save_to_manifest_db
 from .libsyscall.utils import sha256
 
-SPEC_BENCH_DIR = "/home/s117/SPX_Garage/AnyCore/spec/compile/Speckle/built_bin/riscv64-unknown-linux-gnu-gcc-9.2.0/any"
-
 
 def get_pristine_spec_bench_run_dir(base, spec_no, dataset):
     # type: (str, int, str) -> str
@@ -82,9 +80,12 @@ def build_manifest(tree_root, file_usage_info):
 
 
 @click.command()
-@click.argument("input_file", type=click.File())
+@click.argument('input-file', type=click.File())
 @click.option('--echo', is_flag=True, help='echo the decoded scall trace.')
-def main(input_file, echo):
+@click.option("--spec-bench-dir", required=True, envvar='SPEC_BIN_DIR',
+              type=click.Path(exists=True, dir_okay=True, file_okay=False),
+              help='The path to the pristine compiled SPEC benchmark (produced by Speckle)')
+def main(input_file, echo, spec_bench_dir):
     init_at_cwd = os.path.abspath(os.path.dirname(input_file.name))
     bench_name = os.path.basename(init_at_cwd)
 
@@ -96,7 +97,7 @@ def main(input_file, echo):
     else:
         assert bench_name.endswith("_test")
         spec_dataset = "test"
-    pristine_spec_run_dir = get_pristine_spec_bench_run_dir(SPEC_BENCH_DIR, spec_bench_id, spec_dataset)
+    pristine_spec_run_dir = get_pristine_spec_bench_run_dir(spec_bench_dir, spec_bench_id, spec_dataset)
 
     trace_analyzer = scall_trace_analyzer(init_at_cwd)
     strace_str = input_file.read()
