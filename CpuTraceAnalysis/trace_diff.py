@@ -57,7 +57,7 @@ def main():
         pass
 
     def get_sym_name(offset):
-        sym = symtab.find_symbol_by_addr(tr_ev_A.pc)
+        sym = symtab.find_symbol_by_addr(offset)
         if sym:
             return str(sym)
         else:
