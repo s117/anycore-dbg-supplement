@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "anycore-dbg-supplement"
+version = "0.0.1"
+description = "A bundle of auxiliary scripts for the Anycore project"
+authors = ["Jiayang Li <jli95@ncsu.edu>"]
+license = "Other/Proprietary License"
+repository = "https://github.com/s117/anycore-dbg-supplement.git"
+readme = "README.MD"
+keywords = ["anycore"]
+classifiers = [
+    "Operating System :: POSIX :: Linux",
+    "Development Status :: 3 - Alpha",
+]
+packages  = [
+    { include = "Checkpointing" },
+    { include = "CpuTraceAnalysis" },
+    { include = "SpecResultVerification" },
+    { include = "TetherSim" },
+]
+exclude = [
+    "Checkpointing/SyscallAnalysis/archived",
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+click = "^7.1.2"
+fuzzywuzzy = "^0.18.0"
+pyparsing = "^2.4.7"
+PyYAML = "^5.3.1"
+python-Levenshtein = "^0.12.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+# Perform a prerun check based on the info in manifest DB
+atool_prerun_check = "Checkpointing.SyscallAnalysis.prerun_check:main"
+
+# Analyze the syscall trace dump for a SPEC run, produce the manifest for it, save the manifest into DB
+atool_generate_manifest = "Checkpointing.SyscallAnalysis.generate_manifest:main"
+
+# Trim out the extra header/tail message produced by spike or pk during the simulation
+atool_spike_trim = "SpecResultVerification.spike_trim:main"
+
+# Convert the Simpoint output file to the checkpointing job description file accepted by Spike
+atool_smpt2ckptdesc = "Checkpointing.ChkptDescFileGen.smpt2ckptdesc:main"
+
+# Show the HTIF syscalls recorded in a checkpoint file
+atool_chkpt_htif_dump = "Checkpointing.DumpHTIF.chkpt_htif_dump:main"
+
+# The controller for 721sim's Tethering Sim mode
+atool_SimTetheringController = "TetherSim.SimTetheringController:main"
+
+# Analyze the trace dump and output the result in Google's Trace Event Format
+atool_trace2google = "CpuTraceAnalysis.trace2google:main"
+
+# Analyze the trace dump and show the result in the homebrew tracevis web frontend
+atool_trace2tracevis = "CpuTraceAnalysis.trace2tracevis:main"
+
+# Marking the first difference between two trace dump
+atool_trace_diff = "CpuTraceAnalysis.trace_diff:main"
