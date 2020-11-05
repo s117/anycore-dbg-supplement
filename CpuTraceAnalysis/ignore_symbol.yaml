@@ -1,6 +1,16 @@
-#pk:
-#  - __walk_create
-#  - __walk
-#  - pte_ppn
-#  - pt_idx
-#  - __va_avail
+# This file is just a sample, it is not used by trace2google.py and trace2tracevis.py
+#
+# if you want to filter out some symbols in the final trace event, please create one
+# ignore_symbol.yaml at your CWD
+#
+
+# the module name
+pk:
+  # list of filtered symbols
+  - __walk_create
+  - __walk
+  - __va_avail
+
+# another example: filter list for the module helloworld.rv64
+helloworld.rv64:
+  - main
