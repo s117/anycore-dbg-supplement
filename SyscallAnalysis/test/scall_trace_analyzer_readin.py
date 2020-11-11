@@ -2,7 +2,7 @@ import os
 
 import click
 
-from libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
+from ..libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
 
 
 @click.command()

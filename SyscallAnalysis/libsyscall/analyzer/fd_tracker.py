@@ -1,5 +1,4 @@
-import fcntl
-from typing import Dict, List, Any, Optional, Callable, Tuple, Union
+from typing import Dict, Any, Optional, Callable, Tuple, Union
 import os
 
 from ..syscalls import syscall

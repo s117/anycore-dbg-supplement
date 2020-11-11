@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 import os
-from typing import Dict, Set
+from typing import Dict
 
 import click
 
-from .libsyscall.analyzer.check_scall import check_file_usage, check_out_of_tree_reference, check_abs_path_reference, \
-    path_whitelist, file_use_record
-from .libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
-from .libsyscall.spec_bench_name import spec_bench_name
-from .libsyscall.manifest_db import save_to_manifest_db
-from .libsyscall.utils import sha256
+from SyscallAnalysis.libsyscall.analyzer.check_scall import check_file_usage, path_whitelist, file_use_record
+from SyscallAnalysis.libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
+from .libsimenv.spec_bench_name import spec_bench_name
+from .libsimenv.manifest_db import save_to_manifest_db
+from .libsimenv.utils import sha256
 
 
 def get_pristine_spec_bench_run_dir(base, spec_no, dataset):

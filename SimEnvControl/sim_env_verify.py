@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 import os
 import sys
-from typing import Dict, Set
+from typing import Dict
 
 import click
 
-from .libsyscall.analyzer.check_scall import file_use_record
-from .libsyscall.manifest_db import load_from_manifest_db, get_run_name_suggestion, get_avail_runs_in_db, \
-    get_default_dbpath
-from .libsyscall.utils import sha256
+from SyscallAnalysis.libsyscall.analyzer.check_scall import file_use_record
+from .libsimenv.manifest_db import *
+from .libsimenv.utils import sha256
 
 warning = list()
 failures = list()
