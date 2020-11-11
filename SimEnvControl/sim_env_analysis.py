@@ -81,20 +81,22 @@ def build_manifest(tree_root, file_usage_info):
 @click.command()
 @click.argument('input-file', type=click.File())
 @click.option('--echo', is_flag=True, help='echo the decoded scall trace.')
+@click.option("-n", "--run-name", help="Override the run name (default is the name of folder where input is located)")
 @click.option("--spec-bench-dir", required=True, envvar='SPEC_BIN_DIR',
               type=click.Path(exists=True, dir_okay=True, file_okay=False),
               help='The path to the pristine compiled SPEC benchmark (produced by Speckle)')
-def main(input_file, echo, spec_bench_dir):
+def main(input_file, echo, run_name, spec_bench_dir):
     init_at_cwd = os.path.abspath(os.path.dirname(input_file.name))
-    bench_name = os.path.basename(init_at_cwd)
+    if not run_name:
+        run_name = os.path.basename(init_at_cwd)
 
-    print("Generating manifest for run %s" % bench_name)
+    print("Generating manifest for run %s" % run_name)
 
-    spec_bench_id = int(bench_name.split(".")[0])
-    if bench_name.endswith("_ref"):
+    spec_bench_id = int(run_name.split(".")[0])
+    if run_name.endswith("_ref"):
         spec_dataset = "ref"
     else:
-        assert bench_name.endswith("_test")
+        assert run_name.endswith("_test")
         spec_dataset = "test"
     pristine_spec_run_dir = get_pristine_spec_bench_run_dir(spec_bench_dir, spec_bench_id, spec_dataset)
 
@@ -109,7 +111,7 @@ def main(input_file, echo, spec_bench_dir):
     file_usage_info = check_file_usage(trace_analyzer, init_at_cwd)
     manifest = build_manifest(pristine_spec_run_dir, file_usage_info)
 
-    save_to_manifest_db(bench_name, manifest)
+    save_to_manifest_db(run_name, manifest)
 
 
 if __name__ == '__main__':
