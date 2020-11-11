@@ -9,7 +9,7 @@ from SyscallAnalysis.libsyscall.analyzer.check_scall import file_use_record
 from .libsimenv.manifest_db import *
 from .libsimenv.utils import sha256
 
-warning = list()
+warnings = list()
 failures = list()
 
 
@@ -19,7 +19,7 @@ class CheckingFailure(RuntimeError):
 
 def add_warning(warn):
     # type: (str) -> None
-    warning.append(warn)
+    warnings.append(warn)
     print("Warning: %s" % warn, file=sys.stderr)
 
 
@@ -166,7 +166,7 @@ def main(sim_dir, run_name, print_all_valid_run_name):
             print(f, file=sys.stderr)
         sys.exit(-1)
     else:
-        print("Pre-Run checking passed.")
+        print("Pre-Run checking passed%s." % (" with warning" if warnings else ""))
 
 
 if __name__ == '__main__':
