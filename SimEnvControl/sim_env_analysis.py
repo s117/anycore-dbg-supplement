@@ -6,17 +6,8 @@ import click
 
 from SyscallAnalysis.libsyscall.analyzer.check_scall import check_file_usage, path_whitelist, file_use_record
 from SyscallAnalysis.libsyscall.analyzer.scall_trace_analyzer import scall_trace_analyzer
-from .libsimenv.spec_bench_name import spec_bench_name
 from .libsimenv.manifest_db import save_to_manifest_db
-from .libsimenv.utils import sha256
-
-
-def get_pristine_spec_bench_run_dir(base, spec_no, dataset):
-    # type: (str, int, str) -> str
-    return os.path.join(
-        base,
-        "%s.%s_%s" % (spec_no, spec_bench_name[spec_no], dataset)
-    )
+from .libsimenv.utils import sha256, get_pristine_spec_bench_run_dir
 
 
 def build_manifest(tree_root, file_usage_info):

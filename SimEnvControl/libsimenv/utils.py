@@ -1,4 +1,7 @@
 import hashlib
+import os
+
+from .spec_bench_name import spec_bench_name
 
 
 def sha256(fpath):
@@ -12,3 +15,11 @@ def sha256(fpath):
                 break
             sha256.update(data)
     return sha256.hexdigest()
+
+
+def get_pristine_spec_bench_run_dir(base, spec_no, dataset):
+    # type: (str, int, str) -> str
+    return os.path.join(
+        base,
+        "%s.%s_%s" % (spec_no, spec_bench_name[spec_no], dataset)
+    )
