@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import sys
 from typing import Dict
 
 import click
@@ -10,7 +11,7 @@ from .libsimenv.manifest_db import save_to_manifest_db
 from .libsimenv.utils import sha256, get_pristine_spec_bench_run_dir
 
 
-def build_manifest(tree_root, file_usage_info):
+def build_manifest(pristine_tree_root, file_usage_info):
     # type: (str, Dict[str, file_use_record]) -> Dict
     # in (rd/wt/rw)_files, only the files that are out of the tree_root are represented in abspath
     manifest = dict()
@@ -36,7 +37,7 @@ def build_manifest(tree_root, file_usage_info):
     #   create_entry
     #
     # InT access:
-    #   if exist in SPEC input:
+    #   if exist in pristine input:
     #     if FUSE_WRITE or FUSE_REMOVE:
     #       fatal # input modification not allowed
     #     create_entry with SHA256
@@ -52,7 +53,7 @@ def build_manifest(tree_root, file_usage_info):
                 raise RuntimeError("Detected Out of Tree modification: \"%s\" - %s" % (pname, use_info))
             entry = create_manifest_entry(pname, use_info, is_spec_input=False)
         else:  # InT (In Tree) access
-            in_tree_path_abs = os.path.join(tree_root, pname)
+            in_tree_path_abs = os.path.join(pristine_tree_root, pname)
             if os.path.exists(in_tree_path_abs):
                 if use_info.has_write_data() or use_info.has_remove():
                     raise RuntimeError("Detected modification on SPEC input file: \"%s\" - %s" % (pname, use_info))
@@ -90,6 +91,10 @@ def main(input_file, echo, run_name, spec_bench_dir):
         assert run_name.endswith("_test")
         spec_dataset = "test"
     pristine_spec_run_dir = get_pristine_spec_bench_run_dir(spec_bench_dir, spec_bench_id, spec_dataset)
+    if os.path.isdir(pristine_spec_run_dir):
+        print("Pristine input dir [%s] does not exist, cannot analysis the syscall" % pristine_spec_run_dir,
+              file=sys.stderr)
+        sys.exit(-1)
 
     trace_analyzer = scall_trace_analyzer(init_at_cwd)
     strace_str = input_file.read()
