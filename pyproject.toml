@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "anycore-dbg-supplement"
-version = "0.0.2"
+version = "0.0.3"
 description = "A bundle of auxiliary scripts for the Anycore project"
 authors = ["Jiayang Li <jli95@ncsu.edu>"]
 license = "Other/Proprietary License"
@@ -11,14 +11,17 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
     "Development Status :: 3 - Alpha",
 ]
-packages  = [
+packages = [
     { include = "Checkpointing" },
     { include = "CpuTraceAnalysis" },
+    { include = "SimEnvControl" },
     { include = "SpecResultVerification" },
+    { include = "SyscallAnalysis" },
     { include = "TetherSim" },
 ]
 exclude = [
     "Checkpointing/SyscallAnalysis/archived",
+    "debug_entry",
 ]
 
 [tool.poetry.dependencies]
@@ -36,11 +39,14 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-# Perform a prerun check based on the info in manifest DB
-atool_prerun_check = "Checkpointing.SyscallAnalysis.prerun_check:main"
+# Spawn a new sim env using symlink, based on the information in the manifest DB
+atool_sim_env_spawn = "SimEnvControl.sim_env_spawn:main"
 
-# Analyze the syscall trace dump for a SPEC run, produce the manifest for it, save the manifest into DB
-atool_generate_manifest = "Checkpointing.SyscallAnalysis.generate_manifest:main"
+# Check the sim env based on the information in the manifest DB
+atool_sim_env_verify = "SimEnvControl.sim_env_verify:main"
+
+# Learn a new sim env from a syscall trace dump, save the learn result into manifest DB
+atool_sim_env_learn = "SimEnvControl.sim_env_learn:main"
 
 # Trim out the extra header/tail message produced by spike or pk during the simulation
 atool_spike_trim = "SpecResultVerification.spike_trim:main"
