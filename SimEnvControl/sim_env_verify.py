@@ -153,12 +153,14 @@ def main(sim_dir, run_name, print_all_valid_run_name):
         if details['spec_input']:
             check_succ &= check_spec_input(pname, details, fuse_record)
         else:
-            if not fuse_record.has_write_data() and not fuse_record.has_remove() and (
+            if not fuse_record.has_write_data() and not fuse_record.has_remove() and not fuse_record.has_create() and (
                     fuse_record.has_stat() or fuse_record.has_read_data() or fuse_record.has_open()
             ):
                 check_succ &= check_non_spec_input(pname, details, fuse_record)
-            elif fuse_record.has_write_data() or fuse_record.has_remove() or fuse_record.has_create():
+            elif fuse_record.has_write_data() or fuse_record.has_remove() or fuse_record.has_create() or fuse_record.has_stat() or fuse_record.has_open():
                 check_succ &= check_output(pname, details, fuse_record)
+            else:
+                assert False
     print()
     if failures:
         print("Pre-Run checking failed:")
