@@ -91,7 +91,7 @@ def main(input_file, echo, run_name, spec_bench_dir):
         assert run_name.endswith("_test")
         spec_dataset = "test"
     pristine_spec_run_dir = get_pristine_spec_bench_run_dir(spec_bench_dir, spec_bench_id, spec_dataset)
-    if os.path.isdir(pristine_spec_run_dir):
+    if not os.path.isdir(pristine_spec_run_dir):
         print("Pristine input dir [%s] does not exist, cannot analysis the syscall" % pristine_spec_run_dir,
               file=sys.stderr)
         sys.exit(-1)
