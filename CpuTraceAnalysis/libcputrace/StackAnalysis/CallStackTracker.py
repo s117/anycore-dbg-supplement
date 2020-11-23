@@ -4,9 +4,9 @@ from typing import Deque, Optional, Generator, List
 from . import TraceCodePatternScanner
 
 from .HistoryRecorder import HistoryRecorder, DummyHistoryRecorder
-
 from ..MachineCode.Instruction import Instruction
 from ..MachineCode.SymbolTable import SymbolTable
+from ..MachineCode.CppDemangler import CppDemangler
 from ..utils import strong_check, weak_check
 
 
@@ -150,11 +150,11 @@ class CallStackTracker:
 
         def __str__(self):
             return "%s:%s @ %s, called by %s:%s @ %s" % (
-                self.callee_symbol.symbol_name,
+                CppDemangler.demangle(self.callee_symbol.symbol_name),
                 SymbolTable.format_addr(self.callee_symbol.start_addr),
                 self.callee_symbol.module_name,
 
-                self.caller_symbol.symbol_name,
+                CppDemangler.demangle(self.caller_symbol.symbol_name),
                 SymbolTable.format_addr(self.caller_insn_addr),
                 self.caller_symbol.module_name,
             )
@@ -203,7 +203,7 @@ class CallStackTracker:
 
         def __str__(self):
             ret_val = "%s:%s @ %s, called by Reset (reset vector %s)" % (
-                self.callee_symbol.symbol_name,
+                CppDemangler.demangle(self.callee_symbol.symbol_name),
                 SymbolTable.format_addr(self.callee_symbol.start_addr),
                 self.callee_symbol.module_name,
                 SymbolTable.format_addr(self.frame.reset_vec)
@@ -223,17 +223,17 @@ class CallStackTracker:
         def __str__(self):
             if self.caller_symbol:
                 return "%s:%s @ %s, called by %s:%s @ %s [Recovered]" % (
-                    self.callee_symbol.symbol_name,
+                    CppDemangler.demangle(self.callee_symbol.symbol_name),
                     SymbolTable.format_addr(self.callee_symbol.start_addr),
                     self.callee_symbol.module_name,
 
-                    self.caller_symbol.symbol_name,
+                    CppDemangler.demangle(self.caller_symbol.symbol_name),
                     SymbolTable.format_addr(self.caller_insn_addr),
                     self.caller_symbol.module_name,
                 )
             else:
                 return "%s:%s @ %s, called by ? [Recovered]" % (
-                    self.callee_symbol.symbol_name,
+                    CppDemangler.demangle(self.callee_symbol.symbol_name),
                     SymbolTable.format_addr(self.callee_symbol.start_addr),
                     self.callee_symbol.module_name
                 )
