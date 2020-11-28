@@ -1,46 +1,44 @@
 #!/usr/bin/env python3
-import os
 import sys
-from typing import Dict
 
 import click
+import os
 
-from SyscallAnalysis.libsyscall.analyzer.check_scall import file_use_record
-from .libsimenv.manifest_db import *
-from .libsimenv.utils import sha256
+from SyscallAnalysis.libsyscall.target_path_converter import TargetPathConverter
+from SyscallAnalysis.libsyscall.analyzer.file_usage import FileUsageInfo
+from .libsimenv.manifest_db import load_from_manifest_db, prompt_app_name_suggestion
+from .libsimenv.app_manifest import verify_manifest_format
+from .libsimenv.utils import sha256, is_valid_sha256, fatal
 
-warnings = list()
-failures = list()
-
-
-class CheckingFailure(RuntimeError):
-    pass
-
-
-def add_warning(warn):
-    # type: (str) -> None
-    warnings.append(warn)
-    print("Warning: %s" % warn, file=sys.stderr)
+warnings = dict()
+failures = dict()
 
 
-def add_failure(fail):
-    # type: (str) -> None
-    failures.append(fail)
+def add_warning(pname, warn):
+    # type: (str, str) -> None
+    if pname not in warnings:
+        warnings[pname] = warn
 
 
-def check_read(pname):
+def add_failure(pname, fail):
+    # type: (str, str) -> None
+    if pname not in failures:
+        failures[pname] = fail
+
+
+def has_read_perm(pname):
     return os.access(pname, os.R_OK)
 
 
-def check_dir_writeable(dirname):
-    if os.path.isdir(dirname):
-        return os.access(dirname, os.W_OK)
-    pdir = os.path.dirname(dirname)
-    if not pdir: pdir = '.'
-    return check_dir_writeable(pdir)
+def has_write_perm(pname):
+    def check_dir_writeable(dirname):
+        if os.path.isdir(dirname):
+            return os.access(dirname, os.W_OK)
+        pdir = os.path.dirname(dirname)
+        if not pdir:
+            pdir = '.'
+        return check_dir_writeable(pdir)
 
-
-def check_write(pname):
     if os.path.exists(pname):
         if os.path.isfile(pname):
             return os.access(pname, os.W_OK)
@@ -49,126 +47,130 @@ def check_write(pname):
     return check_dir_writeable(pname)
 
 
-def check_stat(pname):
-    return os.path.exists(pname)
-
-
-def check_spec_input(name, details, fuse_record):  # type: (str, Dict, file_use_record) -> bool
-    print("Checking SPEC input file \"%s\"" % name)
-    if fuse_record.has_abs_ref():
-        add_warning("SPEC input will be referenced by absolute path - \"%s\"" % name)
-    if not os.path.exists(name):
-        add_failure("Required SPEC input file/dir doesn't exist in CWD - \"%s\"" % name)
-        return False
-    expected_sha256 = details['sha256']
-    if expected_sha256:
-        try:
-            actual_sha256 = sha256(name)
-        except FileNotFoundError:
-            add_failure("Fail to get the SHA256 hash of file in CWD - \"%s\"" % name)
-            return False
-        if actual_sha256 != expected_sha256:
-            add_failure("SPEC input file's HASH doesn't match - \"%s\"" % name)
-            return False
-    return True
-
-
-def check_non_spec_input(name, details, fuse_record):  # type: (str, Dict, file_use_record) -> bool
-    print("Checking Non-SPEC input file \"%s\" (no integrity checking)" % name)
-    if fuse_record.has_abs_ref():
-        add_warning("Non-SPEC input file will be referenced by absolute path - \"%s\"" % name)
-
-    if not os.path.exists(name):
-        add_failure("Non-SPEC input file doesn't exist - \"%s\"" % name)
-        return False
-
-    if fuse_record.has_read_data():
-        if not check_read(name):
-            add_failure("Cannot read Non-SPEC input file - \"%s\"" % name)
-            return False
-
-    return True
-
-
-def check_output(name, details, fuse_record):  # type: (str, Dict, file_use_record) -> bool
-    print("Checking output permission \"%s\"" % name)
-    if fuse_record.has_abs_ref():
-        add_warning("Output will be referenced by absolute path - \"%s\"" % name)
-    if not check_write(name):
-        add_failure("No write permission on output file - \"%s\"" % name)
+def check_exist(pname):
+    if not os.path.exists(pname):
+        add_failure(pname, "Path not exist")
         return False
     return True
 
 
-def prompt_run_name_suggestion(run_name):
-    suggestions = get_run_name_suggestion(run_name, limit=10)
-    if suggestions:
-        print("Did you mean:", file=sys.stderr)
-        for s in suggestions:
-            print("\t%s" % s, file=sys.stderr)
+def check_read(pname):
+    if not check_exist(pname):
+        return False
+    if not has_read_perm(pname):
+        add_failure(pname, "Path not readable")
+        return False
+    return True
+
+
+def check_write(pname, non_exist_ok):
+    if not non_exist_ok and not check_exist(pname):
+        return False
+    if not has_write_perm(pname):
+        add_failure(pname, "Path not writable")
+        return False
+    return True
+
+
+def check_isdir(pname):
+    if not os.path.isdir(pname):
+        add_failure(pname, "Path is not a DIR")
+        return False
+    return True
+
+
+def check_isfile(pname):
+    if not os.path.isfile(pname):
+        add_failure(pname, "Path is not a FILE")
+        return False
+    return True
+
+
+def check_hash(pname, expect):
+    if expect is None or expect == 'SKIP':
+        add_warning(pname, "SHA256 checking was skipped")
+        return True
+    if expect == 'DIR':
+        return check_isdir(pname)
+    elif is_valid_sha256(expect):
+        if not check_exist(pname):
+            return False
+        if not check_isfile(pname):
+            return False
+        if not check_read(pname):
+            return False
+        actual = sha256(pname)
+        if actual != expect:
+            add_failure(pname, "File hash not match, Expect: %s, Actual: %s" % (expect, actual))
+            return False
+        return True
     else:
-        print("No run name suggestion.", file=sys.stderr)
+        raise ValueError("Malformed hash: %s" % expect)
 
 
-def prompt_all_valid_run_name():
-    all_available_run_names = sorted(get_avail_runs_in_db())
-    if all_available_run_names:
-        print("All valid run name", file=sys.stderr)
-        for arn in all_available_run_names:
-            print("\t%s" % arn, file=sys.stderr)
-    else:
-        print("No record in the manifest DB [%s]" % get_default_dbpath(), file=sys.stderr)
-        print(
-            "To generate manifest for a new benchmark, collect it's syscall trace then use the generate_manifest.py",
-            file=sys.stderr
+def perform_manifest_fsck(manifest, target_sysroot):
+    path_converter = TargetPathConverter({"/": target_sysroot})
+    for pname, details in manifest['fs_access'].items():
+        host_path = path_converter.t2h(pname)
+        print("Checking path [%s] <--> [%s]" % (pname, host_path))
+        file_usage = FileUsageInfo.build_from_str(details['usage'])
+        pre_run_hash = details['hash']['pre-run']
 
-        )
+        check_hash(host_path, pre_run_hash)
+
+        if file_usage.has_remove():
+            check_write(host_path, non_exist_ok=True)
+
+        if file_usage.has_create():
+            if not pre_run_hash:
+                check_write(host_path, non_exist_ok=True)
+
+        if file_usage.has_open_wr() or file_usage.has_open_rw() or file_usage.has_write_data():
+            check_write(host_path, non_exist_ok=pre_run_hash is None)
+
+        if file_usage.has_open_rd() or file_usage.has_open_rw() or file_usage.has_read_data():
+            if pre_run_hash:
+                check_read(host_path)
+            elif not file_usage.has_create():
+                add_warning(host_path, "Possible corrupt manifest: use a non-exist file?")
 
 
 @click.command()
-@click.argument("sim_dir", type=click.Path(exists=True, dir_okay=True, file_okay=False))
-@click.option("-n", "--run-name", help="Override the run name (default is the folder name)")
-@click.option("-a", "--print-all-valid-run-name", is_flag=True, help="Print all the available run name then exit")
-def main(sim_dir, run_name, print_all_valid_run_name):
-    if print_all_valid_run_name:
-        prompt_all_valid_run_name()
-        sys.exit(0)
-
-    os.chdir(sim_dir)
-    init_at_cwd = os.getcwd()
-    if not run_name:
-        run_name = os.path.basename(init_at_cwd)
-    print("Start file environment pre-run checking: '%s' at '%s'\n" % (run_name, sim_dir))
+@click.pass_context
+@click.argument("app-name")
+@click.argument("simenv-sysroot", type=click.Path(exists=True, dir_okay=True, file_okay=False))
+def main(ctx, app_name, simenv_sysroot):
+    manifest_db_path = ctx.obj['manifest_db_path']
+    print("Begin pre-run file environment checking: %s @ [%s]" % (app_name, simenv_sysroot))
+    print()
 
     try:
-        manifest = load_from_manifest_db(run_name)
+        manifest = load_from_manifest_db(app_name)
+        verify_manifest_format(manifest)
     except FileNotFoundError:
-        print("Fatal: No manifest file for run '%s'" % run_name, file=sys.stderr)
-        prompt_run_name_suggestion(run_name)
+        print("Fatal: No manifest file for app '%s'" % app_name, file=sys.stderr)
+        prompt_app_name_suggestion(app_name, manifest_db_path)
         sys.exit(-1)
-
-    check_succ = True
-    for pname, details in manifest.items():
-        fuse_record = file_use_record.build_from_str(details['usage'])
-        if details['spec_input']:
-            check_succ &= check_spec_input(pname, details, fuse_record)
-        else:
-            if not fuse_record.has_write_data() and not fuse_record.has_remove() and not fuse_record.has_create() and (
-                    fuse_record.has_stat() or fuse_record.has_read_data() or fuse_record.has_open()
-            ):
-                check_succ &= check_non_spec_input(pname, details, fuse_record)
-            elif fuse_record.has_write_data() or fuse_record.has_remove() or fuse_record.has_create() or fuse_record.has_stat() or fuse_record.has_open():
-                check_succ &= check_output(pname, details, fuse_record)
-            else:
-                assert False
-    print()
-    if failures:
-        print("Pre-Run checking failed:")
-        for f in failures:
-            print(f, file=sys.stderr)
-        sys.exit(-1)
+    except ValueError as ve:
+        fatal("%s has a malformed manifest (%s)" % (app_name, ve))
     else:
-        print("Pre-Run checking passed%s." % (" with warning" if warnings else ""))
+        perform_manifest_fsck(manifest, simenv_sysroot)
+        print()
+        path_with_caveat = set(warnings.keys()).union(failures.keys())
+        if path_with_caveat:
+            print("Result:")
+            for p in path_with_caveat:
+                print("[%s]" % p)
+                if p in failures:
+                    print("  - (failed) %s" % failures[p])
+                if p in warnings:
+                    print("  - (warn) %s" % warnings[p])
+
+        if failures:
+            print("Pre-Run FS checking failed.")
+            sys.exit(-1)
+        else:
+            print("Pre-Run FS checking passed%s." % (" with warning" if warnings else ""))
 
 
 if __name__ == '__main__':

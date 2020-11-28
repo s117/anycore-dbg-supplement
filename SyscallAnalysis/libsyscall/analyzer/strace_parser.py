@@ -3,7 +3,7 @@ from pyparsing import *
 import base64
 
 
-class strace_parser:
+class StraceInputParser:
     list_arg_type_num = {
         "uint64_t": "int 64",
         "int64_t": "int 64",

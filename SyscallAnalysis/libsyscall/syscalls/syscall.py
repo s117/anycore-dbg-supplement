@@ -1,4 +1,5 @@
 import os
+import pathlib
 from typing import List, Any, Optional, Union
 
 AT_FDCWD = -100
@@ -7,30 +8,54 @@ AT_FDCWD = -100
 class path:
     def __init__(self, base, pathname):
         # type: (str, str) -> None
-        self.base = base
-        self.pathname = pathname
+        self.base = pathlib.PurePosixPath(base)
+        self.path = pathlib.PurePosixPath(pathname)
+        assert self.base.is_absolute()
 
     def isabs(self):
         # type: () -> bool
-        return os.path.isabs(self.pathname)
+        return self.path.is_absolute()
 
     def rawpath(self):
-        return self.pathname
+        return str(self.path)
 
     def abspath(self):
         # type: () -> str
-        if self.isabs():
-            return self.pathname
-        else:
-            return os.path.abspath(os.path.join(self.base, self.pathname))
+        sep = os.path.sep
+
+        def _resolve(_path, _rest):
+            if _rest.startswith(sep):
+                _path = ''
+
+            for name in _rest.split(sep):
+                if not name or name == '.':
+                    # current dir
+                    continue
+                if name == '..':
+                    # parent dir
+                    _path, _, _ = _path.rpartition(sep)
+                    continue
+                if _path.endswith(sep):
+                    _path = _path + name
+                else:
+                    _path = _path + sep + name
+            return _path
+
+        base = '' if self.path.is_absolute() else str(self.base)
+        return _resolve(base, str(self.path)) or sep
 
     def contains(self, p):
         # type: (path) -> bool
         assert isinstance(p, path)
+
         p_abspath = p.abspath()
         this_abspath = self.abspath()
 
-        return p_abspath.startswith(this_abspath)
+        try:
+            pathlib.PurePosixPath(p_abspath).relative_to(this_abspath)
+            return True
+        except ValueError:
+            return False
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and self.base == other.base and self.pathname == other.pathname
@@ -152,3 +177,33 @@ def mixedomatic(cls):
     # Make the local function the class's __init__.
     setattr(cls, '__init__', __init__)
     return cls
+
+
+def main():
+    pass
+
+    def test_resolve(_base, _path, _expect):
+        _actual = path(_base, _path).abspath()
+        print("[%s] %s + %s, Expect [%s], Actual [%s]" % (_actual == _expect, _base, _path, _expect, _actual))
+
+    test_resolve("/", "", "/")
+    test_resolve("/", "/", "/")
+    test_resolve("/", "/app", "/app")
+    test_resolve("/app", "/usr", "/usr")
+    test_resolve("/app", "/usr/..", "/")
+    test_resolve("/app", "ned/..", "/app")
+    test_resolve("/app/ned", "..", "/app")
+    test_resolve("/app", "ned/", "/app/ned")
+    test_resolve("/app/ned", ".", "/app/ned")
+    test_resolve("/app/ned", "..", "/app")
+    test_resolve("/app/ned/..", "", "/app/ned/..")
+    test_resolve("/app/ned/../", "", "/app/ned/..")
+    test_resolve("/app/ned/.", "", "/app/ned")
+    test_resolve("/app/./ned", ".", "/app/ned")
+    test_resolve("/app/./ned/../app", "", "/app/ned/../app")
+    test_resolve("/app/./ned/../app", "app", "/app/ned/../app/app")
+    test_resolve("/", "app/./ned/../app", "/app/app")
+
+
+if __name__ == '__main__':
+    main()

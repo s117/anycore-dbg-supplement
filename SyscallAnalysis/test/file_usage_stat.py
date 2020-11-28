@@ -3,6 +3,7 @@ import os
 import click
 
 from SyscallAnalysis.libsyscall.analyzer.syscall_trace_constructor import SyscallTraceConstructor
+from SyscallAnalysis.libsyscall.analyzer.file_usage import stat_file_usage
 
 
 @click.command()
@@ -17,8 +18,7 @@ def main(input_file, echo):
     strace_str = input_file.read()
 
     trace_cntr.parse_strace_str(strace_str)
-    for t in trace_cntr.syscalls:
-        print(str(t))
+    file_usage = stat_file_usage(trace_cntr.syscalls, True)
 
 
 if __name__ == '__main__':

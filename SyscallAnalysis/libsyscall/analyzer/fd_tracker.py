@@ -1,5 +1,5 @@
 from typing import Dict, Any, Optional, Callable, Tuple, Union
-import os
+import pathlib
 
 from ..syscalls import syscall
 from ..syscalls.sys_openat import sys_openat
@@ -8,8 +8,8 @@ from ..syscalls.sys_close import sys_close
 from ..syscalls.sys_chdir import sys_chdir
 
 
-class fd_tracker:
-    def __init__(self, cwd):
+class FileDescriptorTracker:
+    def __init__(self, initial_cwd):
         # type: (str) -> None
         self.active_fds = dict()  # type: Dict[int, Tuple[str, int, Optional[Union[syscall.syscall, syscall.mixin_syscall_def_fd]]]]
 
@@ -20,14 +20,14 @@ class fd_tracker:
             "sys_chdir": self.on_sys_chdir,
         }  # type: Dict[str, Callable[[Any], None]]
 
-        assert os.path.isabs(cwd)
+        assert pathlib.PurePosixPath(initial_cwd).is_absolute()
         self.on_sys_chdir(
             sys_chdir(
                 name="sys_chdir",
-                args=[syscall.arg_ptr("path", "path_in_t", 0, cwd)],
+                args=[syscall.arg_ptr("path", "path_in_t", 0, initial_cwd)],
                 ret=0,
                 syscall_id=49,
-                at_cwd=cwd,
+                at_cwd=initial_cwd,
                 seq_no=-1
             )
         )

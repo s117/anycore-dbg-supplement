@@ -6,8 +6,6 @@ from . import syscall as s
 # int openat(int dirfd, const char *pathname, int flags, mode_t mode);
 @s.mixedomatic
 class sys_openat(s.syscall, s.mixin_syscall_has_path_args, s.mixin_syscall_def_fd, s.mixin_syscall_use_fd):
-    O_ACCMODE = (os.O_RDONLY | os.O_WRONLY | os.O_RDWR)
-
     def __init__(self, name, args, ret, syscall_id, at_cwd, seq_no):
         super().__init__(name, args, ret, syscall_id, at_cwd, seq_no)
 

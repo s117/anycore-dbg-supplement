@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "anycore-dbg-supplement"
-version = "0.1.0"
+version = "0.2.0"
 description = "A bundle of auxiliary scripts for the Anycore project"
 authors = ["Jiayang Li <jli95@ncsu.edu>"]
 license = "Other/Proprietary License"
@@ -31,6 +31,8 @@ fuzzywuzzy = "^0.18.0"
 pyparsing = "^2.4.7"
 PyYAML = "^5.3.1"
 python-Levenshtein = "^0.12.0"
+coverage = "^5.3"
+bashlex = "^0.15"
 
 [tool.poetry.dev-dependencies]
 
@@ -39,14 +41,12 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-# Spawn a new sim env using symlink, based on the information in the manifest DB
-atool_sim_env_spawn = "SimEnvControl.sim_env_spawn:main"
-
-# Check the sim env based on the information in the manifest DB
-atool_sim_env_verify = "SimEnvControl.sim_env_verify:main"
-
-# Learn a new sim env from a syscall trace dump, save the learn result into manifest DB
-atool_sim_env_learn = "SimEnvControl.sim_env_learn:main"
+# The simenv tool is comprised by serval subcommand:
+#  spawn  - Spawn a new sim env using symlink, based on the information in the manifest DB
+#  verify - Check the sim env based on the information in the manifest DB
+#  learn  - Learn a new sim env from a syscall trace dump, save the learn result into manifest DB
+#  show   - Show all available workload and their checkpoints
+atool-simenv = "SimEnvControl.sim_env_cli:cli"
 
 # Trim out the extra header/tail message produced by spike or pk during the simulation
 atool_spike_trim = "SpecResultVerification.spike_trim:main"

@@ -6,6 +6,7 @@ from . import syscall as s
 # int chdir(const char *path);
 @s.mixedomatic
 class sys_chdir(s.syscall, s.mixin_syscall_has_path_args, s.mixin_syscall_def_fd):
+    # because AT_FDCWD is logically defined by chdir, sys_chdir has mixin_syscall_def_fd
     default_flag = os.O_RDONLY | os.O_CLOEXEC | os.O_DIRECTORY | os.O_NONBLOCK
 
     def __init__(self, name, args, ret, syscall_id, at_cwd, seq_no):

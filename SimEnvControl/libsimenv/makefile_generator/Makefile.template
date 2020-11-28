@@ -1,0 +1,42 @@
+TOP_DIR = $(PWD)
+SIMENV_SYSROOT = $(TOP_DIR)/simenv
+
+APP_NAME = {app_name}
+APP_CMD = {app_cmd}
+APP_INIT_CWD = {app_init_cwd}
+APP_MEMSIZE = {app_memsize}
+
+SIM = {sim_cmd}
+SIM_FLAGS = {sim_flags}
+FESVR_FLAGS = {fesvr_flags}
+PK_FLAGS = {pk_flags}
+
+SIM_FLAGS_EXTRA =
+FESVR_FLAGS_EXTRA =
+PK_FLAGS_EXTRA =
+APP_CMD_EXTRA =
+
+define cmd_check
+$(if $(shell 2>/dev/null which $1),,$(info $2) $(error Cmd check failed))
+endef
+
+$(call cmd_check,atool-simenv,No command 'atool-simenv'. Did you installed the anycore-dbg-supplement? (pip3 install --user anycore-dbg-supplement))
+$(call cmd_check,$(SIM),No simulation command '$(SIM)')
+
+.PHONY: envsetup envcheck envclean run
+
+envsetup:
+	@ echo Setting up a new simenv at $(SIMENV_SYSROOT)
+	atool-simenv spawn $(APP_NAME) $(SIMENV_SYSROOT)
+
+envcheck:
+	@ echo Verifing the simenv at $(SIMENV_SYSROOT)
+	atool-simenv verify $(APP_NAME) $(SIMENV_SYSROOT)
+
+envclean:
+	@ echo Removing the simenv at $(SIMENV_SYSROOT)
+	rm -frv $(SIMENV_SYSROOT)
+
+run: envcheck
+	echo sim
+	cd $(SIMENV_SYSROOT)$(APP_INIT_CWD) && $(SIM) -m$(APP_MEMSIZE) $(SIM_FLAGS) $(SIM_FLAGS_EXTRA) $(FESVR_FLAGS) $(FESVR_FLAGS_EXTRA) +chroot=$(SIMENV_SYSROOT) pk $(PK_FLAGS) $(PK_FLAGS_EXTRA) $(APP_CMD) $(APP_CMD_EXTRA)

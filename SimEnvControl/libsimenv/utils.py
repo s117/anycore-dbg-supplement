@@ -1,5 +1,7 @@
-import hashlib
 import os
+import hashlib
+import string
+import sys
 
 from .spec_bench_name import spec_bench_name
 
@@ -17,9 +19,14 @@ def sha256(fpath):
     return sha256.hexdigest()
 
 
-def get_pristine_spec_bench_run_dir(base, spec_no, dataset):
-    # type: (str, int, str) -> str
-    return os.path.join(
-        base,
-        "%s.%s_%s" % (spec_no, spec_bench_name[spec_no], dataset)
-    )
+def is_valid_sha256(h):
+    return len(h) == 64 and all(_ in string.hexdigits for _ in h)
+
+
+def fatal(s):
+    print("Fatal: %s" % s, file=sys.stderr)
+    sys.exit(-1)
+
+
+def warning(s):
+    print("Warning: %s" % s, file=sys.stderr)

@@ -1,29 +1,29 @@
 from typing import List, Iterable
 from pyparsing import ParseResults
 
-from .fd_tracker import fd_tracker
-from .strace_parser import strace_parser
+from .fd_tracker import FileDescriptorTracker
+from .strace_parser import StraceInputParser
 from ..syscalls import syscall
 from ..syscalls import factory as syscall_factory
 
 
-class scall_trace_analyzer:
+class SyscallTraceConstructor:
 
     def __init__(self, initial_working_dir):
         self.syscalls = list()  # type: List[syscall.syscall]
-        self.fd_res = fd_tracker(initial_working_dir)
+        self.fd_res = FileDescriptorTracker(initial_working_dir)
 
     def get_fd_resolver(self):
-        # type: () -> fd_tracker
+        # type: () -> FileDescriptorTracker
         return self.fd_res
 
     def on_strace_parsed(self, p, start, end):
         # type: (ParseResults, int, int) -> None
         args = list()
         for pa in p.syscall_args:
-            if pa.arg_type in strace_parser.list_arg_type_strptr:
+            if pa.arg_type in StraceInputParser.list_arg_type_strptr:
                 args.append(syscall.arg_ptr(pa.arg_name, pa.arg_type, pa.arg_val, pa.arg_memval))
-            elif pa.arg_type in strace_parser.list_arg_type_num:
+            elif pa.arg_type in StraceInputParser.list_arg_type_num:
                 args.append(syscall.arg_val(pa.arg_name, pa.arg_type, pa.arg_val))
             else:
                 raise ValueError("Invalid syscall argument type %s" % p.arg_type)
@@ -46,6 +46,6 @@ class scall_trace_analyzer:
         self.fd_res.on_syscall(new_syscall, start, end)
 
     def parse_strace_str(self, strace_str):
-        for i, start, end in strace_parser.parse(strace_str):
+        for i, start, end in StraceInputParser.parse(strace_str):
             if i:
                 self.on_strace_parsed(i, start, end)
