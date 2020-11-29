@@ -6,6 +6,7 @@ import os
 
 from SyscallAnalysis.libsyscall.target_path_converter import TargetPathConverter
 from SyscallAnalysis.libsyscall.analyzer.file_usage import FileUsageInfo
+from .libsimenv.autocomplete import complete_app_names, complete_dir
 from .libsimenv.manifest_db import load_from_manifest_db, prompt_app_name_suggestion
 from .libsimenv.app_manifest import verify_manifest_format
 from .libsimenv.utils import sha256, is_valid_sha256, fatal
@@ -109,7 +110,7 @@ def check_hash(pname, expect):
 
 
 def perform_manifest_fsck(manifest, target_sysroot):
-    path_converter = TargetPathConverter({"/": target_sysroot})
+    path_converter = TargetPathConverter({"/": os.path.abspath(target_sysroot)})
     for pname, details in manifest['fs_access'].items():
         host_path = path_converter.t2h(pname)
         print("Checking path [%s] <--> [%s]" % (pname, host_path))
@@ -137,11 +138,15 @@ def perform_manifest_fsck(manifest, target_sysroot):
 
 @click.command()
 @click.pass_context
-@click.argument("app-name")
-@click.argument("simenv-sysroot", type=click.Path(exists=True, dir_okay=True, file_okay=False))
-def main(ctx, app_name, simenv_sysroot):
+@click.argument("app-name", autocompletion=complete_app_names, type=click.STRING)
+@click.argument("simenv-path", autocompletion=complete_dir,
+                type=click.Path(exists=True, dir_okay=True, file_okay=False))
+def verify(ctx, app_name, simenv_path):
+    """
+    Perform integrity checking for a simenv.
+    """
     manifest_db_path = ctx.obj['manifest_db_path']
-    print("Begin pre-run file environment checking: %s @ [%s]" % (app_name, simenv_sysroot))
+    print("Begin pre-run file environment checking: %s @ [%s]" % (app_name, simenv_path))
     print()
 
     try:
@@ -154,11 +159,11 @@ def main(ctx, app_name, simenv_sysroot):
     except ValueError as ve:
         fatal("%s has a malformed manifest (%s)" % (app_name, ve))
     else:
-        perform_manifest_fsck(manifest, simenv_sysroot)
+        perform_manifest_fsck(manifest, simenv_path)
         print()
         path_with_caveat = set(warnings.keys()).union(failures.keys())
         if path_with_caveat:
-            print("Result:")
+            print("Caveat:")
             for p in path_with_caveat:
                 print("[%s]" % p)
                 if p in failures:
@@ -174,4 +179,4 @@ def main(ctx, app_name, simenv_sysroot):
 
 
 if __name__ == '__main__':
-    main()
+    verify()

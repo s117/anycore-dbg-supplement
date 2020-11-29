@@ -1,9 +1,13 @@
+from typing import Optional, List
+
 from bashlex import parser, ast
+from bashlex.errors import ParsingError
 
 from .utils import fatal, warning
 
 
 def extract_stdin_file_from_shcmd(shcmd):
+    # type: (str) -> Optional[List[str]]
     trees = parser.parse(shcmd)
     stdin_files = []
 
@@ -17,7 +21,10 @@ def extract_stdin_file_from_shcmd(shcmd):
             else:
                 warning("Warning: command [%s] contains non-resolvable stdin source." % shcmd)
 
-    for tree in trees:
-        visitor = nodevisitor()
-        visitor.visit(tree)
-    return stdin_files
+    try:
+        for tree in trees:
+            visitor = nodevisitor()
+            visitor.visit(tree)
+        return stdin_files
+    except ParsingError:
+        return None

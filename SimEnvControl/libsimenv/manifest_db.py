@@ -1,6 +1,7 @@
 import os
 import sys
 from collections import defaultdict
+from typing import List
 
 import yaml
 
@@ -35,16 +36,20 @@ def load_from_manifest_db(record_name, db_path=get_default_dbpath()):
 
 
 def get_avail_apps_in_db(db_path=get_default_dbpath()):
-    avail_apps = list(map(
-        lambda tp: tp[0],
-        filter(
-            lambda tp: tp[1].lower() == ".yaml",
-            map(
-                lambda p: os.path.splitext(p),
-                os.listdir(db_path)
+    # type: (str) -> List[str]
+    try:
+        avail_apps = list(map(
+            lambda tp: tp[0],
+            filter(
+                lambda tp: tp[1].lower() == ".yaml",
+                map(
+                    lambda p: os.path.splitext(p),
+                    os.listdir(db_path)
+                )
             )
-        )
-    ))
+        ))
+    except FileNotFoundError:
+        return []
 
     return avail_apps
 
@@ -89,7 +94,9 @@ def prompt_all_valid_app_name(db_path, checkpoints_archive_path):
         print("All available app:", file=sys.stderr)
         for arn in all_available_app_names:
             if checkpoints_archive_path:
-                print("\t%s (%d checkpoint(s) available)" % (arn, len(apps_chkpts[arn])), file=sys.stderr)
+                n_chkpts = len(apps_chkpts[arn])
+                print("\t%s (%d %s available)" % (arn, n_chkpts, "checkpoints" if n_chkpts > 1 else "checkpoint"),
+                      file=sys.stderr)
             else:
                 print("\t%s" % arn, file=sys.stderr)
     else:

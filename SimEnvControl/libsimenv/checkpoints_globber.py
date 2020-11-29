@@ -1,11 +1,13 @@
 import os
+from typing import Dict, List
 
 
 def glob_all_checkpoints(chkpt_root):
+    # type: (str) -> Dict[str, List[str]]
     apps = filter(lambda _p: os.path.isdir(os.path.join(chkpt_root, _p)), os.listdir(chkpt_root))
 
     def get_all_gz_in_dir(_dirpath):
-        return tuple(filter(lambda _p: _p.endswith(".gz"), os.listdir(_dirpath)))
+        return list(filter(lambda _p: _p.endswith(".gz"), os.listdir(_dirpath)))
 
     result = dict()
     for app in apps:
@@ -14,6 +16,24 @@ def glob_all_checkpoints(chkpt_root):
             result[app] = chkpts
 
     return result
+
+
+def get_available_checkpoints_for_app(chkpt_root, app):
+    # type: (str, str) -> List[str]
+    all_available = glob_all_checkpoints(chkpt_root)
+    if app not in all_available:
+        return []
+    else:
+        return all_available[app]
+
+
+def get_all_available_checkpoints_for_any(chkpt_root):
+    # type: (str) -> List[str]
+    all_available = glob_all_checkpoints(chkpt_root)
+    all_chkpts = []
+    for v in all_available.values():
+        all_chkpts.extend(v)
+    return all_chkpts
 
 
 def check_checkpoint_exist(chkpt_root, app_name, checkpoint):

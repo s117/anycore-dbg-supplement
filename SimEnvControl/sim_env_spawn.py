@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
-import os
 import shutil
-import sys
-from typing import Dict
 
 import click
 
-from SyscallAnalysis.libsyscall.analyzer.file_usage import FileUsageInfo
-from SyscallAnalysis.libsyscall.target_path_converter import TargetPathConverter
+from .libsimenv.autocomplete import complete_app_names, complete_dir
 from .libsimenv.app_manifest import *
 from .libsimenv.manifest_db import *
 
@@ -16,15 +12,15 @@ from .libsimenv.utils import *
 
 @click.command()
 @click.pass_context
-@click.argument("app-name", type=click.STRING)
-@click.argument("dest-dir", type=click.Path())
+@click.argument("app-name", autocompletion=complete_app_names, type=click.STRING)
+@click.argument("dest-dir", autocompletion=complete_dir, type=click.Path(exists=True, dir_okay=True, file_okay=False))
 @click.option("-f", "--force", is_flag=True,
-              help="If path [new-dir] already exist, remove it before create the new sim env")
+              help="If path [new-dir] already exist, remove it before create the new simenv.")
 @click.option("-c", "--copy-mode", is_flag=True,
-              help="Copy the file to the new simenv, regardless the spawn mode given by the manifest")
-def main(ctx, app_name, dest_dir, force, copy_mode):
+              help="Copy the file to the new simenv, regardless the spawn mode given by the manifest.")
+def spawn(ctx, app_name, dest_dir, force, copy_mode):
     """
-    Spawn a new simenv
+    Spawn a simenv.
     """
     manifest_db_path = ctx.obj['manifest_db_path']
 
@@ -67,8 +63,6 @@ def main(ctx, app_name, dest_dir, force, copy_mode):
             spawn_dir(par_dir)
             if os.path.isdir(dst):
                 fatal("Malformed manifest input: %s implies both input file and dir" % dst)
-            if not os.path.isfile(src):
-                raise ValueError("Internal error: src [%s] is not a file" % src)
             if link_mode:
                 os.symlink(src, dst)
                 print("Symlink %s -> %s" % (src, dst))
@@ -96,4 +90,4 @@ def main(ctx, app_name, dest_dir, force, copy_mode):
 
 
 if __name__ == '__main__':
-    main()
+    spawn()

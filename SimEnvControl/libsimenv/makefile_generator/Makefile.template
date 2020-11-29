@@ -21,7 +21,6 @@ $(if $(shell 2>/dev/null which $1),,$(info $2) $(error Cmd check failed))
 endef
 
 $(call cmd_check,atool-simenv,No command 'atool-simenv'. Did you installed the anycore-dbg-supplement? (pip3 install --user anycore-dbg-supplement))
-$(call cmd_check,$(SIM),No simulation command '$(SIM)')
 
 .PHONY: envsetup envcheck envclean run
 

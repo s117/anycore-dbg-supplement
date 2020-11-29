@@ -1,13 +1,7 @@
 #!/usr/bin/env python3
-import os
-import shutil
-import sys
-from typing import Dict
-
 import click
 
-from SyscallAnalysis.libsyscall.analyzer.file_usage import FileUsageInfo
-from SyscallAnalysis.libsyscall.target_path_converter import TargetPathConverter
+from .libsimenv.autocomplete import complete_chkpt_names, complete_app_names
 from .libsimenv.app_manifest import *
 from .libsimenv.checkpoints_globber import *
 from .libsimenv.makefile_generator.makefile_generator import *
@@ -18,12 +12,12 @@ from .libsimenv.utils import *
 
 @click.command()
 @click.pass_context
-@click.argument("app-name", type=click.STRING)
-@click.option("-f", "--checkpoint",
+@click.argument("app-name", autocompletion=complete_app_names, type=click.STRING)
+@click.option("-f", "--checkpoint", autocompletion=complete_chkpt_names,
               help="If give and exist, the generated makefile will load the given checkpoint by default.")
-def main(ctx, app_name, checkpoint):
+def mkgen(ctx, app_name, checkpoint):
     """
-    Generate a Makefile for an app simulation, at current dir.
+    Generate a Makefile for a simenv, at current dir.
     """
     manifest_db_path = ctx.obj['manifest_db_path']
     checkpoints_archive_path = ctx.obj['checkpoints_archive_path']
@@ -69,4 +63,4 @@ def main(ctx, app_name, checkpoint):
 
 
 if __name__ == '__main__':
-    main()
+    mkgen()

@@ -46,6 +46,10 @@ class ContentManager:
                 return sha256(res_path)
             elif os.path.isdir(res_path):
                 return "DIR"
+            elif os.path.exists(res_path):
+                return "SKIP"  # Skip this type of path, usually it is a device file
+            else:
+                return None
         else:
             return None
 
@@ -79,6 +83,7 @@ def build_manifest(app_name, app_cmd, app_init_cwd, memsize, pristine_sysroot, p
 
     def manifest_add_fs_access_entry(_path, _file_usage):
         # type: (str, FileUsageInfo) -> None
+
         pre_run_hash = content_manager.get_pristine_hash(_path)
         post_run_hash = content_manager.get_post_sim_hash(_path)
 
@@ -107,12 +112,6 @@ def build_manifest(app_name, app_cmd, app_init_cwd, memsize, pristine_sysroot, p
         }
 
     for path, file_usage in file_usage_info.items():
-        if file_usage.has_read_data() and not content_manager.locate_pristine_file(path):
-            fatal(
-                "Syscall analysis shows the app will read file [%s], which in not found in the pristine sysroot [%s]" %
-                (path, pristine_sysroot)
-            )
-
         manifest_add_fs_access_entry(path, file_usage)
 
     file_usage = FileUsageInfo.build_from_str("FUSE_OPEN_RD | FUSE_READ_DATA")
@@ -184,13 +183,17 @@ def verify_manifest_format(manifest):
         else:
             if "pre-run" not in detail['hash']:
                 raise ValueError("Manifest['fs_access']['%s']['hash']['pre-run'] doesn't exist." % fpath)
-            elif detail['hash']['pre-run'] is not None and not isinstance(detail['hash']['pre-run'], str):
+            if detail['hash']['pre-run'] is None:
+                pass
+            elif not isinstance(detail['hash']['pre-run'], str):
                 raise ValueError("Manifest['fs_access']['%s']['hash']['pre-run'] is invalid." % fpath)
             elif detail['hash']['pre-run'] not in {"DIR", "SKIP"} and not is_valid_sha256(detail['hash']['pre-run']):
                 raise ValueError("Manifest['fs_access']['%s']['hash']['pre-run'] is invalid." % fpath)
 
             if "post-run" not in detail['hash']:
                 raise ValueError("Manifest['fs_access']['%s']['hash']['post-run'] doesn't exist." % fpath)
+            elif detail['hash']['post-run'] is None:
+                pass
             elif detail['hash']['post-run'] is not None and not isinstance(detail['hash']['post-run'], str):
                 raise ValueError("Manifest['fs_access']['%s']['hash']['post-run'] is invalid." % fpath)
             elif detail['hash']['post-run'] not in {"DIR", "SKIP"} and not is_valid_sha256(detail['hash']['post-run']):

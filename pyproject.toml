@@ -42,10 +42,11 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 # The simenv tool is comprised by serval subcommand:
-#  spawn  - Spawn a new sim env using symlink, based on the information in the manifest DB
-#  verify - Check the sim env based on the information in the manifest DB
-#  learn  - Learn a new sim env from a syscall trace dump, save the learn result into manifest DB
-#  show   - Show all available workload and their checkpoints
+#  spawn  - Spawn a new simenv using symlink, based on the information in the manifest DB
+#  verify - Check the simenv based on the information in the manifest DB
+#  learn  - Learn a new simenv from a syscall trace dump, save the learn result into manifest DB
+#  list   - List all available apps and their checkpoints
+#  mkgen  - Generate a Makefile for a given simulation
 atool-simenv = "SimEnvControl.sim_env_cli:cli"
 
 # Trim out the extra header/tail message produced by spike or pk during the simulation

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import click
 
+from .libsimenv.autocomplete import complete_app_names
 from .libsimenv.manifest_db import *
 from .libsimenv.utils import *
 from .libsimenv.checkpoints_globber import glob_all_checkpoints
@@ -8,8 +9,11 @@ from .libsimenv.checkpoints_globber import glob_all_checkpoints
 
 @click.command()
 @click.pass_context
-@click.argument("app-names", type=click.STRING, nargs=-1)
-def main(ctx, app_names):
+@click.argument("app-names", type=click.STRING, nargs=-1, autocompletion=complete_app_names)
+def list(ctx, app_names):
+    """
+    List the simenv for available apps and checkpoints.
+    """
     manifest_db_path = ctx.obj['manifest_db_path']
     checkpoints_archive_path = ctx.obj['checkpoints_archive_path']
     if not app_names:
@@ -22,7 +26,7 @@ def main(ctx, app_names):
             )
         else:
             print(
-                "Run `%s show [app names]` to see the name of available checkpoint(s)." % os.path.basename(sys.argv[0]))
+                "Run `%s list [app names]` to see the name of available checkpoint(s)." % os.path.basename(sys.argv[0]))
     else:
         if not checkpoints_archive_path:
             fatal("You must provide the path to the checkpoint archive to see which checkpoints are available.")
@@ -45,4 +49,4 @@ def main(ctx, app_names):
 
 
 if __name__ == '__main__':
-    main()
+    list()

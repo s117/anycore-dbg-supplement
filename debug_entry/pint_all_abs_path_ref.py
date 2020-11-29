@@ -8,11 +8,10 @@ import click
 
 from SyscallAnalysis.libsyscall.analyzer.file_usage import FileUsageInfo
 from SimEnvControl.libsimenv.manifest_db import *
-from SimEnvControl.libsimenv.utils import sha256, get_pristine_spec_bench_run_dir
 
 
 def main():
-    all_available_run_names = sorted(get_avail_runs_in_db())
+    all_available_run_names = sorted(get_avail_apps_in_db())
     for run_name in all_available_run_names:
         manifest = load_from_manifest_db(run_name)
         out_of_tree_refs = []
