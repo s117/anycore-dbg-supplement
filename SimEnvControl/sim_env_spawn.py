@@ -13,7 +13,7 @@ from .libsimenv.utils import *
 @click.command()
 @click.pass_context
 @click.argument("app-name", autocompletion=complete_app_names, type=click.STRING)
-@click.argument("dest-dir", autocompletion=complete_dir, type=click.Path(exists=True, dir_okay=True, file_okay=False))
+@click.argument("dest-dir", autocompletion=complete_dir, type=click.Path())
 @click.option("-f", "--force", is_flag=True,
               help="If path [new-dir] already exist, remove it before create the new simenv.")
 @click.option("-c", "--copy-mode", is_flag=True,
