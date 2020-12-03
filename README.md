@@ -1,8 +1,34 @@
-## Pre-Simulation readiness checking
+## atool-simenv
+A new toolset to reliably packing, then spawning a RISC-V workload (app) for any simulation purpose.
 
-- `Checkpointing/SyscallAnalysis/prerun_check.py` - Perform a prerun check based on the info in manifest DB.
-- `Checkpointing/SyscallAnalysis/generate_manifest.py` - Analyze the System Call trace for an entire SPEC simulation (dumped by a special version of [spike](https://github.com/s117/riscv-isa-sim/tree/feature_syscall_trace)). Then produce the manifest for it. Finally save the manifest into DB.
+An app is packed into a `simenv`, which is basically the rootfs containing all the essentials for a simulation. The tool learns what are the essentials by analyzing the workload's syscall trace. When simulating with the proper PK/FESVR, the dynamic instruction stream is even reproducible.  
 
+The motivation is to help Dr. Rotenberg's microarchitecture research group and ECE721 students using SPEC CPU2006 and CPU2017 workloads (usually checkpointed workloads) with ease.
+
+At the time, run `atool-simenv --help` to see how to use it (docs are incoming). 
+  
+```
+Usage: atool-simenv [OPTIONS] COMMAND [ARGS]...
+
+  The simenv utility
+
+Options:
+  --db-path DIRECTORY             Override the manifest directory path.
+  --checkpoints-archive-path DIRECTORY
+                                  Override the checkpoint archive directory
+                                  path.
+
+  --help                          Show this message and exit.
+
+Commands:
+  learn   Create a new simenv by learning the syscall trace.
+  list    List the simenv for available apps and checkpoints.
+  mkgen   Generate a Makefile for a simenv, at current dir.
+  spawn   Spawn a simenv.
+  verify  Perform integrity checking for a simenv.
+```
+
+\* If you are using bash/zsh/fish, you can run `eval "$(_ATOOL_SIMENV_COMPLETE=source_$(basename $SHELL) atool-simenv)"` to enable the auto completion for atool-simenv.
 
 ## Misc.
 
