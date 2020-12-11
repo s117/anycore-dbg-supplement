@@ -25,7 +25,7 @@ def mkgen(ctx, app_name, checkpoint):
         fatal("Checkpoints archive root must be provided if you want to load a checkpoint.")
 
     try:
-        manifest = load_from_manifest_db(app_name)
+        manifest = load_from_manifest_db(app_name, manifest_db_path)
         verify_manifest_format(manifest)
         if checkpoint and not check_checkpoint_exist(checkpoints_archive_path, app_name, checkpoint):
             fatal("App %s doesn't have checkpoint %s" % (app_name, checkpoint))

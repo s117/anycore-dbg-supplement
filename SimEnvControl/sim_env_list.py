@@ -32,7 +32,7 @@ def list(ctx, app_names):
             fatal("You must provide the path to the checkpoint archive to see which checkpoints are available.")
         apps_chkpts = defaultdict(tuple, glob_all_checkpoints(checkpoints_archive_path))
         for app in app_names:
-            if not is_app_available(app):
+            if not is_app_available(app, manifest_db_path):
                 print("App %s doesn't exist." % app)
                 prompt_app_name_suggestion(app, manifest_db_path)
                 exit(-1)

@@ -34,7 +34,7 @@ def spawn(ctx, app_name, dest_dir, force, copy_mode):
     os.makedirs(dest_dir, exist_ok=True)
 
     try:
-        manifest = load_from_manifest_db(app_name)
+        manifest = load_from_manifest_db(app_name, manifest_db_path)
         verify_manifest_format(manifest)
     except FileNotFoundError:
         print("Fatal: No manifest file for app '%s'" % app_name, file=sys.stderr)

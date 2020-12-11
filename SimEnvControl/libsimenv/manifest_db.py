@@ -23,19 +23,19 @@ def get_default_dbpath():
     return default_dbpath
 
 
-def save_to_manifest_db(record_name, manifest, db_path=get_default_dbpath()):
+def save_to_manifest_db(record_name, manifest, db_path):
     out_filename = os.path.join(db_path, "%s.yaml" % record_name)
     with open(out_filename, "w") as out_fp:
         yaml.dump(manifest, out_fp)
 
 
-def load_from_manifest_db(record_name, db_path=get_default_dbpath()):
+def load_from_manifest_db(record_name, db_path):
     in_filename = os.path.join(db_path, "%s.yaml" % record_name)
     with open(in_filename, "r") as in_fp:
         return yaml.safe_load(in_fp)
 
 
-def get_avail_apps_in_db(db_path=get_default_dbpath()):
+def get_avail_apps_in_db(db_path):
     # type: (str) -> List[str]
     try:
         avail_apps = list(map(
@@ -54,7 +54,7 @@ def get_avail_apps_in_db(db_path=get_default_dbpath()):
     return avail_apps
 
 
-def get_app_name_suggestion(name, limit, db_path=get_default_dbpath()):
+def get_app_name_suggestion(name, limit, db_path):
     PICKING_FUZZ_RATION_THRESHOLD = 70
     avail_apps = get_avail_apps_in_db(db_path)
     ranked_suggestions = sorted(map(
@@ -69,7 +69,7 @@ def get_app_name_suggestion(name, limit, db_path=get_default_dbpath()):
     return suggestion_list
 
 
-def is_app_available(name, db_path=get_default_dbpath()):
+def is_app_available(name, db_path):
     return os.path.isfile(os.path.join(db_path, "%s.yaml" % name))
 
 

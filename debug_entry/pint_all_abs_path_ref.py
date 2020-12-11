@@ -11,9 +11,9 @@ from SimEnvControl.libsimenv.manifest_db import *
 
 
 def main():
-    all_available_run_names = sorted(get_avail_apps_in_db())
+    all_available_run_names = sorted(get_avail_apps_in_db(get_default_dbpath()))
     for run_name in all_available_run_names:
-        manifest = load_from_manifest_db(run_name)
+        manifest = load_from_manifest_db(run_name, get_default_dbpath())
         out_of_tree_refs = []
         for pname, details in manifest['fs_access'].items():
             fuse_record = FileUsageInfo.build_from_str(details['usage'])
