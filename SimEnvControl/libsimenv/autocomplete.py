@@ -42,7 +42,7 @@ def complete_app_names(ctx, args, incomplete):
     if not manifest_db_path:
         return []
     apps = get_avail_apps_in_db(db_path=manifest_db_path)
-    return [app for app in apps if app.startswith(incomplete)]
+    return sorted([app for app in apps if app.startswith(incomplete)])
 
 
 def complete_chkpt_names(ctx, args, incomplete):
@@ -63,7 +63,7 @@ def complete_chkpt_names(ctx, args, incomplete):
     if not checkpoints_archive_path:
         return []
     checkpoints = get_all_available_checkpoints_for_any(checkpoints_archive_path)
-    return [chkpt for chkpt in checkpoints if chkpt.startswith(incomplete)]
+    return sorted([chkpt for chkpt in checkpoints if chkpt.startswith(incomplete)])
 
 
 def __no_filter(_):
