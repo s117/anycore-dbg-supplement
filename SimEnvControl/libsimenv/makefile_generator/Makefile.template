@@ -37,5 +37,5 @@ envclean:
 	rm -frv $(SIMENV_SYSROOT)
 
 run: envcheck
-	echo sim
+	@ echo Starting simulation
 	$(SIM) -m$(APP_MEMSIZE) $(SIM_FLAGS) $(SIM_FLAGS_EXTRA) $(FESVR_FLAGS) $(FESVR_FLAGS_EXTRA) +chroot=$(SIMENV_SYSROOT) +target-cwd=$(APP_INIT_CWD) pk $(PK_FLAGS) $(PK_FLAGS_EXTRA) $(APP_CMD) $(APP_CMD_EXTRA)
