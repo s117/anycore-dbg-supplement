@@ -88,10 +88,12 @@ def check_isfile(pname):
 
 
 def check_hash(pname, expect):
-    if expect is None or expect == 'SKIP':
+    if expect is None:
+        return True
+    elif expect == 'SKIP':
         add_warning(pname, "SHA256 checking was skipped")
         return True
-    if expect == 'DIR':
+    elif expect == 'DIR':
         return check_isdir(pname)
     elif is_valid_sha256(expect):
         if not check_exist(pname):
