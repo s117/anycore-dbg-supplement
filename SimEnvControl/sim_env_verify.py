@@ -122,11 +122,11 @@ def perform_manifest_fsck(manifest, target_sysroot):
         check_hash(host_path, pre_run_hash)
 
         if file_usage.has_remove():
-            check_write(host_path, non_exist_ok=True)
+            check_write(host_path, non_exist_ok=pre_run_hash is None)
 
         if file_usage.has_create():
             if not pre_run_hash:
-                check_write(host_path, non_exist_ok=True)
+                check_write(host_path, non_exist_ok=pre_run_hash is None)
 
         if file_usage.has_open_wr() or file_usage.has_open_rw() or file_usage.has_write_data():
             check_write(host_path, non_exist_ok=pre_run_hash is None)
