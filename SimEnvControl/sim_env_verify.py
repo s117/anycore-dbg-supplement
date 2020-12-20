@@ -165,16 +165,16 @@ def verify(ctx, app_name, simenv_path):
         print()
         path_with_caveat = set(warnings.keys()).union(failures.keys())
         if path_with_caveat:
-            print("Caveat:")
+            print("Caveat:", file=sys.stderr)
             for p in path_with_caveat:
-                print("[%s]" % p)
+                print("[%s]" % p, file=sys.stderr)
                 if p in failures:
-                    print("  - (failed) %s" % failures[p])
+                    print("  - (failed) %s" % failures[p], file=sys.stderr)
                 if p in warnings:
-                    print("  - (warn) %s" % warnings[p])
+                    print("  - (warn) %s" % warnings[p], file=sys.stderr)
 
         if failures:
-            print("Pre-Run FS checking failed.")
+            print("Pre-Run FS checking failed.", file=sys.stderr)
             sys.exit(-1)
         else:
             print("Pre-Run FS checking passed%s." % (" with warning" if warnings else ""))
