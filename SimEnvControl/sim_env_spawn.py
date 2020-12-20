@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import shutil
+import stat
 
 import click
 
@@ -79,14 +80,28 @@ def spawn(ctx, app_name, dest_dir, force, copy_mode):
 
         for pname, details in manifest['fs_access'].items():
             pre_run_hash = details['hash']['pre-run']
+            file_usage = FileUsageInfo.build_from_str(details['usage'])
             if pre_run_hash:
                 if pre_run_hash == 'DIR':
                     spawn_dir(spawn_path_converter.t2h(pname))
                 else:
+                    file_src = pristine_path_converter.t2h(pname)
+                    file_dst = spawn_path_converter.t2h(pname)
                     spawn_file(
-                        pristine_path_converter.t2h(pname),
-                        spawn_path_converter.t2h(pname)
+                        file_src,
+                        file_dst
                     )
+                    if not link_mode and (
+                            file_usage.has_remove() or
+                            file_usage.has_create() or
+                            file_usage.has_open_wr() or
+                            file_usage.has_open_rw() or
+                            file_usage.has_write_data()
+                    ):
+                        # in copy mode, automatic set the write permission if needed by the app
+                        if not os.access(file_dst, os.W_OK):
+                            st = os.stat(file_dst)
+                            os.chmod(file_dst, st.st_mode | stat.S_IWRITE)
 
 
 if __name__ == '__main__':
