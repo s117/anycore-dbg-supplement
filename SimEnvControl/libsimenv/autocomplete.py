@@ -1,9 +1,9 @@
-import os
-import sys
 from functools import partial
 
-from .manifest_db import get_avail_apps_in_db, get_default_dbpath
-from .checkpoints_globber import get_all_available_checkpoints_for_any
+from .manifest_db import get_avail_apps_in_db
+from .checkpoints_db import get_all_available_checkpoints_for_any
+from .sysroots_db import get_all_sysroots
+from .repo_path import *
 
 
 def try_retrieve_option_value_from_args(args, option_name):
@@ -23,17 +23,40 @@ def try_retrieve_value_from_envron(name):
     return os.environ.get(name, None)
 
 
+def complete_sysroot_names(ctx, args, incomplete):
+    def try_get_sysroots_path():
+        _, cmdline_val = try_retrieve_option_value_from_args(args, "--repo-path")
+        envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_REPO_PATH")
+        default_val = get_default_repo_path(False)
+        if cmdline_val and os.path.isdir(get_sysroots_dir(cmdline_val)):
+            return get_sysroots_dir(cmdline_val)
+        elif envron_val and os.path.isdir(get_sysroots_dir(envron_val)):
+            return get_sysroots_dir(envron_val)
+        elif default_val and os.path.isdir(get_sysroots_dir(default_val)):
+            return get_sysroots_dir(default_val)
+        else:
+            return None
+
+    sysroots_path = try_get_sysroots_path()
+
+    if not sysroots_path:
+        return []
+
+    sysroots = get_all_sysroots(sysroots_root=sysroots_path)
+    return sorted([sysroot for sysroot in sysroots if sysroot.startswith(incomplete)])
+
+
 def complete_app_names(ctx, args, incomplete):
     def try_get_manifest_db_path():
-        _, cmdline_val = try_retrieve_option_value_from_args(args, "--db-path")
-        envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_MANIFEST_DB_PATH")
-        default_val = get_default_dbpath()
-        if cmdline_val and os.path.isdir(cmdline_val):
-            return cmdline_val
-        elif envron_val and os.path.isdir(envron_val):
-            return envron_val
-        elif default_val and os.path.isdir(default_val):
-            return default_val
+        _, cmdline_val = try_retrieve_option_value_from_args(args, "--repo-path")
+        envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_REPO_PATH")
+        default_val = get_default_repo_path(False)
+        if cmdline_val and os.path.isdir(get_manifest_dir(cmdline_val)):
+            return get_manifest_dir(cmdline_val)
+        elif envron_val and os.path.isdir(get_manifest_dir(envron_val)):
+            return get_manifest_dir(envron_val)
+        elif default_val and os.path.isdir(get_manifest_dir(default_val)):
+            return get_manifest_dir(default_val)
         else:
             return None
 
@@ -47,15 +70,15 @@ def complete_app_names(ctx, args, incomplete):
 
 def complete_chkpt_names(ctx, args, incomplete):
     def try_get_checkpoints_archive_path():
-        _, cmdline_val = try_retrieve_option_value_from_args(args, "--checkpoints-archive-path")
-        envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_CHECKPOINTS_ARCHIVE_PATH")
+        _, cmdline_val = try_retrieve_option_value_from_args(args, "--repo-path")
+        envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_REPO_PATH")
         default_val = ""
-        if cmdline_val and os.path.isdir(cmdline_val):
-            return cmdline_val
-        elif envron_val and os.path.isdir(envron_val):
-            return envron_val
-        elif default_val and os.path.isdir(default_val):
-            return default_val
+        if cmdline_val and os.path.isdir(get_chkpt_dir(cmdline_val)):
+            return get_chkpt_dir(cmdline_val)
+        elif envron_val and os.path.isdir(get_chkpt_dir(envron_val)):
+            return get_chkpt_dir(envron_val)
+        elif default_val and os.path.isdir(get_chkpt_dir(default_val)):
+            return get_chkpt_dir(default_val)
         else:
             return None
 

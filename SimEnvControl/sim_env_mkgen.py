@@ -3,9 +3,10 @@ import click
 
 from .libsimenv.autocomplete import complete_chkpt_names, complete_app_names
 from .libsimenv.app_manifest import *
-from .libsimenv.checkpoints_globber import *
+from .libsimenv.checkpoints_db import *
 from .libsimenv.makefile_generator.makefile_generator import *
 from .libsimenv.manifest_db import *
+from .libsimenv.shcmd_utils import add_prefix_to_stdin_file_in_shcmd
 
 from .libsimenv.utils import *
 
@@ -37,11 +38,12 @@ def mkgen(ctx, app_name, checkpoint):
         fatal("%s has a malformed manifest (%s)" % (app_name, ve))
     else:
         print(
-            "Generating makefile simenv for app %s%s" % (
+            "Generating makefile for app %s%s" % (
                 app_name, ", checkpoint %s" % checkpoint if checkpoint else "")
         )
         app_name = manifest["app_name"]
         app_cmd = manifest["app_cmd"]
+        app_cmd = add_prefix_to_stdin_file_in_shcmd(app_cmd, "$(SIMENV_SYSROOT)/$(APP_INIT_CWD)/")
         app_init_cwd = manifest["app_init_cwd"]
         app_memsize = manifest["app_memsize"]
         if checkpoint:

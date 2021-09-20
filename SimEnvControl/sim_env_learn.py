@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 import pathlib
 import click
+import os
 
 from SyscallAnalysis.libsyscall.analyzer.file_usage import stat_file_usage
 from SyscallAnalysis.libsyscall.analyzer.syscall_trace_constructor import SyscallTraceConstructor
 
-from .libsimenv.autocomplete import complete_app_names, complete_dir, complete_path
+from .libsimenv.autocomplete import complete_sysroot_names, complete_app_names, complete_dir, complete_path
 from .libsimenv.manifest_db import save_to_manifest_db
-from .libsimenv.stdin_file_extractor import extract_stdin_file_from_shcmd
+from .libsimenv.shcmd_utils import extract_stdin_file_from_shcmd
 from .libsimenv.app_manifest import build_manifest
 from .libsimenv.utils import fatal, warning
 
@@ -26,24 +27,28 @@ from .libsimenv.utils import fatal, warning
 @click.option("-s", "--strace", required=True, autocompletion=complete_path,
               type=click.File(),
               help="The FESVR syscall trace file.")
-@click.option("-i", "--pristine-sysroot", required=True, autocompletion=complete_dir,
-              type=click.Path(exists=True, dir_okay=True, file_okay=False),
+@click.option("-i", "--pristine-sysroot-name", required=True, autocompletion=complete_sysroot_names,
+              type=click.STRING,
               help="The path to a pristine sysroot including all the files the app needs.")
-@click.option("-o", "--post-sim-sysroot", required=True, autocompletion=complete_dir,
+@click.option("-o", "--post-sim-sysroot-path", required=True, autocompletion=complete_dir,
               type=click.Path(exists=True, dir_okay=True, file_okay=False),
               help="The path to the sysroot after the app has run.")
 @click.option("--copy-spawn", is_flag=True,
               help="When spawning this simenv, copying all it's input instead of making symbolic link.")
-def learn(ctx, app_name, app_cmd_file, app_init_cwd, memsize, strace, pristine_sysroot, post_sim_sysroot, copy_spawn):
+def learn(ctx, app_name, app_cmd_file, app_init_cwd, memsize, strace, pristine_sysroot_name, post_sim_sysroot_path,
+          copy_spawn):
     """
-    Create a new simenv by learning the syscall trace.
+    Analyze an app for how to create SimEnv.
     """
     print("Generating manifest for app %s" % app_name)
     app_cmd = app_cmd_file.read().strip()
+    pristine_sysroot_path = os.path.join(ctx.obj['sysroots_archive_path'], pristine_sysroot_name)
+    if not os.path.isdir(pristine_sysroot_path):
+        fatal("Cannot find pristine sysroot at \"%s\".\n" % pristine_sysroot_path)
 
     stdin_files = extract_stdin_file_from_shcmd(app_cmd)
     if stdin_files is None:
-        warning("The app's cmd is not parsable for finding stdin redirection input file(s).")
+        warning("Fail to parse the commandline for analyzing STDIN input file(s).")
         stdin_files = []
     elif stdin_files:
         for f in stdin_files:
@@ -58,7 +63,9 @@ def learn(ctx, app_name, app_cmd_file, app_init_cwd, memsize, strace, pristine_s
     trace_analyzer.parse_strace_str(strace_str)
 
     file_usage_info = stat_file_usage(trace_analyzer.syscalls)
-    manifest = build_manifest(app_name, app_cmd, app_init_cwd, memsize, pristine_sysroot, post_sim_sysroot,
+    manifest = build_manifest(app_name, app_cmd, app_init_cwd, memsize, pristine_sysroot_name,
+                              pristine_sysroot_path,
+                              post_sim_sysroot_path,
                               file_usage_info,
                               stdin_files,
                               copy_spawn)

@@ -47,14 +47,15 @@ def spawn(ctx, app_name, dest_dir, force, copy_mode):
         app_name = manifest["app_name"]
         app_cmd = manifest["app_cmd"]
         app_init_cwd = manifest["app_init_cwd"]
-        app_pristine_sysroot = manifest["app_pristine_sysroot"]
+        app_pristine_sysroot_name = manifest["app_pristine_sysroot"]
+        app_pristine_sysroot_path = os.path.join(ctx.obj['sysroots_archive_path'], app_pristine_sysroot_name)
         app_memsize = manifest["app_memsize"]
         link_mode = not copy_mode and manifest["spawn_mode"] == "link"
 
-        if not os.path.isdir(app_pristine_sysroot):
-            fatal("App's pristine sysroot [%s] is not a dir" % app_pristine_sysroot)
+        if not os.path.isdir(app_pristine_sysroot_path):
+            fatal("App's pristine sysroot [%s] does not exist" % app_pristine_sysroot_path)
 
-        pristine_path_converter = TargetPathConverter({"/": os.path.abspath(app_pristine_sysroot)})
+        pristine_path_converter = TargetPathConverter({"/": os.path.abspath(app_pristine_sysroot_path)})
         spawn_path_converter = TargetPathConverter({"/": os.path.abspath(dest_dir)})
 
         def spawn_file(src, dst):

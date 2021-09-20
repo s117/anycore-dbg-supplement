@@ -6,19 +6,17 @@ An app is packed into a `simenv`, which is basically the rootfs containing all t
 The motivation is to help Dr. Rotenberg's microarchitecture research group and ECE721 students using SPEC CPU2006 and CPU2017 workloads (usually checkpointed workloads) with ease.
 
 At the time, run `atool-simenv --help` to see how to use it (docs are incoming). 
-  
+
 ```
 Usage: atool-simenv [OPTIONS] COMMAND [ARGS]...
 
   The simenv utility
 
 Options:
-  --db-path DIRECTORY             Override the manifest directory path.
-  --checkpoints-archive-path DIRECTORY
-                                  Override the checkpoint archive directory
-                                  path.
+  --repo-path DIRECTORY  Override the SimEnv repository path given by the
+                         environmental variable "ATOOL_SIMENV_REPO_PATH".
 
-  --help                          Show this message and exit.
+  --help                 Show this message and exit.
 
 Commands:
   learn   Create a new simenv by learning the syscall trace.
