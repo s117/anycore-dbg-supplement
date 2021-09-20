@@ -64,15 +64,16 @@ class ContentManager:
         return self.do_sha256(res_path)
 
 
-def build_manifest(app_name, app_cmd, app_init_cwd, memsize, pristine_sysroot, post_sim_sysroot,
+def build_manifest(app_name, app_cmd, app_init_cwd, memsize, sysroot_name,
+                   pristine_sysroot, post_sim_sysroot,
                    file_usage_info, additional_inputs, copy_spawn):
-    # type: (str, str, str, int, str, str, Dict[str, FileUsageInfo], List[str], bool) -> Dict
+    # type: (str, str, str, int, str, str, str, Dict[str, FileUsageInfo], List[str], bool) -> Dict
     manifest = dict()
     manifest["app_name"] = app_name
     manifest["app_cmd"] = app_cmd
     manifest["app_init_cwd"] = app_init_cwd
     manifest["app_memsize"] = memsize
-    manifest["app_pristine_sysroot"] = pristine_sysroot
+    manifest["app_pristine_sysroot"] = sysroot_name
     if copy_spawn:
         manifest["spawn_mode"] = "copy"
     else:

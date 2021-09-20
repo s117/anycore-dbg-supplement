@@ -4,7 +4,7 @@ import click
 from .libsimenv.autocomplete import complete_app_names
 from .libsimenv.manifest_db import *
 from .libsimenv.utils import *
-from .libsimenv.checkpoints_globber import glob_all_checkpoints
+from .libsimenv.checkpoints_db import glob_all_checkpoints
 
 
 @click.command()
@@ -12,17 +12,16 @@ from .libsimenv.checkpoints_globber import glob_all_checkpoints
 @click.argument("app-names", type=click.STRING, nargs=-1, autocompletion=complete_app_names)
 def list(ctx, app_names):
     """
-    List the simenv for available apps and checkpoints.
+    List available apps and checkpoints in the SimEnv repository.
     """
     manifest_db_path = ctx.obj['manifest_db_path']
     checkpoints_archive_path = ctx.obj['checkpoints_archive_path']
     if not app_names:
         prompt_all_valid_app_name(manifest_db_path, checkpoints_archive_path)
         if not checkpoints_archive_path:
-            print("No checkpoint information available because the checkpoint root is not give.")
+            print("No checkpoint information available because the repository root is not set.")
             print(
-                "Use global option --checkpoints-archive-path or environment variable 'ATOOL_CHECKPOINTS_ARCHIVE_PATH' "
-                "to set this path."
+                "Specify it using --repo-path or environment variable 'ATOOL_SIMENV_REPO_PATH'."
             )
         else:
             print(

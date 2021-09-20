@@ -8,19 +8,7 @@ import yaml
 from fuzzywuzzy import fuzz
 from pathlib import Path
 
-from .checkpoints_globber import glob_all_checkpoints
-
-
-def get_default_dbpath():
-    default_dbpath = os.path.join(Path.home(), ".config", "atool", "app_manifests")
-    try:
-        if not os.path.isdir(default_dbpath):
-            os.makedirs(default_dbpath, exist_ok=True)
-    except FileExistsError as fe:
-        raise RuntimeError(
-            "Fail to create the default manifest DB directory at [%s]" % fe.filename
-        )
-    return default_dbpath
+from .checkpoints_db import glob_all_checkpoints
 
 
 def save_to_manifest_db(record_name, manifest, db_path):
@@ -100,8 +88,8 @@ def prompt_all_valid_app_name(db_path, checkpoints_archive_path):
             else:
                 print("\t%s" % arn, file=sys.stderr)
     else:
-        print("No record in the manifest DB [%s]" % get_default_dbpath(), file=sys.stderr)
+        print("No record in the manifest DB [%s]" % db_path, file=sys.stderr)
         print(
-            "To generate manifest for a new benchmark, collect it's syscall trace then use the generate_manifest.py",
+            "To generate manifest for a new benchmark, collect it's syscall trace then use the \"learn\" subcommand",
             file=sys.stderr
         )
