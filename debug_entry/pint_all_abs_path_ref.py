@@ -12,9 +12,9 @@ from SimEnvControl.libsimenv.repo_path import *
 
 
 def main():
-    all_available_run_names = sorted(get_avail_apps_in_db(get_manifest_dir(get_default_repo_path(True))))
+    all_available_run_names = sorted(get_avail_apps_in_db(get_manifests_dir(get_default_repo_path(True))))
     for run_name in all_available_run_names:
-        manifest = load_from_manifest_db(run_name, get_manifest_dir(get_default_repo_path(True)))
+        manifest = load_from_manifest_db(run_name, get_manifests_dir(get_default_repo_path(True)))
         out_of_tree_refs = []
         for pname, details in manifest['fs_access'].items():
             fuse_record = FileUsageInfo.build_from_str(details['usage'])
