@@ -5,17 +5,17 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-_MANIFEST_DIR = "manifest"
-_CHKPT_DIR = "checkpoints"
+_MANIFEST_DB_DIR = "manifests"
+_CHECKPOINTS_DIR = "checkpoints"
 _SYSROOTS_DIR = "sysroots"
 
 
 def create_repo(path):
     # type: (str) -> None
     os.makedirs(path, exist_ok=True)
-    os.makedirs(get_manifest_dir(path), exist_ok=True)
+    os.makedirs(get_manifests_dir(path), exist_ok=True)
     os.makedirs(get_sysroots_dir(path), exist_ok=True)
-    os.makedirs(get_chkpt_dir(path), exist_ok=True)
+    os.makedirs(get_checkpoints_dir(path), exist_ok=True)
 
 
 def get_default_repo_path(create_if_not_exist):
@@ -34,18 +34,18 @@ def get_default_repo_path(create_if_not_exist):
         )
 
 
-def get_manifest_dir(repo_path):
+def get_manifests_dir(repo_path):
     # type: (Optional[str]) -> Optional[str]
     if not repo_path:
         return None
-    return os.path.join(repo_path, _MANIFEST_DIR)
+    return os.path.join(repo_path, _MANIFEST_DB_DIR)
 
 
-def get_chkpt_dir(repo_path):
+def get_checkpoints_dir(repo_path):
     # type: (Optional[str]) -> Optional[str]
     if not repo_path:
         return None
-    return os.path.join(repo_path, _CHKPT_DIR)
+    return os.path.join(repo_path, _CHECKPOINTS_DIR)
 
 
 def get_sysroots_dir(repo_path):
@@ -61,8 +61,8 @@ def check_repo(repo_path):
     path_to_check = (
         repo_path,
         get_sysroots_dir(repo_path),
-        get_chkpt_dir(repo_path),
-        get_manifest_dir(repo_path)
+        get_checkpoints_dir(repo_path),
+        get_manifests_dir(repo_path)
     )
     path_status = tuple(map(os.path.isdir, path_to_check))
 

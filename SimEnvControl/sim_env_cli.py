@@ -24,8 +24,8 @@ def cli(ctx, repo_path):
     if not repo_path:
         repo_path = get_default_repo_path(True)
     check_repo(repo_path)
-    ctx.obj['manifest_db_path'] = get_manifest_dir(repo_path)
-    ctx.obj['checkpoints_archive_path'] = get_chkpt_dir(repo_path)
+    ctx.obj['manifest_db_path'] = get_manifests_dir(repo_path)
+    ctx.obj['checkpoints_archive_path'] = get_checkpoints_dir(repo_path)
     ctx.obj['sysroots_archive_path'] = get_sysroots_dir(repo_path)
 
 

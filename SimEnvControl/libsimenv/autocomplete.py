@@ -51,12 +51,12 @@ def complete_app_names(ctx, args, incomplete):
         _, cmdline_val = try_retrieve_option_value_from_args(args, "--repo-path")
         envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_REPO_PATH")
         default_val = get_default_repo_path(False)
-        if cmdline_val and os.path.isdir(get_manifest_dir(cmdline_val)):
-            return get_manifest_dir(cmdline_val)
-        elif envron_val and os.path.isdir(get_manifest_dir(envron_val)):
-            return get_manifest_dir(envron_val)
-        elif default_val and os.path.isdir(get_manifest_dir(default_val)):
-            return get_manifest_dir(default_val)
+        if cmdline_val and os.path.isdir(get_manifests_dir(cmdline_val)):
+            return get_manifests_dir(cmdline_val)
+        elif envron_val and os.path.isdir(get_manifests_dir(envron_val)):
+            return get_manifests_dir(envron_val)
+        elif default_val and os.path.isdir(get_manifests_dir(default_val)):
+            return get_manifests_dir(default_val)
         else:
             return None
 
@@ -73,12 +73,12 @@ def complete_chkpt_names(ctx, args, incomplete):
         _, cmdline_val = try_retrieve_option_value_from_args(args, "--repo-path")
         envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_REPO_PATH")
         default_val = ""
-        if cmdline_val and os.path.isdir(get_chkpt_dir(cmdline_val)):
-            return get_chkpt_dir(cmdline_val)
-        elif envron_val and os.path.isdir(get_chkpt_dir(envron_val)):
-            return get_chkpt_dir(envron_val)
-        elif default_val and os.path.isdir(get_chkpt_dir(default_val)):
-            return get_chkpt_dir(default_val)
+        if cmdline_val and os.path.isdir(get_checkpoints_dir(cmdline_val)):
+            return get_checkpoints_dir(cmdline_val)
+        elif envron_val and os.path.isdir(get_checkpoints_dir(envron_val)):
+            return get_checkpoints_dir(envron_val)
+        elif default_val and os.path.isdir(get_checkpoints_dir(default_val)):
+            return get_checkpoints_dir(default_val)
         else:
             return None
 
