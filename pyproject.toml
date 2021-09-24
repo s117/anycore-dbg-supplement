@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "anycore-dbg-supplement"
-version = "0.3.1"
+version = "0.4.0"
 description = "A bundle of auxiliary scripts for the Anycore project"
 authors = ["Jiayang Li <jli95@ncsu.edu>"]
 license = "Other/Proprietary License"
