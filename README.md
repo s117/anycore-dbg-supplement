@@ -19,11 +19,13 @@ Options:
   --help                 Show this message and exit.
 
 Commands:
-  learn   Create a new simenv by learning the syscall trace.
-  list    List the simenv for available apps and checkpoints.
-  mkgen   Generate a Makefile for a simenv, at current dir.
-  spawn   Spawn a simenv.
-  verify  Perform integrity checking for a simenv.
+  addsysroot  Import a pristine sysroot for new app.
+  learn       Analyze an app for how to create SimEnv.
+  list        List available apps and checkpoints in the SimEnv repository.
+  mkgen       Generate a Makefile for a simenv, at current dir.
+  spawn       Spawn a simenv.
+  verify      Perform integrity checking for a simenv.
+
 ```
 
 \* If you are using bash/zsh/fish, you can run `eval "$(_ATOOL_SIMENV_COMPLETE=source_$(basename $SHELL) atool-simenv)"` to enable the auto completion for atool-simenv.
