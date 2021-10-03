@@ -2,16 +2,20 @@ import os
 from typing import Dict, List
 
 
+def get_app_ckpt_dir(ckpt_root, app_name):
+    return os.path.join(ckpt_root, app_name)
+
+
 def glob_all_checkpoints(chkpt_root):
     # type: (str) -> Dict[str, List[str]]
-    apps = filter(lambda _p: os.path.isdir(os.path.join(chkpt_root, _p)), os.listdir(chkpt_root))
+    apps = filter(lambda _p: os.path.isdir(get_app_ckpt_dir(chkpt_root, _p)), os.listdir(chkpt_root))
 
     def get_all_gz_in_dir(_dirpath):
         return list(filter(lambda _p: _p.endswith(".gz"), os.listdir(_dirpath)))
 
     result = dict()
     for app in apps:
-        chkpts = get_all_gz_in_dir(os.path.join(chkpt_root, app))
+        chkpts = get_all_gz_in_dir(get_app_ckpt_dir(chkpt_root, app))
         if chkpts:
             result[app] = chkpts
 
@@ -43,7 +47,9 @@ def check_checkpoint_exist(chkpt_root, app_name, checkpoint):
 
 
 def get_checkpoint_abspath(chkpt_root, app_name, checkpoint):
-    return os.path.join(chkpt_root, app_name, checkpoint)
+    return os.path.join(
+        get_app_ckpt_dir(chkpt_root, app_name), checkpoint
+    )
 
 
 if __name__ == '__main__':

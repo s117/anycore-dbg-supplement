@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "anycore-dbg-supplement"
-version = "0.4.1"
+version = "0.5.0"
 description = "A bundle of auxiliary scripts for the Anycore project"
 authors = ["Jiayang Li <jli95@ncsu.edu>"]
 license = "Other/Proprietary License"
@@ -48,6 +48,7 @@ build-backend = "poetry.core.masonry.api"
 #  list   - List all available apps and their checkpoints
 #  mkgen  - Generate a Makefile for a given simulation
 atool-simenv = "SimEnvControl.sim_env_cli:cli"
+atool-app-repo = "SimEnvControl.app_repo_cli:cli"
 
 # Trim out the extra header/tail message produced by spike or pk during the simulation
 atool_spike_trim = "SpecResultVerification.spike_trim:main"

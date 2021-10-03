@@ -22,8 +22,6 @@ def mkgen(ctx, app_name, checkpoint):
     """
     manifest_db_path = ctx.obj['manifest_db_path']
     checkpoints_archive_path = ctx.obj['checkpoints_archive_path']
-    if checkpoint and not checkpoints_archive_path:
-        fatal("Checkpoints archive root must be provided if you want to load a checkpoint.")
 
     try:
         manifest = load_from_manifest_db(app_name, manifest_db_path)
@@ -46,8 +44,10 @@ def mkgen(ctx, app_name, checkpoint):
         app_cmd = add_prefix_to_stdin_file_in_shcmd(app_cmd, "$(SIMENV_SYSROOT)/$(APP_INIT_CWD)/")
         app_init_cwd = manifest["app_init_cwd"]
         app_memsize = manifest["app_memsize"]
+        ckpt_flag_override = os.getenv("ATOOL_SIMENV_SIM_CKPT_LOAD_FLAG", default="-c")
+
         if checkpoint:
-            sim_flags = "-f%s" % get_checkpoint_abspath(checkpoints_archive_path, app_name, checkpoint)
+            sim_flags = ckpt_flag_override + get_checkpoint_abspath(checkpoints_archive_path, app_name, checkpoint)
         else:
             sim_flags = ""
         generated_makefile = generate_makefile(

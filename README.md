@@ -1,13 +1,31 @@
-## atool-simenv
-A new toolset to reliably packing, then spawning a RISC-V workload (app) for any simulation purpose.
+## SimEnv
+A new toolset to reliably packing, and spawning a RISC-V workload (app) for any simulation purpose.
 
 An app is packed into a `simenv`, which is basically the rootfs containing all the essentials for a simulation. The tool learns what are the essentials by analyzing the workload's syscall trace. When simulating with the proper PK/FESVR, the dynamic instruction stream is even reproducible.  
 
 The motivation is to help Dr. Rotenberg's microarchitecture research group and ECE721 students using SPEC CPU2006 and CPU2017 workloads (usually checkpointed workloads) with ease.
 
-At the time, run `atool-simenv --help` to see how to use it (docs are incoming). 
+Run `atool-app-repo --help` to learn how to create a workload repository, and `atool-simenv --help` to learn how to use a workload repository.
 
 ```
+$ atool-app-repo --help
+Usage: atool-app-repo [OPTIONS] COMMAND [ARGS]...
+
+  The app repository management utility
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  addckpt     Import a checkpoint.
+  addsysroot  Import a pristine sysroot.
+  init        Create an empty app repository.
+  learn       Analyze an app for how to create SimEnv.
+  subrepo     Spawn a sub-repository with the selected apps.
+```
+
+```
+$ atool-simenv --help
 Usage: atool-simenv [OPTIONS] COMMAND [ARGS]...
 
   The simenv utility
@@ -19,16 +37,15 @@ Options:
   --help                 Show this message and exit.
 
 Commands:
-  addsysroot  Import a pristine sysroot for new app.
-  learn       Analyze an app for how to create SimEnv.
-  list        List available apps and checkpoints in the SimEnv repository.
-  mkgen       Generate a Makefile for a simenv, at current dir.
-  spawn       Spawn a simenv.
-  verify      Perform integrity checking for a simenv.
-
+  list    List available apps and checkpoints in the SimEnv repository.
+  mkgen   Generate a Makefile for a simenv, at current dir.
+  spawn   Spawn a simenv.
+  verify  Perform integrity checking for a simenv.
 ```
 
-\* If you are using bash/zsh/fish, you can run `eval "$(_ATOOL_SIMENV_COMPLETE=source_$(basename $SHELL) atool-simenv)"` to enable the auto completion for atool-simenv.
+\* If you are using bash/zsh/fish, you can:
+- run `eval "$(_ATOOL_SIMENV_COMPLETE=source_$(basename $SHELL) atool-simenv)"` to enable the auto completion for atool-simenv.
+- run `eval "$(_ATOOL_APP_REPO_COMPLETE=source_$(basename $SHELL) atool-app-repo)"` to enable the auto completion for atool-app-repo.
 
 ## Misc.
 

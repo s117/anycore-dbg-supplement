@@ -42,7 +42,7 @@ def complete_sysroot_names(ctx, args, incomplete):
     if not sysroots_path:
         return []
 
-    sysroots = get_all_sysroots(sysroots_root=sysroots_path)
+    sysroots = get_all_sysroots(sysroots_db_path=sysroots_path)
     return sorted([sysroot for sysroot in sysroots if sysroot.startswith(incomplete)])
 
 

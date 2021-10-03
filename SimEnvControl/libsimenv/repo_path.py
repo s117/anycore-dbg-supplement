@@ -32,6 +32,7 @@ def get_default_repo_path(create_if_not_exist):
         raise RuntimeError(
             "Fail to create a default manifest DB directory at [%s]" % fe.filename
         )
+    return default_dbpath
 
 
 def get_manifests_dir(repo_path):

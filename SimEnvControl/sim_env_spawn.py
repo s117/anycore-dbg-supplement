@@ -4,6 +4,7 @@ import stat
 
 import click
 
+from SimEnvControl.libsimenv.sysroots_db import get_pristine_sysroot_dir
 from .libsimenv.autocomplete import complete_app_names, complete_dir
 from .libsimenv.app_manifest import *
 from .libsimenv.manifest_db import *
@@ -24,6 +25,7 @@ def spawn(ctx, app_name, dest_dir, force, copy_mode):
     Spawn a simenv.
     """
     manifest_db_path = ctx.obj['manifest_db_path']
+    sysroots_archive_path = ctx.obj['sysroots_archive_path']
 
     if os.path.exists(dest_dir):
         if force:
@@ -48,7 +50,7 @@ def spawn(ctx, app_name, dest_dir, force, copy_mode):
         app_cmd = manifest["app_cmd"]
         app_init_cwd = manifest["app_init_cwd"]
         app_pristine_sysroot_name = manifest["app_pristine_sysroot"]
-        app_pristine_sysroot_path = os.path.join(ctx.obj['sysroots_archive_path'], app_pristine_sysroot_name)
+        app_pristine_sysroot_path = get_pristine_sysroot_dir(sysroots_archive_path, app_pristine_sysroot_name)
         app_memsize = manifest["app_memsize"]
         link_mode = not copy_mode and manifest["spawn_mode"] == "link"
 

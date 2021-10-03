@@ -3,42 +3,53 @@ import stat
 from typing import Dict, List
 
 
-def get_all_sysroots(sysroots_root):
+def get_pristine_sysroot_dir(sysroots_db_path, sysroot_name):
+    return os.path.join(sysroots_db_path, sysroot_name)
+
+
+def is_sysroot_available(sysroots_db_path, sysroot_name):
+    return os.path.isdir(
+        get_pristine_sysroot_dir(sysroots_db_path, sysroot_name)
+    )
+
+
+def get_all_sysroots(sysroots_db_path):
     # type: (str) -> List[str]
-    sysroots = list(filter(lambda _p: os.path.isdir(os.path.join(sysroots_root, _p)), os.listdir(sysroots_root)))
+    sysroots = list(filter(lambda _p: is_sysroot_available(sysroots_db_path, _p), os.listdir(sysroots_db_path)))
 
     return sysroots
 
 
-def set_sysroot_dir_readonly(path):
+def set_file_readonly_ugo(filepath):
+    no_write_mask = ~(stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
+    mode = os.stat(filepath).st_mode
+    os.chmod(filepath, mode=mode & no_write_mask)
+
+
+def set_file_writable_u(filepath):
+    mode = os.stat(filepath).st_mode
+    os.chmod(filepath, mode=mode | stat.S_IWUSR)
+
+
+def set_dir_readonly_ugo(path):
     # type: (str) -> None
     no_write_mask = ~(stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
     for root, dirs, files in os.walk(path):
         for dname in dirs:
-            dpath = os.path.join(root, dname)
-            mode = os.stat(dpath).st_mode
-            os.chmod(dpath, mode=mode & no_write_mask)
+            set_file_readonly_ugo(os.path.join(root, dname))
         for fname in files:
-            fpath = os.path.join(root, fname)
-            mode = os.stat(fpath).st_mode
-            os.chmod(fpath, mode=mode & no_write_mask)
-    mode = os.stat(path).st_mode
-    os.chmod(path, mode=mode & no_write_mask)
+            set_file_readonly_ugo(os.path.join(root, fname))
+    set_file_readonly_ugo(path)
 
 
-def set_sysroot_dir_writeable(path):
+def set_dir_writeable_u(path):
     # type: (str) -> None
     for root, dirs, files in os.walk(path):
         for dname in dirs:
-            dpath = os.path.join(root, dname)
-            mode = os.stat(dpath).st_mode
-            os.chmod(dpath, mode=mode | stat.S_IWUSR)
+            set_file_writable_u(os.path.join(root, dname))
         for fname in files:
-            fpath = os.path.join(root, fname)
-            mode = os.stat(fpath).st_mode
-            os.chmod(fpath, mode=mode | stat.S_IWUSR)
-    mode = os.stat(path).st_mode
-    os.chmod(path, mode=mode | stat.S_IWUSR)
+            set_file_writable_u(os.path.join(root, fname))
+    set_file_writable_u(path)
 
 
 if __name__ == '__main__':
