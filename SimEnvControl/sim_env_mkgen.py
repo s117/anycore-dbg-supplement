@@ -58,7 +58,7 @@ def mkgen(ctx, app_name, checkpoint):
             sim_cmd="spike",
             sim_flags=sim_flags,
             fesvr_flags="",
-            pk_flags="-c"
+            pk_flags=""
         )
         with open("Makefile", "w") as fp:
             fp.write(generated_makefile)
