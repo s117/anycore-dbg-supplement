@@ -11,18 +11,20 @@ from SimEnvControl.libsimenv.repo_path import get_manifests_dir, get_checkpoints
 from .libsimenv.autocomplete import complete_path, complete_app_names
 from .libsimenv.manifest_db import is_app_available, prompt_app_name_suggestion
 from .libsimenv.sysroots_db import set_dir_readonly_ugo, set_file_readonly_ugo
-from .libsimenv.utils import fatal, warning
+from .libsimenv.utils import fatal, warning, remove_path
 
 
 @click.command()
 @click.option("--repo-path", required=True,
               type=click.Path(exists=True, dir_okay=True, file_okay=False),
               help="The app repository path.", autocompletion=complete_path)
+@click.option("-s", "--scrub", is_flag=True,
+              help="[Danger] Remove all existing checkpoint before importing any checkpoint.")
 @click.argument("app-name", nargs=1, type=click.STRING, autocompletion=complete_app_names)
 @click.argument("checkpoints", nargs=-1, type=click.Path(exists=False), autocompletion=complete_path)
-def addckpt(repo_path, app_name, checkpoints):
+def addckpt(repo_path, app_name, checkpoints, scrub):
     """
-    Import a checkpoint.
+    Import checkpoint.
     """
     manifest_db_path = get_manifests_dir(repo_path)
     checkpoints_archive_path = get_checkpoints_dir(repo_path)
@@ -32,8 +34,14 @@ def addckpt(repo_path, app_name, checkpoints):
         prompt_app_name_suggestion(app_name, manifest_db_path)
         sys.exit(-1)
     app_ckpt_dir = get_app_ckpt_dir(checkpoints_archive_path, app_name)
-    if os.path.isfile(app_ckpt_dir):
-        fatal("App's checkpoint dir is occupied by a file: %s" % app_ckpt_dir)
+
+    if os.path.exists(app_ckpt_dir):
+        if scrub:
+            succ, msg = remove_path(app_ckpt_dir)
+            if not succ:
+                fatal("Fail to scrub existing checkpoint from \"%s\", reason:\n%s" % (app_ckpt_dir, msg))
+        elif os.path.isfile(app_ckpt_dir):
+            fatal("App's checkpoint dir is occupied by a file: %s" % app_ckpt_dir)
 
     os.makedirs(app_ckpt_dir, exist_ok=True)
 

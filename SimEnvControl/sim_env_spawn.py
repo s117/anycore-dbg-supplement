@@ -29,10 +29,11 @@ def spawn(ctx, app_name, dest_dir, force, copy_mode):
 
     if os.path.exists(dest_dir):
         if force:
-            shutil.rmtree(dest_dir)
+            succ, msg = remove_path(dest_dir)
+            if not succ:
+                fatal("Fail to remove \"%s\", reason:\n%s" % (dest_dir, msg))
         else:
-            fatal("Path %s already exist, new simenv not spawned." % dest_dir)
-            sys.exit(-1)
+            fatal("Path \"%s\" already exist, new simenv not spawned." % dest_dir)
     print("Spawning simenv for app %s" % app_name)
     os.makedirs(dest_dir, exist_ok=True)
 

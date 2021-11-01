@@ -1,5 +1,6 @@
 import os
 import hashlib
+import shutil
 import string
 import sys
 
@@ -21,6 +22,23 @@ def sha256(fpath):
 
 def is_valid_sha256(h):
     return len(h) == 64 and all(_ in string.hexdigits for _ in h)
+
+
+def remove_path(p):
+    # type: (str) -> (bool, str)
+    if not os.path.exists(p):
+        return True, "Success"
+    if os.path.isfile(p):
+        try:
+            os.remove(p)
+        except Exception as e:
+            return False, str(e)
+    else:
+        try:
+            shutil.rmtree(p)
+        except Exception as e:
+            return False, str(e)
+    return True, "Success"
 
 
 def fatal(s):
