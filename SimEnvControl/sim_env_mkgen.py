@@ -44,7 +44,8 @@ def mkgen(ctx, app_name, checkpoint):
         app_cmd = add_prefix_to_stdin_file_in_shcmd(app_cmd, "$(SIMENV_SYSROOT)/$(APP_INIT_CWD)/")
         app_init_cwd = manifest["app_init_cwd"]
         app_memsize = manifest["app_memsize"]
-        ckpt_flag_override = os.getenv("ATOOL_SIMENV_SIM_CKPT_LOAD_FLAG", default="-c")
+        ckpt_flag_override = os.getenv("ATOOL_SIMENV_SIM_FLAG_LDCKPT", default="-f")
+        sim_cmd_override = os.getenv("ATOOL_SIMENV_SIM_CMD", default="spike")
 
         if checkpoint:
             sim_flags = ckpt_flag_override + get_checkpoint_abspath(checkpoints_archive_path, app_name, checkpoint)
@@ -55,7 +56,7 @@ def mkgen(ctx, app_name, checkpoint):
             app_cmd=app_cmd,
             app_init_cwd=app_init_cwd,
             app_memsize=app_memsize,
-            sim_cmd="spike",
+            sim_cmd=sim_cmd_override,
             sim_flags=sim_flags,
             fesvr_flags="",
             pk_flags=""
