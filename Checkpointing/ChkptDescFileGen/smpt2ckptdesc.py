@@ -1,44 +1,35 @@
 #!/usr/bin/env python3
 import gzip
-import os
 import sys
 from functools import reduce
 from operator import add
-from typing import List
+from typing import List, Tuple
 
 
 def read_simpoints(path):
-    # type: (str) -> List[int]
+    # type: (str) -> List[Tuple[int, float]]
     with open(path, "r") as smpt_fp:
-        idx = 0
-        ret_val = []  # type: List[int]
+        ret_val = []  # type: List[Tuple[int, float]]
         for line in smpt_fp:
             if line.strip():
                 line_split = line.split(' ')
-                line_smpt = int(line_split[0].strip())
-                line_idx = int(line_split[1].strip())
-                if line_idx != idx:
-                    raise RuntimeError("Corrupt input file: " + os.path.join(os.getcwd(), "simpoints"))
-                idx += 1
-                ret_val.append(line_smpt)
+                smpt = int(line_split[0].strip())
+                idx = int(line_split[1].strip())
+                ret_val.append((idx, smpt))
 
         return ret_val
 
 
 def read_weights(path):
-    # type: (str) -> List[float]
+    # type: (str) -> List[Tuple[int, float]]
     with open(path, "r") as smpt_fp:
-        idx = 0
-        ret_val = []  # type: List[float]
+        ret_val = []  # type: List[Tuple[int, float]]
         for line in smpt_fp:
             if line.strip():
                 line_split = line.split(' ')
-                line_weight = float(line_split[0].strip())
-                line_idx = int(line_split[1].strip())
-                if line_idx != idx:
-                    raise RuntimeError("Corrupt input file: " + os.path.join(os.getcwd(), "weights"))
-                idx += 1
-                ret_val.append(line_weight)
+                weight = float(line_split[0].strip())
+                idx = int(line_split[1].strip())
+                ret_val.append((idx, weight))
 
         return ret_val
 
@@ -97,14 +88,14 @@ def main():
 
     if len(sys.argv) != 5 and len(sys.argv) != 6:
         print_help()
-        sys.exit(-1)
+        return -1
 
     try:
         simpoint_interval = int(sys.argv[1])
     except ValueError:
         print("Invalid SimPoint Interval: %s" % sys.argv[1], file=sys.stderr)
         print_help()
-        sys.exit(-1)
+        return -1
     ckpt_basename = sys.argv[2]
     simpoints_path = sys.argv[3]
     weights_path = sys.argv[4]
@@ -117,18 +108,31 @@ def main():
         if not (c.isalnum() or c == '-' or c == '_' or c == '.'):
             print("Invalid checkpoint name: " + ckpt_basename + "\n" +
                   "  (a valid checkpoint name can only contain char, digit, '-', '_', '.')", file=sys.stderr)
-            sys.exit(-1)
+            return -1
     try:
         simpoints = read_simpoints(simpoints_path)
         weights = read_weights(weights_path)
     except FileNotFoundError as ef:
-        # print("Fail to load simpoint data: %s" % str(ef), file=sys.stderr)
-        sys.exit(-1)
+        print("%s" % str(ef), file=sys.stderr)
+        return -1
 
     if len(simpoints) != len(weights):
-        raise RuntimeError("Input 'weights' and 'simpoints' not match")
+        print("Unmatched input '%s' and '%s'" % (weights_path, simpoints_path), file=sys.stderr)
+        return -1
 
-    smpt_weight_pos_pairs = sorted(list(zip(weights, simpoints)), key=lambda i: i[1])
+    for i in range(0, len(simpoints)):
+        if simpoints[i][0] != weights[i][0]:
+            print(
+                "Unmatched index %d/%d from file '%s'/'%s'" % (
+                    weights[i][0], simpoints[i][0], weights_path, simpoints_path),
+                file=sys.stderr
+            )
+            return -1
+
+    simpoints = tuple(map(lambda x: x[1], simpoints))
+    weights = tuple(map(lambda x: x[1], weights))
+
+    smpt_weight_pos_pairs = sorted(list(zip(weights, simpoints)), key=lambda x: x[1])
 
     if pcfreq_vec_path:
         smpt_weight_pos_skipcount_pairs = get_exact_skip_count_using_pc_count(pcfreq_vec_path, smpt_weight_pos_pairs)
@@ -145,8 +149,6 @@ def main():
     print("%2d - %3.2f%%\t%s" % (len(weights), int(reduce(add, weights) * 10000) / 100.0, ckpt_basename),
           file=sys.stderr)
 
-    sys.exit(0)
-
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
