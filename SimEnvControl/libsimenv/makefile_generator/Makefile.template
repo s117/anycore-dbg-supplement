@@ -16,7 +16,7 @@ FESVR_FLAGS_EXTRA =
 PK_FLAGS_EXTRA =
 APP_CMD_EXTRA =
 
-.PHONY: envsetup envcheck envclean run app_cmd app_mem
+.PHONY: envsetup envcheck envclean run app_target_cwd app_target_cmd app_mem
 
 envsetup:
 	@ echo Setting up a new simenv at $(SIMENV_SYSROOT)
@@ -34,7 +34,11 @@ run: envcheck
 	@ echo Starting simulation
 	$(SIM) -m$(APP_MEMSIZE) $(SIM_FLAGS) $(SIM_FLAGS_EXTRA) $(FESVR_FLAGS) $(FESVR_FLAGS_EXTRA) +chroot=$(SIMENV_SYSROOT) +target-cwd=$(APP_INIT_CWD) pk $(PK_FLAGS) $(PK_FLAGS_EXTRA) $(APP_CMD) $(APP_CMD_EXTRA)
 
-app_cmd:
+app_target_cwd:
+	@ echo "$(APP_INIT_CWD)"
+
+app_target_cmd:
+	$(eval SIMENV_SYSROOT=)
 	@ echo "$(APP_CMD)"
 
 app_mem:
