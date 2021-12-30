@@ -60,12 +60,10 @@ def learn(repo_path, app_name, app_cmd_file, app_init_cwd, memsize, strace, pris
         warning("Fail to parse the commandline for analyzing STDIN input file(s).")
         stdin_files = []
     elif stdin_files:
-        for f in stdin_files:
-            if pathlib.PurePosixPath(f).is_absolute():
-                warning("The app command used absolute path to indicates stdin redirect, which is not supported")
         print("Recognized following file(s) passed as the input via stdin from the app run command [%s]" % app_cmd)
         for f in stdin_files:
             print("   - %s" % f)
+        print("Notice: The path(s) above will be dealt as 'target path'.")
 
     trace_analyzer = SyscallTraceConstructor(app_init_cwd)
     strace_str = strace.read()
