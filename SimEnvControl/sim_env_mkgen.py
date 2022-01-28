@@ -6,7 +6,7 @@ from .libsimenv.app_manifest import *
 from .libsimenv.checkpoints_db import *
 from .libsimenv.makefile_generator.makefile_generator import *
 from .libsimenv.manifest_db import *
-from .libsimenv.shcmd_utils import add_prefix_to_stdin_file_in_shcmd
+from .libsimenv.shcmd_utils import add_base_to_stdin_file_in_shcmd
 
 from .libsimenv.utils import *
 
@@ -41,11 +41,7 @@ def mkgen(ctx, app_name, checkpoint):
         )
         app_name = manifest["app_name"]
         app_init_cwd = manifest["app_init_cwd"]
-        if os.path.isabs(app_init_cwd):
-            stdin_prefix="$(SIMENV_SYSROOT)$(APP_INIT_CWD)/"
-        else:
-            stdin_prefix = "$(SIMENV_SYSROOT)/$(APP_INIT_CWD)/"
-        app_cmd = add_prefix_to_stdin_file_in_shcmd(manifest["app_cmd"], stdin_prefix)
+        app_cmd = add_base_to_stdin_file_in_shcmd(manifest["app_cmd"], "$(SIMENV_SYSROOT)", "$(APP_INIT_CWD)")
         app_memsize = manifest["app_memsize"]
         ckpt_flag_override = os.getenv("ATOOL_SIMENV_SIM_FLAG_LDCKPT", default="-f")
         sim_cmd_override = os.getenv("ATOOL_SIMENV_SIM_CMD", default="spike")
