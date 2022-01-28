@@ -476,6 +476,9 @@ class htif_stream_reader:
             elif htif_ev_name == "END_HTIF_CHECKPOINT":
                 assert len(token_list) == 4
                 self.ev_handler.on_end()
+                print("HTIF stream size: %s" % (
+                    self.htif_stream_fp.tell()
+                ))
                 break
             else:
                 raise ValueError("Unknown token %s" % token_list[0])
