@@ -16,7 +16,10 @@ FESVR_FLAGS_EXTRA =
 PK_FLAGS_EXTRA =
 APP_CMD_EXTRA =
 
-.PHONY: envsetup envcheck envclean run app_target_cwd app_target_cmd app_mem
+.PHONY: cleanrun cleangdb envsetup envcheck envclean run gdb app_target_cwd app_target_cmd app_mem
+
+cleanrun: envclean envsetup run
+cleangdb: envclean envsetup gdb
 
 envsetup:
 	@ echo Setting up a new simenv at $(SIMENV_SYSROOT)
@@ -33,6 +36,10 @@ envclean:
 run: envcheck
 	@ echo Starting simulation
 	$(SIM) -m$(APP_MEMSIZE) $(SIM_FLAGS) $(SIM_FLAGS_EXTRA) $(FESVR_FLAGS) $(FESVR_FLAGS_EXTRA) +chroot=$(SIMENV_SYSROOT) +target-cwd=$(APP_INIT_CWD) pk $(PK_FLAGS) $(PK_FLAGS_EXTRA) $(APP_CMD) $(APP_CMD_EXTRA)
+
+gdb: envcheck
+	@ echo Starting simulation in gdb
+	gdb --args $(SIM) -m$(APP_MEMSIZE) $(SIM_FLAGS) $(SIM_FLAGS_EXTRA) $(FESVR_FLAGS) $(FESVR_FLAGS_EXTRA) +chroot=$(SIMENV_SYSROOT) +target-cwd=$(APP_INIT_CWD) pk $(PK_FLAGS) $(PK_FLAGS_EXTRA) $(APP_CMD) $(APP_CMD_EXTRA)
 
 app_target_cwd:
 	@ echo "$(APP_INIT_CWD)"
