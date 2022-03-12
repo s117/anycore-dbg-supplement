@@ -4,13 +4,12 @@ import click
 from .libsimenv.autocomplete import complete_app_names
 from .libsimenv.manifest_db import *
 from .libsimenv.utils import *
-from .libsimenv.checkpoints_db import glob_all_checkpoints
 
 
 @click.command()
 @click.pass_context
 @click.argument("app-names", type=click.STRING, nargs=-1, autocompletion=complete_app_names)
-def list(ctx, app_names):
+def list_app(ctx, app_names):
     """
     List available apps and checkpoints in the SimEnv repository.
     """
@@ -48,4 +47,4 @@ def list(ctx, app_names):
 
 
 if __name__ == '__main__':
-    list()
+    list_app()

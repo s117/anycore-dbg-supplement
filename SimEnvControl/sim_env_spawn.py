@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
-import shutil
 import stat
 
 import click
 
 from SimEnvControl.libsimenv.sysroots_db import get_pristine_sysroot_dir
-from .libsimenv.autocomplete import complete_app_names, complete_dir
 from .libsimenv.app_manifest import *
+from .libsimenv.autocomplete import complete_app_names
 from .libsimenv.manifest_db import *
-
 from .libsimenv.utils import *
 
 
 @click.command()
 @click.pass_context
 @click.argument("app-name", autocompletion=complete_app_names, type=click.STRING)
-@click.argument("dest-dir", autocompletion=complete_dir, type=click.Path())
+@click.argument("dest-dir", type=click.Path())
 @click.option("-f", "--force", is_flag=True,
               help="If path [new-dir] already exist, remove it before create the new simenv.")
 @click.option("-c", "--copy-mode", is_flag=True,
@@ -47,12 +45,8 @@ def spawn(ctx, app_name, dest_dir, force, copy_mode):
     except ValueError as ve:
         fatal("%s has a malformed manifest (%s)" % (app_name, ve))
     else:
-        app_name = manifest["app_name"]
-        app_cmd = manifest["app_cmd"]
-        app_init_cwd = manifest["app_init_cwd"]
         app_pristine_sysroot_name = manifest["app_pristine_sysroot"]
         app_pristine_sysroot_path = get_pristine_sysroot_dir(sysroots_archive_path, app_pristine_sysroot_name)
-        app_memsize = manifest["app_memsize"]
         link_mode = not copy_mode and manifest["spawn_mode"] == "link"
 
         if not os.path.isdir(app_pristine_sysroot_path):

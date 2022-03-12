@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 import os
-import pathlib
 from collections import defaultdict
 from typing import Dict, List
 
-import click
 from ..syscalls import syscall as s
-from .syscall_trace_constructor import SyscallTraceConstructor
 
 
 class FileUsageInfo:

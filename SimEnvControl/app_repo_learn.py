@@ -1,40 +1,36 @@
 #!/usr/bin/env python3
-import pathlib
-import click
 import os
+
+import click
 
 from SimEnvControl.libsimenv.repo_path import get_manifests_dir, get_sysroots_dir
 from SyscallAnalysis.libsyscall.analyzer.file_usage import stat_file_usage
 from SyscallAnalysis.libsyscall.analyzer.syscall_trace_constructor import SyscallTraceConstructor
-
-from .libsimenv.autocomplete import complete_sysroot_names, complete_app_names, complete_dir, complete_path
+from .libsimenv.app_manifest import build_manifest
+from .libsimenv.autocomplete import complete_sysroot_names
 from .libsimenv.manifest_db import save_to_manifest_db
 from .libsimenv.shcmd_utils import extract_stdin_file_from_shcmd
-from .libsimenv.app_manifest import build_manifest
 from .libsimenv.sysroots_db import get_pristine_sysroot_dir
 from .libsimenv.utils import fatal, warning
 
 
 @click.command()
-@click.option("--repo-path", required=True,
-              type=click.Path(exists=True, dir_okay=True, file_okay=False),
-              help="The app repository path.", autocompletion=complete_path)
+@click.option("--repo-path", required=True, type=click.Path(exists=True, dir_okay=True, file_okay=False),
+              help="The app repository path.")
 @click.option("-n", "--app-name", required=True, help="The app name.")
-@click.option("-c", "--app-cmd-file", required=True, autocompletion=complete_path,
-              type=click.File(),
+@click.option("-c", "--app-cmd-file", required=True, type=click.File(),
               help="A single-line text file that contains the command to run this app.")
 @click.option("-w", "--app-init-cwd", required=True,
               help="The CWD where you started this app. Use the target path, not host path.")
 @click.option("-m", "--memsize", required=True,
               type=click.INT,
               help="The amount of RAM this app needs.")
-@click.option("-s", "--strace", required=True, autocompletion=complete_path,
-              type=click.File(),
+@click.option("-s", "--strace", required=True, type=click.File(),
               help="The FESVR syscall trace file.")
 @click.option("-i", "--pristine-sysroot-name", required=True, autocompletion=complete_sysroot_names,
               type=click.STRING,
               help="The path to a pristine sysroot including all the files the app needs.")
-@click.option("-o", "--post-sim-sysroot-path", required=True, autocompletion=complete_dir,
+@click.option("-o", "--post-sim-sysroot-path", required=True,
               type=click.Path(exists=True, dir_okay=True, file_okay=False),
               help="The path to the sysroot after the app has run.")
 @click.option("--copy-spawn", is_flag=True,

@@ -1,27 +1,26 @@
 #!/usr/bin/env python3
-import pathlib
+import os
+import shutil
 import sys
 
 import click
-import os
-import shutil
 
 from SimEnvControl.libsimenv.checkpoints_db import get_app_ckpt_dir, get_checkpoint_abspath
 from SimEnvControl.libsimenv.repo_path import get_manifests_dir, get_checkpoints_dir
-from .libsimenv.autocomplete import complete_path, complete_app_names
+from .libsimenv.autocomplete import complete_app_names
 from .libsimenv.manifest_db import is_app_available, prompt_app_name_suggestion
-from .libsimenv.sysroots_db import set_dir_readonly_ugo, set_file_readonly_ugo
-from .libsimenv.utils import fatal, warning, remove_path
+from .libsimenv.sysroots_db import set_file_readonly_ugo
+from .libsimenv.utils import fatal, remove_path
 
 
 @click.command()
 @click.option("--repo-path", required=True,
               type=click.Path(exists=True, dir_okay=True, file_okay=False),
-              help="The app repository path.", autocompletion=complete_path)
+              help="The app repository path.")
 @click.option("-s", "--scrub", is_flag=True,
               help="[Danger] Remove all existing checkpoint before importing any checkpoint.")
 @click.argument("app-name", nargs=1, type=click.STRING, autocompletion=complete_app_names)
-@click.argument("checkpoints", nargs=-1, type=click.Path(exists=False), autocompletion=complete_path)
+@click.argument("checkpoints", nargs=-1, type=click.Path(exists=False))
 def addckpt(repo_path, app_name, checkpoints, scrub):
     """
     Import checkpoint.

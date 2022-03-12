@@ -1,6 +1,6 @@
 import os
 import stat
-from typing import Dict, List
+from typing import List
 
 
 def get_pristine_sysroot_dir(sysroots_db_path, sysroot_name):
@@ -33,7 +33,6 @@ def set_file_writable_u(filepath):
 
 def set_dir_readonly_ugo(path):
     # type: (str) -> None
-    no_write_mask = ~(stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
     for root, dirs, files in os.walk(path):
         for dname in dirs:
             set_file_readonly_ugo(os.path.join(root, dname))
@@ -53,7 +52,7 @@ def set_dir_writeable_u(path):
 
 
 if __name__ == '__main__':
-    test_path = "/home/s117/sshfs_mnt/homelab_server/anycore-riscv/anycore-riscv-tests/build_gcc_chkpt/anycore-scratch/riscv_chkpts"
+    test_path = "./sysroots"
 
 
     def main():

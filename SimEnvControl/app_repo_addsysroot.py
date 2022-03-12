@@ -1,24 +1,20 @@
 #!/usr/bin/env python3
-import pathlib
-import click
-import os
 import shutil
 
+import click
+
 from SimEnvControl.libsimenv.repo_path import get_sysroots_dir
-from .libsimenv.autocomplete import complete_path
 from .libsimenv.sysroots_db import *
-from .libsimenv.utils import fatal, warning, remove_path
+from .libsimenv.utils import fatal, remove_path
 
 
 @click.command()
-@click.option("--repo-path", required=True,
-              type=click.Path(exists=True, dir_okay=True, file_okay=False),
-              help="The app repository path.", autocompletion=complete_path)
+@click.option("--repo-path", required=True, type=click.Path(exists=True, dir_okay=True, file_okay=False),
+              help="The app repository path.")
 @click.option("-s", "--scrub", is_flag=True,
               help="[Danger] Remove existing sysroot from the repository before importing the new sysroot.")
-@click.argument("sysroot-name", autocompletion=complete_path)
-@click.argument("sysroot-path", type=click.Path(exists=True, dir_okay=True, file_okay=False),
-                autocompletion=complete_path)
+@click.argument("sysroot-name")
+@click.argument("sysroot-path", type=click.Path(exists=True, dir_okay=True, file_okay=False))
 def addsysroot(repo_path, sysroot_name, sysroot_path, scrub):
     """
     Import a pristine sysroot.

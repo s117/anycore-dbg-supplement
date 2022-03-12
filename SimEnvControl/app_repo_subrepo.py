@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 import os.path
-import shutil
 
 import click
 
 from SimEnvControl.libsimenv.repo_path import create_repo, get_manifests_dir, get_checkpoints_dir, get_sysroots_dir
 from SimEnvControl.libsimenv.sysroots_db import get_pristine_sysroot_dir
-from .libsimenv.autocomplete import complete_chkpt_names, complete_app_names, complete_path
 from .libsimenv.app_manifest import *
+from .libsimenv.autocomplete import complete_app_names
 from .libsimenv.checkpoints_db import *
 from .libsimenv.manifest_db import *
-
 from .libsimenv.utils import *
 
 
@@ -40,12 +38,11 @@ def xcopy(src_path, dst_path):
 
 
 @click.command()
-@click.option("--repo-path", required=True,
-              type=click.Path(exists=True, dir_okay=True, file_okay=False),
-              help="The app repository path.", autocompletion=complete_path)
+@click.option("--repo-path", required=True, type=click.Path(exists=True, dir_okay=True, file_okay=False),
+              help="The app repository path.")
 @click.option("-c", "--checkpoints", is_flag=True,
               help="Include checkpoints.")
-@click.argument("new-repo-root", nargs=1, type=click.Path(exists=False), autocompletion=complete_path)
+@click.argument("new-repo-root", nargs=1, type=click.Path(exists=False))
 @click.argument("app-names", nargs=-1, type=click.STRING, autocompletion=complete_app_names)
 def subrepo(repo_path, checkpoints, new_repo_root, app_names):
     """

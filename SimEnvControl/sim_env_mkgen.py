@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 import click
 
-from .libsimenv.autocomplete import complete_chkpt_names, complete_app_names
 from .libsimenv.app_manifest import *
+from .libsimenv.autocomplete import complete_chkpt_names, complete_app_names
 from .libsimenv.checkpoints_db import *
 from .libsimenv.makefile_generator.makefile_generator import *
 from .libsimenv.manifest_db import *
 from .libsimenv.shcmd_utils import add_base_to_stdin_file_in_shcmd
-
 from .libsimenv.utils import *
 
 

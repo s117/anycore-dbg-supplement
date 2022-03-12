@@ -1,23 +1,21 @@
-import os
 import hashlib
+import os
 import shutil
 import string
 import sys
-
-from .spec_bench_name import spec_bench_name
 
 
 def sha256(fpath):
     # type: (str) -> str
     BUF_SIZE = 65536
-    sha256 = hashlib.sha256()
+    h = hashlib.sha256()
     with open(fpath, 'rb') as f:
         while True:
             data = f.read(BUF_SIZE)
             if not data:
                 break
-            sha256.update(data)
-    return sha256.hexdigest()
+            h.update(data)
+    return h.hexdigest()
 
 
 def is_valid_sha256(h):

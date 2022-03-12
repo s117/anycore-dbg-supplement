@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 
 def get_app_ckpt_dir(ckpt_root, app_name):
@@ -7,11 +7,11 @@ def get_app_ckpt_dir(ckpt_root, app_name):
 
 
 def glob_all_checkpoints(chkpt_root):
-    # type: (str) -> Dict[str, List[str]]
+    # type: (str) -> Dict[str, Tuple[str]]
     apps = filter(lambda _p: os.path.isdir(get_app_ckpt_dir(chkpt_root, _p)), os.listdir(chkpt_root))
 
     def get_all_gz_in_dir(_dirpath):
-        return list(filter(lambda _p: _p.endswith(".gz"), os.listdir(_dirpath)))
+        return tuple(filter(lambda _p: _p.endswith(".gz"), os.listdir(_dirpath)))
 
     result = dict()
     for app in apps:
@@ -23,10 +23,10 @@ def glob_all_checkpoints(chkpt_root):
 
 
 def get_available_checkpoints_for_app(chkpt_root, app):
-    # type: (str, str) -> List[str]
+    # type: (str, str) -> Tuple[str]
     all_available = glob_all_checkpoints(chkpt_root)
     if app not in all_available:
-        return []
+        return tuple()
     else:
         return all_available[app]
 
@@ -53,7 +53,7 @@ def get_checkpoint_abspath(chkpt_root, app_name, checkpoint):
 
 
 if __name__ == '__main__':
-    test_path = "/home/s117/sshfs_mnt/homelab_server/anycore-riscv/anycore-riscv-tests/build_gcc_chkpt/anycore-scratch/riscv_chkpts"
+    test_path = "./checkpoints"
 
 
     def main():

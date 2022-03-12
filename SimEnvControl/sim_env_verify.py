@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
+import os
 import sys
 
 import click
-import os
 
-from SyscallAnalysis.libsyscall.target_path_converter import TargetPathConverter
 from SyscallAnalysis.libsyscall.analyzer.file_usage import FileUsageInfo
-from .libsimenv.autocomplete import complete_app_names, complete_dir
-from .libsimenv.manifest_db import load_from_manifest_db, prompt_app_name_suggestion
+from SyscallAnalysis.libsyscall.target_path_converter import TargetPathConverter
 from .libsimenv.app_manifest import verify_manifest_format
+from .libsimenv.autocomplete import complete_app_names
+from .libsimenv.manifest_db import load_from_manifest_db, prompt_app_name_suggestion
 from .libsimenv.utils import sha256, is_valid_sha256, fatal
 
 warnings = dict()
@@ -141,8 +141,7 @@ def perform_manifest_fsck(manifest, target_sysroot):
 @click.command()
 @click.pass_context
 @click.argument("app-name", autocompletion=complete_app_names, type=click.STRING)
-@click.argument("simenv-path", autocompletion=complete_dir,
-                type=click.Path(exists=True, dir_okay=True, file_okay=False))
+@click.argument("simenv-path", type=click.Path(exists=True, dir_okay=True, file_okay=False))
 def verify(ctx, app_name, simenv_path):
     """
     Perform integrity checking for a simenv.

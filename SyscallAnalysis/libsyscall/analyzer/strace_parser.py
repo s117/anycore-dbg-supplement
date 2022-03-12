@@ -1,6 +1,6 @@
-import typing
-from pyparsing import *
 import base64
+
+from pyparsing import *
 
 
 class StraceInputParser:

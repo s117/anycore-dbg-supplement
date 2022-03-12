@@ -1,5 +1,3 @@
-import os
-
 from . import syscall as s
 
 

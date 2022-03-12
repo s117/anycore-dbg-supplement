@@ -4,9 +4,7 @@ from collections import defaultdict
 from typing import List
 
 import yaml
-
 from fuzzywuzzy import fuzz
-from pathlib import Path
 
 from .checkpoints_db import glob_all_checkpoints
 

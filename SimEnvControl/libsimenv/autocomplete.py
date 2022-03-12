@@ -1,9 +1,9 @@
 from functools import partial
 
-from .manifest_db import get_avail_apps_in_db
 from .checkpoints_db import get_all_available_checkpoints_for_any
-from .sysroots_db import get_all_sysroots
+from .manifest_db import get_avail_apps_in_db
 from .repo_path import *
+from .sysroots_db import get_all_sysroots
 
 
 def try_retrieve_option_value_from_args(args, option_name):

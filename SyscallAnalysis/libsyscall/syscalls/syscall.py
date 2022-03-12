@@ -1,6 +1,6 @@
 import os
 import pathlib
-from typing import List, Any, Optional, Union
+from typing import List, Any, Union
 
 AT_FDCWD = -100
 
@@ -9,15 +9,15 @@ class path:
     def __init__(self, base, pathname):
         # type: (str, str) -> None
         self.base = pathlib.PurePosixPath(base)
-        self.path = pathlib.PurePosixPath(pathname)
+        self.rpath = pathlib.PurePosixPath(pathname)
         assert self.base.is_absolute()
 
     def isabs(self):
         # type: () -> bool
-        return self.path.is_absolute()
+        return self.rpath.is_absolute()
 
     def rawpath(self):
-        return str(self.path)
+        return str(self.rpath)
 
     def abspath(self):
         # type: () -> str
@@ -41,8 +41,8 @@ class path:
                     _path = _path + sep + name
             return _path
 
-        base = '' if self.path.is_absolute() else str(self.base)
-        return _resolve(base, str(self.path)) or sep
+        base = '' if self.rpath.is_absolute() else str(self.base)
+        return _resolve(base, str(self.rpath)) or sep
 
     def contains(self, p):
         # type: (path) -> bool
@@ -58,10 +58,10 @@ class path:
             return False
 
     def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.base == other.base and self.pathname == other.pathname
+        return isinstance(other, self.__class__) and self.base == other.base and self.rpath == other.rpath
 
     def __hash__(self):
-        return (hash(self.base) << 1) ^ hash(self.pathname)
+        return (hash(self.base) << 1) ^ hash(self.rpath)
 
 
 class arg_val:

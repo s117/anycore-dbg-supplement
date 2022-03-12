@@ -8,10 +8,7 @@ from SyscallAnalysis.libsyscall.analyzer.file_usage import stat_file_usage
 
 @click.command()
 @click.argument("input_file", type=click.File())
-@click.option('--echo', is_flag=True, help='echo the decoded scall trace.')
-# @click.option("-c", '--cwd', "cwd_path", type=click.Path(exists=True),
-#               help='the CWD used for evaluate out-of-tree file access.')
-def main(input_file, echo):
+def main(input_file):
     cwd_path = os.path.abspath(os.path.dirname(input_file.name))
 
     trace_cntr = SyscallTraceConstructor(cwd_path)
@@ -19,6 +16,7 @@ def main(input_file, echo):
 
     trace_cntr.parse_strace_str(strace_str)
     file_usage = stat_file_usage(trace_cntr.syscalls, True)
+    print(file_usage)
 
 
 if __name__ == '__main__':

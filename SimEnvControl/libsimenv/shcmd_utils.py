@@ -4,7 +4,7 @@ from typing import Optional, List
 from bashlex import parser, ast
 from bashlex.errors import ParsingError
 
-from .utils import fatal, warning
+from .utils import warning
 
 
 def extract_stdin_file_from_shcmd(shcmd):
@@ -40,12 +40,9 @@ def add_base_to_stdin_file_in_shcmd(shcmd, root, cwd):
             else:
                 print("Warning: command [%s] contains non-resolvable stdin source." % shcmd)
 
-    try:
-        for tree in trees:
-            visitor = nodevisitor()
-            visitor.visit(tree)
-    except ParsingError as e:
-        raise
+    for tree in trees:
+        visitor = nodevisitor()
+        visitor.visit(tree)
 
     insert_positions.sort(key=lambda _: _[0], reverse=True)
     result_cmd = shcmd

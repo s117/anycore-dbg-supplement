@@ -1,10 +1,10 @@
 import pathlib
-import string
-from typing import List, Dict, Optional, Any, Union
-from SyscallAnalysis.libsyscall.target_path_converter import TargetPathConverter
-from .utils import *
+from typing import List, Dict, Optional, Union
+
 from SyscallAnalysis.libsyscall.analyzer.file_usage import FileUsageInfo
 from SyscallAnalysis.libsyscall.syscalls.syscall import path as TargetPath
+from SyscallAnalysis.libsyscall.target_path_converter import TargetPathConverter
+from .utils import *
 
 
 class ContentManager:
@@ -174,7 +174,7 @@ def verify_manifest_format(manifest):
             raise ValueError("Manifest['fs_access']['%s']['usage'] doesn't exist." % fpath)
         else:
             try:
-                file_usage = FileUsageInfo.build_from_str(detail["usage"])
+                FileUsageInfo.build_from_str(detail["usage"])
             except Exception:
                 raise ValueError("Manifest['fs_access']['%s']['usage'] is invalid." % fpath)
         if "hash" not in detail:
