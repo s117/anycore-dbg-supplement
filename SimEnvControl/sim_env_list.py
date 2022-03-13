@@ -5,6 +5,8 @@ from collections import defaultdict
 
 import click
 
+from natsort import natsorted
+
 from .libsimenv.autocomplete import complete_app_names
 from .libsimenv.manifest_db import glob_all_checkpoints, get_avail_apps_in_db, prompt_app_name_suggestion, \
     is_app_available
@@ -12,7 +14,7 @@ from .libsimenv.utils import fatal
 
 
 def prompt_avail_app_name(manifest_db_path, checkpoint_db_path):
-    all_available_app_names = sorted(get_avail_apps_in_db(manifest_db_path))
+    all_available_app_names = natsorted(get_avail_apps_in_db(manifest_db_path))
     apps_chkpts = defaultdict(tuple, glob_all_checkpoints(checkpoint_db_path))
     if all_available_app_names:
         print("All available app:")
@@ -32,7 +34,7 @@ def prompt_apps_checkpoint(app_names, checkpoints_db_path):
     for app in app_names:
         if app in apps_chkpts:
             print("Available checkpoints for '%s':" % app)
-            for app_chkpt in apps_chkpts[app]:
+            for app_chkpt in natsorted(apps_chkpts[app]):
                 print("   %s" % app_chkpt)
             print()
         else:
@@ -66,7 +68,7 @@ def list_app(ctx, app_names, brief):
 
     if not app_names:
         if brief:
-            for app in sorted(get_avail_apps_in_db(manifest_db_path)):
+            for app in natsorted(get_avail_apps_in_db(manifest_db_path)):
                 print(app)
         else:
             prompt_avail_app_name(manifest_db_path, checkpoints_archive_path)
@@ -74,7 +76,7 @@ def list_app(ctx, app_names, brief):
         if brief:
             apps_chkpts = defaultdict(tuple, glob_all_checkpoints(checkpoints_archive_path))
             for app in app_names:
-                for app_chkpt in sorted(apps_chkpts[app]):
+                for app_chkpt in natsorted(apps_chkpts[app]):
                     print(app_chkpt)
         else:
             prompt_apps_checkpoint(app_names, checkpoints_archive_path)

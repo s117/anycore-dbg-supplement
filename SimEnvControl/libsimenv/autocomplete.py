@@ -1,11 +1,15 @@
+import os
 from functools import partial
 from typing import Callable, Iterable, Union, Dict
 
 from click.core import Context, Argument, Option
 from click.shell_completion import CompletionItem
+from natsort import natsorted
+
 from .checkpoints_db import get_available_checkpoints_for_app, get_all_available_checkpoints_for_any
 from .manifest_db import get_avail_apps_in_db
-from .repo_path import *
+from .repo_path import get_default_repo_path, get_sysroots_dir, get_manifests_dir, get_checkpoints_dir
+
 from .sysroots_db import get_all_sysroots
 
 
@@ -46,7 +50,7 @@ def complete_sysroot_names(ctx, param, incomplete):
         return []
 
     sysroots = get_all_sysroots(sysroots_db_path=sysroots_path)
-    return sorted([sysroot for sysroot in sysroots if sysroot.startswith(incomplete)])
+    return natsorted([sysroot for sysroot in sysroots if sysroot.startswith(incomplete)])
 
 
 def complete_app_names(ctx, param, incomplete):
@@ -71,7 +75,7 @@ def complete_app_names(ctx, param, incomplete):
     if not manifest_db_path:
         return []
     apps = get_avail_apps_in_db(db_path=manifest_db_path)
-    return sorted([app for app in apps if app.startswith(incomplete)])
+    return natsorted([app for app in apps if app.startswith(incomplete)])
 
 
 def complete_chkpt_names(ctx, param, incomplete):
@@ -101,7 +105,7 @@ def complete_chkpt_names(ctx, param, incomplete):
     else:
         checkpoints = get_all_available_checkpoints_for_any(checkpoints_archive_path)
 
-    return sorted([chkpt for chkpt in checkpoints if chkpt.startswith(incomplete)])
+    return natsorted([chkpt for chkpt in checkpoints if chkpt.startswith(incomplete)])
 
 
 def __no_filter(_):

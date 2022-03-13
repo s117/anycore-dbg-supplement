@@ -32,6 +32,7 @@ pyparsing = "^3.0.7"
 bashlex = "^0.16"
 fuzzywuzzy = "^0.18.0"
 python-Levenshtein = "^0.12.2"
+natsort = "^8.1.0"
 
 [tool.poetry.dev-dependencies]
 coverage = "^5.3"
