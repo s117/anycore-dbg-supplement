@@ -8,7 +8,7 @@ from .libsimenv.utils import *
 
 @click.command()
 @click.pass_context
-@click.argument("app-names", type=click.STRING, nargs=-1, autocompletion=complete_app_names)
+@click.argument("app-names", type=click.STRING, nargs=-1, shell_complete=complete_app_names)
 def list_app(ctx, app_names):
     """
     List available apps and checkpoints in the SimEnv repository.

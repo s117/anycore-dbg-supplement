@@ -19,7 +19,7 @@ from .libsimenv.utils import fatal, remove_path
               help="The app repository path.")
 @click.option("-s", "--scrub", is_flag=True,
               help="[Danger] Remove all existing checkpoint before importing any checkpoint.")
-@click.argument("app-name", nargs=1, type=click.STRING, autocompletion=complete_app_names)
+@click.argument("app-name", nargs=1, type=click.STRING, shell_complete=complete_app_names)
 @click.argument("checkpoints", nargs=-1, type=click.Path(exists=False))
 def addckpt(repo_path, app_name, checkpoints, scrub):
     """

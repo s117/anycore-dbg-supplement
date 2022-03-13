@@ -27,7 +27,7 @@ from .libsimenv.utils import fatal, warning
               help="The amount of RAM this app needs.")
 @click.option("-s", "--strace", required=True, type=click.File(),
               help="The FESVR syscall trace file.")
-@click.option("-i", "--pristine-sysroot-name", required=True, autocompletion=complete_sysroot_names,
+@click.option("-i", "--pristine-sysroot-name", required=True, shell_complete=complete_sysroot_names,
               type=click.STRING,
               help="The path to a pristine sysroot including all the files the app needs.")
 @click.option("-o", "--post-sim-sysroot-path", required=True,

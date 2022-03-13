@@ -12,8 +12,8 @@ from .libsimenv.utils import *
 
 @click.command()
 @click.pass_context
-@click.argument("app-name", autocompletion=complete_app_names, type=click.STRING)
-@click.option("-f", "--checkpoint", autocompletion=complete_chkpt_names,
+@click.argument("app-name", shell_complete=complete_app_names, type=click.STRING)
+@click.option("-f", "--checkpoint", shell_complete=complete_chkpt_names,
               help="If give and exist, the generated makefile will load the given checkpoint by default.")
 def mkgen(ctx, app_name, checkpoint):
     """

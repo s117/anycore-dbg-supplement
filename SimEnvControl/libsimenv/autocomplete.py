@@ -1,31 +1,34 @@
 from functools import partial
+from typing import Callable, Iterable, Union, Dict
 
-from .checkpoints_db import get_all_available_checkpoints_for_any
+from click.core import Context, Argument, Option
+from click.shell_completion import CompletionItem
+from .checkpoints_db import get_available_checkpoints_for_app, get_all_available_checkpoints_for_any
 from .manifest_db import get_avail_apps_in_db
 from .repo_path import *
 from .sysroots_db import get_all_sysroots
 
 
-def try_retrieve_option_value_from_args(args, option_name):
-    option_found = False
-    option_value = None
-
-    for idx, arg in enumerate(args):
-        if arg == option_name:
-            option_found = True
-            if idx + 1 < len(args):
-                option_value = args[idx + 1]
-            break
-    return option_found, option_value
+def get_parsed_params(ctx):
+    # type: (Context) -> Dict[str, str]
+    parsed_params = dict()
+    curr_ctx = ctx
+    while curr_ctx:
+        parsed_params = {**parsed_params, **curr_ctx.params}
+        curr_ctx = curr_ctx.parent
+    return parsed_params
 
 
 def try_retrieve_value_from_envron(name):
     return os.environ.get(name, None)
 
 
-def complete_sysroot_names(ctx, args, incomplete):
+def complete_sysroot_names(ctx, param, incomplete):
+    # type: (Context, Union[Argument, Option], str) -> Iterable[Union[str,CompletionItem]]
+    parsed_params = get_parsed_params(ctx)
+
     def try_get_sysroots_path():
-        _, cmdline_val = try_retrieve_option_value_from_args(args, "--repo-path")
+        cmdline_val = parsed_params["repo_path"]
         envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_REPO_PATH")
         default_val = get_default_repo_path(False)
         if cmdline_val and os.path.isdir(get_sysroots_dir(cmdline_val)):
@@ -46,9 +49,12 @@ def complete_sysroot_names(ctx, args, incomplete):
     return sorted([sysroot for sysroot in sysroots if sysroot.startswith(incomplete)])
 
 
-def complete_app_names(ctx, args, incomplete):
+def complete_app_names(ctx, param, incomplete):
+    # type: (Context, Union[Argument, Option], str) -> Iterable[Union[str,CompletionItem]]
+    parsed_params = get_parsed_params(ctx)
+
     def try_get_manifest_db_path():
-        _, cmdline_val = try_retrieve_option_value_from_args(args, "--repo-path")
+        cmdline_val = parsed_params["repo_path"]
         envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_REPO_PATH")
         default_val = get_default_repo_path(False)
         if cmdline_val and os.path.isdir(get_manifests_dir(cmdline_val)):
@@ -68,9 +74,12 @@ def complete_app_names(ctx, args, incomplete):
     return sorted([app for app in apps if app.startswith(incomplete)])
 
 
-def complete_chkpt_names(ctx, args, incomplete):
+def complete_chkpt_names(ctx, param, incomplete):
+    # type: (Context, Union[Argument, Option], str) -> Iterable[Union[str,CompletionItem]]
+    parsed_params = get_parsed_params(ctx)
+
     def try_get_checkpoints_archive_path():
-        _, cmdline_val = try_retrieve_option_value_from_args(args, "--repo-path")
+        cmdline_val = parsed_params["repo_path"]
         envron_val = try_retrieve_value_from_envron("ATOOL_SIMENV_REPO_PATH")
         default_val = ""
         if cmdline_val and os.path.isdir(get_checkpoints_dir(cmdline_val)):
@@ -85,7 +94,11 @@ def complete_chkpt_names(ctx, args, incomplete):
     checkpoints_archive_path = try_get_checkpoints_archive_path()
     if not checkpoints_archive_path:
         return []
-    checkpoints = get_all_available_checkpoints_for_any(checkpoints_archive_path)
+    if parsed_params["app_name"]:
+        checkpoints = get_available_checkpoints_for_app(checkpoints_archive_path, parsed_params["app_name"])
+    else:
+        checkpoints = get_all_available_checkpoints_for_any(checkpoints_archive_path)
+
     return sorted([chkpt for chkpt in checkpoints if chkpt.startswith(incomplete)])
 
 
@@ -93,7 +106,8 @@ def __no_filter(_):
     return True
 
 
-def __complete_path(ctx, args, incomplete, file_filter):
+def __complete_path(ctx, param, incomplete, file_filter):
+    # type: (Context, Union[Argument, Option], str, Callable) -> Iterable[Union[str,CompletionItem]]
     base_dir = os.path.dirname(incomplete)
     if base_dir:
         if not os.path.isdir(base_dir):

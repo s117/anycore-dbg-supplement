@@ -140,7 +140,7 @@ def perform_manifest_fsck(manifest, target_sysroot):
 
 @click.command()
 @click.pass_context
-@click.argument("app-name", autocompletion=complete_app_names, type=click.STRING)
+@click.argument("app-name", shell_complete=complete_app_names, type=click.STRING)
 @click.argument("simenv-path", type=click.Path(exists=True, dir_okay=True, file_okay=False))
 def verify(ctx, app_name, simenv_path):
     """

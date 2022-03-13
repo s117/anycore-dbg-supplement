@@ -43,7 +43,7 @@ def xcopy(src_path, dst_path):
 @click.option("-c", "--checkpoints", is_flag=True,
               help="Include checkpoints.")
 @click.argument("new-repo-root", nargs=1, type=click.Path(exists=False))
-@click.argument("app-names", nargs=-1, type=click.STRING, autocompletion=complete_app_names)
+@click.argument("app-names", nargs=-1, type=click.STRING, shell_complete=complete_app_names)
 def subrepo(repo_path, checkpoints, new_repo_root, app_names):
     """
     Spawn a sub-repository with the selected apps.
