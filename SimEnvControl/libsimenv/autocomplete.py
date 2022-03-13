@@ -77,6 +77,8 @@ def complete_app_names(ctx, param, incomplete):
 def complete_chkpt_names(ctx, param, incomplete):
     # type: (Context, Union[Argument, Option], str) -> Iterable[Union[str,CompletionItem]]
     parsed_params = get_parsed_params(ctx)
+    if not parsed_params["app_name"] and len(ctx.args) == 1:
+        parsed_params["app_name"] = ctx.args[0]
 
     def try_get_checkpoints_archive_path():
         cmdline_val = parsed_params["repo_path"]
