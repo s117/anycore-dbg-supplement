@@ -7,6 +7,9 @@ from .sim_env_mkgen import mkgen as entry_mkgen
 from .sim_env_spawn import spawn as entry_spawn
 from .sim_env_verify import verify as entry_verify
 
+# To support auto-completion in bash 4.2 shipped with CentOS 7
+from .libsimenv.click_bash42_completion import patch
+patch()
 
 @click.group()
 @click.pass_context
