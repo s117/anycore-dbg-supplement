@@ -45,7 +45,7 @@ def get_avail_apps_in_db(db_path):
 
 
 def get_app_name_suggestion(name, limit, db_path):
-    PICKING_FUZZ_RATION_THRESHOLD = 70
+    PICKING_FUZZ_RATION_THRESHOLD = 36
     avail_apps = get_avail_apps_in_db(db_path)
     ranked_suggestions = sorted(map(
         lambda arn: (arn, fuzz.ratio(name, arn)),
