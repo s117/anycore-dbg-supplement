@@ -71,27 +71,3 @@ def prompt_app_name_suggestion(app_name, db_path):
             print("\t%s" % s, file=sys.stderr)
     else:
         print("No app name suggestion.", file=sys.stderr)
-
-
-def prompt_all_valid_app_name(db_path, checkpoints_archive_path):
-    if checkpoints_archive_path:
-        apps_chkpts = defaultdict(tuple, glob_all_checkpoints(checkpoints_archive_path))
-    else:
-        apps_chkpts = defaultdict(tuple)
-
-    all_available_app_names = sorted(get_avail_apps_in_db(db_path))
-    if all_available_app_names:
-        print("All available app:", file=sys.stderr)
-        for arn in all_available_app_names:
-            if checkpoints_archive_path:
-                n_chkpts = len(apps_chkpts[arn])
-                print("\t%s (%d %s available)" % (arn, n_chkpts, "checkpoints" if n_chkpts > 1 else "checkpoint"),
-                      file=sys.stderr)
-            else:
-                print("\t%s" % arn, file=sys.stderr)
-    else:
-        print("No record in the manifest DB [%s]" % db_path, file=sys.stderr)
-        print(
-            "To add an app to the repository, use `atool-app-repo`",
-            file=sys.stderr
-        )
