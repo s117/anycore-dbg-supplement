@@ -25,17 +25,18 @@ exclude = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
-PyYAML = "^6.0"
-click = "^8.0.4"
-pyparsing = "^3.0.7"
-bashlex = "^0.16"
+python = "^3.9"
+PyYAML = "^6.0.2"
+click = "^8.1.8"
+pyparsing = "^3.2.3"
+bashlex = "^0.18"
 fuzzywuzzy = "^0.18.0"
-python-Levenshtein = "^0.12.2"
-natsort = "^8.1.0"
+levenshtein = "^0.27.1"
+natsort = "^8.4.0"
 
-[tool.poetry.dev-dependencies]
-coverage = "^5.3"
+[tool.poetry.group.dev.dependencies]
+coverage = "^7.8.0"
+setuptools = "^78.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
